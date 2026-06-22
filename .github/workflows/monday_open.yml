@@ -1,0 +1,34 @@
+name: Monday Open - Generate Recommendation
+
+on:
+  schedule:
+    - cron: '35 14 * * 1'  # 09:35 ET (14:35 UTC) every Monday
+  workflow_dispatch:         # Manual trigger for testing
+
+jobs:
+  generate-recommendation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate recommendation
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py monday
+
+      - name: Commit updated trade state
+        run: |
+          git config user.name "IBKR Options Bot"
+          git config user.email "bot@profdrtan.com"
+          git add docs/data/trade_state.json
+          git diff --staged --quiet || git commit -m "Weekly recommendation $(date +%Y-%m-%d)"
+          git push
