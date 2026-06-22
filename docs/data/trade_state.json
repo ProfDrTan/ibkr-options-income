@@ -1,0 +1,16 @@
+{
+  "last_updated": "2026-06-23T00:00:00",
+  "recommendation": {
+    "date": null,
+    "status": "AWAITING_FIRST_RUN",
+    "approved": false,
+    "executed": false,
+    "human_score": 55
+  },
+  "open_positions": [],
+  "trade_log": [],
+  "weekly_pnl": [],
+  "total_pnl": 0,
+  "win_rate": 0,
+  "total_trades": 0
+}
