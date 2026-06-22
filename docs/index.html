@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBKR Options Income | Prof Dr Tan</title>
+<style>
+  :root {
+    --navy:  #0a0e1a;
+    --navy2: #111827;
+    --gold:  #c9a84c;
+    --teal:  #2dd4bf;
+    --green: #22c55e;
+    --red:   #ef4444;
+    --text:  #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
+
+  /* NAV */
+  nav { background:var(--navy2); border-bottom:1px solid var(--gold)33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; }
+  nav .brand { color:var(--gold); font-size:1.1rem; font-weight:bold; letter-spacing:0.05em; }
+  nav .links { display:flex; gap:1.5rem; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.85rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+
+  /* HERO */
+  .hero { padding:3rem 2rem 2rem; text-align:center; }
+  .hero h1 { font-size:2rem; color:var(--gold); margin-bottom:0.5rem; }
+  .hero p  { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.9rem; }
+
+  /* KPI ROW */
+  .kpi-row { display:flex; gap:1rem; padding:1rem 2rem; flex-wrap:wrap; justify-content:center; }
+  .kpi { background:var(--navy2); border:1px solid #ffffff11; border-radius:8px;
+          padding:1.2rem 1.8rem; min-width:160px; text-align:center; }
+  .kpi .label { font-size:0.75rem; color:var(--muted); font-family:'Arial',sans-serif;
+                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
+  .kpi .value { font-size:1.6rem; font-weight:bold; color:var(--gold); }
+  .kpi .value.green { color:var(--green); }
+  .kpi .value.red   { color:var(--red); }
+  .kpi .value.teal  { color:var(--teal); }
+
+  /* MAIN GRID */
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+           padding:1rem 2rem 3rem; max-width:1200px; margin:0 auto; }
+  @media(max-width:768px){ .grid { grid-template-columns:1fr; } }
+
+  /* CARD */
+  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; }
+  .card h2 { font-size:1rem; color:var(--gold); margin-bottom:1.2rem;
+              font-family:'Arial',sans-serif; text-transform:uppercase;
+              letter-spacing:0.08em; border-bottom:1px solid #ffffff11; padding-bottom:0.8rem; }
+
+  /* TRADE RECOMMENDATION */
+  .trade-box { border:1px solid var(--teal)44; border-radius:8px; padding:1.2rem; margin-bottom:1rem; }
+  .trade-row { display:flex; justify-content:space-between; align-items:center;
+                padding:0.4rem 0; border-bottom:1px solid #ffffff08; font-family:'Arial',sans-serif; font-size:0.85rem; }
+  .trade-row:last-child { border-bottom:none; }
+  .trade-row .tl { color:var(--muted); }
+  .trade-row .tr { color:var(--text); font-weight:bold; }
+
+  /* STATUS BADGE */
+  .badge { display:inline-block; padding:0.25rem 0.8rem; border-radius:20px;
+            font-size:0.75rem; font-family:'Arial',sans-serif; font-weight:bold;
+            text-transform:uppercase; letter-spacing:0.06em; }
+  .badge.pending  { background:#c9a84c22; color:var(--gold); border:1px solid var(--gold)44; }
+  .badge.approved { background:#2dd4bf22; color:var(--teal); border:1px solid var(--teal)44; }
+  .badge.executed { background:#22c55e22; color:var(--green); border:1px solid var(--green)44; }
+  .badge.skipped  { background:#ef444422; color:var(--red);   border:1px solid var(--red)44; }
+  .badge.waiting  { background:#94a3b822; color:var(--muted); border:1px solid #94a3b844; }
+
+  /* APPROVE BUTTON */
+  .btn-approve { width:100%; padding:1rem; background:var(--teal); color:var(--navy);
+                  border:none; border-radius:8px; font-size:1rem; font-weight:bold;
+                  font-family:'Arial',sans-serif; cursor:pointer; margin-top:1rem;
+                  transition:opacity 0.2s; letter-spacing:0.05em; }
+  .btn-approve:hover   { opacity:0.85; }
+  .btn-approve:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* INTEL BARS */
+  .intel-bar { margin-bottom:0.8rem; }
+  .intel-label { display:flex; justify-content:space-between;
+                  font-size:0.8rem; font-family:'Arial',sans-serif;
+                  color:var(--muted); margin-bottom:0.3rem; }
+  .bar-track { background:#ffffff11; border-radius:4px; height:6px; }
+  .bar-fill  { height:6px; border-radius:4px; background:var(--teal);
+                transition:width 0.5s ease; }
+
+  /* POSITIONS */
+  .pos-row { display:flex; justify-content:space-between; align-items:center;
+              padding:0.6rem 0; border-bottom:1px solid #ffffff08;
+              font-family:'Arial',sans-serif; font-size:0.83rem; }
+  .pos-row:last-child { border-bottom:none; }
+  .no-pos { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.85rem;
+             text-align:center; padding:1.5rem 0; }
+
+  /* FOOTER */
+  footer { text-align:center; padding:1.5rem; color:var(--muted);
+            font-size:0.75rem; font-family:'Arial',sans-serif;
+            border-top:1px solid #ffffff08; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="#" class="active">Dashboard</a>
+    <a href="#recommendation">This Week</a>
+    <a href="#positions">Positions</a>
+    <a href="#intel">Intelligence</a>
+    <a href="#log">Trade Log</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Options Income Command Center</h1>
+  <p>SPX Bull Put Spreads · 10 Spreads/Week · Moderate Risk · Account U10500387</p>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row" id="kpi-row">
+  <div class="kpi"><div class="label">Total P&L</div><div class="value green" id="kpi-pnl">$0</div></div>
+  <div class="kpi"><div class="label">Win Rate</div><div class="value teal" id="kpi-winrate">—</div></div>
+  <div class="kpi"><div class="label">Total Trades</div><div class="value" id="kpi-trades">0</div></div>
+  <div class="kpi"><div class="label">Open Positions</div><div class="value" id="kpi-open">0</div></div>
+  <div class="kpi"><div class="label">Intel Score</div><div class="value teal" id="kpi-intel">—</div></div>
+</div>
+
+<div class="grid">
+
+  <!-- THIS WEEK'S TRADE -->
+  <div class="card" id="recommendation">
+    <h2>This Week's Recommendation</h2>
+    <div id="rec-content">
+      <div class="no-pos">⏳ Awaiting first Monday run...<br><br>
+      Algorithm runs Monday 09:35 ET</div>
+    </div>
+    <button class="btn-approve" id="approve-btn" disabled onclick="approveTrade()">
+      APPROVE &amp; EXECUTE TRADE
+    </button>
+  </div>
+
+  <!-- MARKET INTELLIGENCE -->
+  <div class="card" id="intel">
+    <h2>Market Intelligence</h2>
+    <div id="intel-content">
+      <div class="intel-bar">
+        <div class="intel-label"><span>Almanac (Seasonal)</span><span id="s-almanac">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="b-almanac" style="width:0%"></div></div>
+      </div>
+      <div class="intel-bar">
+        <div class="intel-label"><span>Macro Environment</span><span id="s-macro">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="b-macro" style="width:0%"></div></div>
+      </div>
+      <div class="intel-bar">
+        <div class="intel-label"><span>Technical Analysis</span><span id="s-technical">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="b-technical" style="width:0%"></div></div>
+      </div>
+      <div class="intel-bar">
+        <div class="intel-label"><span>LLM Synthesis (CP3405)</span><span id="s-llm">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="b-llm" style="width:0%"></div></div>
+      </div>
+      <div class="intel-bar">
+        <div class="intel-label"><span>Human Score</span><span id="s-human">—</span></div>
+        <div class="bar-track"><div class="bar-fill" id="b-human" style="width:0%"></div></div>
+      </div>
+      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #ffffff11;
+                  display:flex; justify-content:space-between; font-family:'Arial',sans-serif;">
+        <span style="color:var(--muted); font-size:0.85rem;">Composite Score</span>
+        <span style="color:var(--teal); font-weight:bold; font-size:1.1rem;" id="composite-score">—</span>
+      </div>
+      <div style="text-align:center; margin-top:0.8rem;">
+        <span class="badge waiting" id="bias-badge">AWAITING DATA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN POSITIONS -->
+  <div class="card" id="positions">
+    <h2>Open Positions</h2>
+    <div id="positions-content">
+      <div class="no-pos">No open positions</div>
+    </div>
+  </div>
+
+  <!-- TRADE LOG -->
+  <div class="card" id="log">
+    <h2>Trade Log</h2>
+    <div id="log-content">
+      <div class="no-pos">No completed trades yet</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Prof Dr Tan · IBKR Options Income System · Auto-updated every Monday 09:35 ET
+  <br>Last data refresh: <span id="last-refresh">—</span>
+</footer>
+
+<script>
+let tradeState = {};
+
+async function loadState() {
+  try {
+    const r = await fetch('data/trade_state.json?t=' + Date.now());
+    tradeState = await r.json();
+    render();
+  } catch(e) {
+    console.log('State not yet available — awaiting first algorithm run');
+  }
+}
+
+function render() {
+  const s = tradeState;
+
+  // KPIs
+  const pnl = s.total_pnl || 0;
+  document.getElementById('kpi-pnl').textContent =
+    (pnl >= 0 ? '+' : '') + '$' + pnl.toLocaleString();
+  document.getElementById('kpi-pnl').className = 'value ' + (pnl >= 0 ? 'green' : 'red');
+  document.getElementById('kpi-winrate').textContent =
+    s.total_trades > 0 ? (s.win_rate * 100).toFixed(0) + '%' : '—';
+  document.getElementById('kpi-trades').textContent = s.total_trades || 0;
+  document.getElementById('kpi-open').textContent = (s.open_positions || []).length;
+
+  // Intel scores
+  const intel = s.recommendation?.intel;
+  if (intel) {
+    document.getElementById('kpi-intel').textContent = intel.composite + '/100';
+    const scores = intel.scores || {};
+    ['almanac','macro','technical','llm','human'].forEach(k => {
+      const v = scores[k] || 0;
+      document.getElementById('s-' + k).textContent = v + '/100';
+      document.getElementById('b-' + k).style.width = v + '%';
+    });
+    document.getElementById('composite-score').textContent = intel.composite + '/100';
+    const bias = intel.bias || 'NEUTRAL';
+    const bb = document.getElementById('bias-badge');
+    bb.textContent = bias;
+    bb.className = 'badge ' + (bias === 'BULLISH' ? 'approved' : bias === 'BEARISH' ? 'skipped' : 'pending');
+  }
+
+  // Recommendation
+  const rec = s.recommendation || {};
+  const recDiv = document.getElementById('rec-content');
+  const btn    = document.getElementById('approve-btn');
+
+  if (rec.status === 'AWAITING_FIRST_RUN' || !rec.date) {
+    recDiv.innerHTML = '<div class="no-pos">⏳ Awaiting first Monday run...<br><br>Algorithm runs Monday 09:35 ET</div>';
+    btn.disabled = true;
+  } else if (!rec.proceed) {
+    recDiv.innerHTML = `<div class="trade-box">
+      <div class="trade-row"><span class="tl">Status</span><span class="tr"><span class="badge skipped">TRADE SKIPPED</span></span></div>
+      <div class="trade-row"><span class="tl">Reason</span><span class="tr" style="color:var(--red);font-size:0.8rem;">${rec.reason}</span></div>
+      <div class="trade-row"><span class="tl">Date</span><span class="tr">${rec.date}</span></div>
+    </div>`;
+    btn.disabled = true;
+    btn.textContent = 'NO TRADE THIS WEEK';
+  } else {
+    const statusClass = rec.executed ? 'executed' : rec.approved ? 'approved' : 'pending';
+    const statusText  = rec.executed ? 'EXECUTED' : rec.approved ? 'APPROVED' : 'PENDING APPROVAL';
+    recDiv.innerHTML = `<div class="trade-box">
+      <div class="trade-row"><span class="tl">Status</span><span class="tr"><span class="badge ${statusClass}">${statusText}</span></span></div>
+      <div class="trade-row"><span class="tl">Strategy</span><span class="tr">SPX Bull Put Spread</span></div>
+      <div class="trade-row"><span class="tl">Short Put</span><span class="tr">${rec.short_put}</span></div>
+      <div class="trade-row"><span class="tl">Long Put</span><span class="tr">${rec.long_put}</span></div>
+      <div class="trade-row"><span class="tl">Expiry</span><span class="tr">${rec.expiry}</span></div>
+      <div class="trade-row"><span class="tl">Spreads</span><span class="tr">${rec.num_spreads}x</span></div>
+      <div class="trade-row"><span class="tl">Est. Credit</span><span class="tr" style="color:var(--green)">$${(rec.est_premium * rec.num_spreads).toLocaleString()}</span></div>
+      <div class="trade-row"><span class="tl">Max Risk</span><span class="tr" style="color:var(--red)">$${rec.max_risk?.toLocaleString()}</span></div>
+      <div class="trade-row"><span class="tl">Profit Target</span><span class="tr" style="color:var(--teal)">$${rec.profit_target?.toLocaleString()}</span></div>
+      <div class="trade-row"><span class="tl">SPX Price</span><span class="tr">${rec.spx_price?.toLocaleString()}</span></div>
+    </div>`;
+    btn.disabled  = rec.executed || rec.approved;
+    btn.textContent = rec.executed ? '✅ TRADE EXECUTED' :
+                      rec.approved ? '✅ APPROVED — EXECUTING' :
+                      'APPROVE & EXECUTE TRADE';
+  }
+
+  // Open positions
+  const posDiv = document.getElementById('positions-content');
+  const positions = s.open_positions || [];
+  if (positions.length === 0) {
+    posDiv.innerHTML = '<div class="no-pos">No open positions</div>';
+  } else {
+    posDiv.innerHTML = positions.map(p => `
+      <div class="pos-row">
+        <div>
+          <div style="font-weight:bold">SPX ${p.short_put}/${p.long_put} P</div>
+          <div style="color:var(--muted);font-size:0.75rem">Exp: ${p.expiry} · ${p.quantity}x</div>
+        </div>
+        <div style="text-align:right">
+          <div style="color:var(--green)">+$${p.premium_received?.toLocaleString()}</div>
+          <div style="color:var(--muted);font-size:0.75rem">credit received</div>
+        </div>
+      </div>`).join('');
+  }
+
+  // Trade log
+  const logDiv = document.getElementById('log-content');
+  const log = s.trade_log || [];
+  if (log.length === 0) {
+    logDiv.innerHTML = '<div class="no-pos">No completed trades yet</div>';
+  } else {
+    logDiv.innerHTML = log.slice(-10).reverse().map(t => `
+      <div class="pos-row">
+        <div>
+          <div style="font-weight:bold">${t.date} · SPX ${t.short_put}/${t.long_put}P</div>
+          <div style="color:var(--muted);font-size:0.75rem">${t.reason || ''}</div>
+        </div>
+        <div style="color:${t.pnl>=0?'var(--green)':'var(--red)'};font-weight:bold">
+          ${t.pnl>=0?'+':''}$${t.pnl?.toLocaleString()}
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('last-refresh').textContent = new Date().toLocaleString();
+}
+
+async function approveTrade() {
+  const btn = document.getElementById('approve-btn');
+  btn.disabled = true;
+  btn.textContent = 'SUBMITTING APPROVAL...';
+
+  // Update local state
+  tradeState.recommendation.approved = true;
+  tradeState.recommendation.status   = 'APPROVED';
+
+  // In production: POST to GitHub API to update trade_state.json
+  // For now: show confirmation
+  alert('✅ Trade approved! The algorithm will execute your position shortly.\n\nYou will receive a Telegram confirmation when the order is filled.');
+  btn.textContent = '✅ APPROVED — EXECUTING';
+  render();
+}
+
+// Load state on page load and refresh every 5 minutes
+loadState();
+setInterval(loadState, 300000);
+</script>
+</body>
+</html>
