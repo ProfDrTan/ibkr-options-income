@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Guide | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a; --navy2: #111827; --gold: #c9a84c;
+    --teal:  #2dd4bf; --green: #22c55e; --red: #ef4444;
+    --text:  #e2e8f0; --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; }
+  nav .brand { color:var(--gold); font-size:1.1rem; font-weight:bold; letter-spacing:0.05em; }
+  nav .links { display:flex; gap:1.5rem; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.85rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+  .page { max-width:960px; margin:0 auto; padding:3rem 2rem; }
+  h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.5rem; }
+  .subtitle { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.9rem; margin-bottom:2.5rem; }
+  .file-card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px;
+                padding:1.5rem; margin-bottom:1.2rem; }
+  .file-header { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+  .file-name { font-family:'Courier New', monospace; font-size:1rem; color:var(--teal);
+                font-weight:bold; }
+  .file-type { font-size:0.72rem; font-family:'Arial',sans-serif; padding:0.2rem 0.6rem;
+                border-radius:4px; font-weight:bold; text-transform:uppercase; letter-spacing:0.06em; }
+  .ft-python   { background:#3b82f622; color:#60a5fa; border:1px solid #3b82f644; }
+  .ft-json     { background:#f59e0b22; color:#fbbf24; border:1px solid #f59e0b44; }
+  .ft-html     { background:#8b5cf622; color:#a78bfa; border:1px solid #8b5cf644; }
+  .ft-yaml     { background:#22c55e22; color:#4ade80; border:1px solid #22c55e44; }
+  .ft-config   { background:#ec489922; color:#f472b6; border:1px solid #ec489944; }
+  .file-desc { font-family:'Arial',sans-serif; font-size:0.88rem; color:var(--text);
+                line-height:1.7; margin-bottom:1rem; }
+  .func-list { list-style:none; }
+  .func-list li { display:flex; gap:0.8rem; padding:0.4rem 0;
+                   border-bottom:1px solid #ffffff08; font-family:'Arial',sans-serif; font-size:0.82rem; }
+  .func-list li:last-child { border-bottom:none; }
+  .func-name { color:var(--gold); font-family:'Courier New', monospace; min-width:220px; }
+  .func-desc { color:var(--muted); }
+  .section-title { color:var(--teal); font-size:0.9rem; font-family:'Arial',sans-serif;
+                    text-transform:uppercase; letter-spacing:0.08em;
+                    margin:2rem 0 1rem; border-bottom:1px solid #ffffff11; padding-bottom:0.6rem; }
+  .flow-box { background:var(--navy2); border:1px solid var(--teal)33; border-radius:10px;
+               padding:1.5rem; margin-bottom:1.5rem; font-family:'Courier New',monospace;
+               font-size:0.82rem; line-height:2; color:var(--text); }
+  .flow-box .arrow { color:var(--teal); }
+  .pending-item { display:flex; gap:1rem; padding:0.7rem 0;
+                   border-bottom:1px solid #ffffff08; font-family:'Arial',sans-serif; font-size:0.85rem; }
+  .pending-item:last-child { border-bottom:none; }
+  .pending-num { color:var(--gold); font-weight:bold; min-width:24px; }
+  .pending-text { color:var(--text); line-height:1.5; }
+  .pending-text .tag { display:inline-block; background:#ef444422; color:var(--red);
+                        border:1px solid #ef444444; border-radius:4px;
+                        padding:0.1rem 0.4rem; font-size:0.72rem; margin-left:0.4rem; }
+  .pending-text .done { display:inline-block; background:#22c55e22; color:var(--green);
+                         border:1px solid #22c55e44; border-radius:4px;
+                         padding:0.1rem 0.4rem; font-size:0.72rem; margin-left:0.4rem; }
+  footer { text-align:center; padding:1.5rem; color:var(--muted);
+            font-size:0.75rem; font-family:'Arial',sans-serif; border-top:1px solid #ffffff08; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="master-prompt.html">Master Prompt</a>
+    <a href="system-guide.html" class="active">System Guide</a>
+  </div>
+</nav>
+
+<div class="page">
+  <h1>System Guide</h1>
+  <p class="subtitle">Complete reference for every file, function, and workflow in the IBKR Options Income System.</p>
+
+  <!-- WORKFLOW -->
+  <div class="section-title">Weekly Workflow</div>
+  <div class="flow-box">
+    Monday 09:35 ET <span class="arrow">→</span> GitHub Actions triggers main.py monday<br>
+    <span class="arrow">→</span> market_intel.py computes composite score (almanac + macro + technical + LLM + human)<br>
+    <span class="arrow">→</span> strategy.py selects SPX strikes and builds recommendation<br>
+    <span class="arrow">→</span> docs/data/trade_state.json updated and pushed to GitHub<br>
+    <span class="arrow">→</span> ibkr-options-income.pages.dev auto-updates (Cloudflare, ~60 seconds)<br>
+    <span class="arrow">→</span> alerts.py sends Telegram message to Professor Dr. Tan's phone<br>
+    <span class="arrow">→</span> Professor Dr. Tan reviews on website and clicks APPROVE<br>
+    <span class="arrow">→</span> executor.py connects to IBKR TWS and places the order<br>
+    <span class="arrow">→</span> Telegram confirmation: trade filled, premium received<br>
+    Daily 15:45 ET <span class="arrow">→</span> risk_manager.py checks 50% profit target or stop loss<br>
+    Thursday 15:45 ET <span class="arrow">→</span> All positions force-closed, week P&L recorded
+  </div>
+
+  <!-- PYTHON FILES -->
+  <div class="section-title">Python Files</div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">config.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      Central configuration file. Every trading parameter lives here — nothing is hardcoded elsewhere.
+      To change strategy behavior (number of spreads, strike distance, profit targets), edit only this file.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">IBKR_HOST / PORT / ACCOUNT</span><span class="func-desc">Connection settings for TWS API (port 7496 live, 7497 paper)</span></li>
+      <li><span class="func-name">NUM_SPREADS = 10</span><span class="func-desc">Moderate risk profile — 10 bull put spreads per week</span></li>
+      <li><span class="func-name">SPREAD_WIDTH = 10</span><span class="func-desc">10-point wide spread (e.g. 7350/7340 puts)</span></li>
+      <li><span class="func-name">TARGET_DELTA = 0.05</span><span class="func-desc">Sell put at ~5 delta = approximately 5% out of the money</span></li>
+      <li><span class="func-name">PROFIT_TARGET_PCT = 0.50</span><span class="func-desc">Close position when 50% of premium is captured</span></li>
+      <li><span class="func-name">MAX_LOSS_PCT = 2.00</span><span class="func-desc">Stop loss trigger at 200% of premium received</span></li>
+      <li><span class="func-name">VIX_MAX = 25</span><span class="func-desc">Skip all trades if VIX above 25 — too dangerous to sell premium</span></li>
+      <li><span class="func-name">MIN_BULLISH_SCORE = 55</span><span class="func-desc">Minimum composite intel score to proceed with trade</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">market_intel.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      The intelligence layer — connects CP3405 market prediction agents to trading decisions.
+      Computes a composite score (0–100) from five sources. Score above 55 = proceed, below 45 = skip, below 35 = hard veto.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">get_almanac_score()</span><span class="func-desc">Seasonal bias from monthly SPX historical patterns + day-of-week adjustment</span></li>
+      <li><span class="func-name">get_macro_score()</span><span class="func-desc">Fed stance, yields, credit spreads → risk-on / risk-off environment</span></li>
+      <li><span class="func-name">get_technical_score()</span><span class="func-desc">SPX price vs key moving averages → trend strength signal</span></li>
+      <li><span class="func-name">get_llm_synthesis_score()</span><span class="func-desc">Aggregates ChatGPT / Gemini / DeepSeek weekly predictions from CP3405</span></li>
+      <li><span class="func-name">get_human_score()</span><span class="func-desc">Professor Dr. Tan's manual override — read from trade_state.json via website</span></li>
+      <li><span class="func-name">get_composite_score()</span><span class="func-desc">Weighted average of all five scores → final BULLISH / NEUTRAL / BEARISH bias</span></li>
+      <li><span class="func-name">get_vix()</span><span class="func-desc">Fetches live VIX level via yfinance for volatility gate check</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">strategy.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      Bull put spread construction logic. Takes market intel composite score and current SPX price,
+      selects optimal strikes, checks all trade gates, and builds the weekly recommendation object.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">get_next_friday()</span><span class="func-desc">Calculates upcoming Friday for weekly expiry selection</span></li>
+      <li><span class="func-name">should_trade(intel)</span><span class="func-desc">Gate check — returns (proceed: bool, reason: str) based on score and VIX</span></li>
+      <li><span class="func-name">calculate_strikes(spx_price, score)</span><span class="func-desc">Intel-adjusted OTM distance: 4% (high conviction), 5% (standard), 6% (cautious)</span></li>
+      <li><span class="func-name">build_recommendation(spx_price)</span><span class="func-desc">Assembles full trade recommendation dict saved to trade_state.json</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">risk_manager.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      Enforces all risk rules. Never risks more than 3% of account per week. 
+      Monitors open positions daily and triggers closes when profit targets or stop losses are hit.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">check_portfolio_risk(positions)</span><span class="func-desc">Ensures total weekly risk stays within $10,000 hard limit</span></li>
+      <li><span class="func-name">should_close_position(position)</span><span class="func-desc">Evaluates 50% profit, 200% stop loss, Thursday forced close</span></li>
+      <li><span class="func-name">calculate_position_size(capital, score)</span><span class="func-desc">Scales spreads down when intel conviction is low (marginal score = half size)</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">executor.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      IBKR TWS API integration. Connects to Trader Workstation on port 7496 and places the spread order.
+      Requires TWS running with API enabled. Will NOT execute without Professor Dr. Tan's approval flag set.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">IBKRApp class</span><span class="func-desc">EWrapper + EClient subclass handling connection, order status, error callbacks</span></li>
+      <li><span class="func-name">make_spx_put_contract(strike, expiry)</span><span class="func-desc">Builds IBKR Contract object for SPX put option on CBOE</span></li>
+      <li><span class="func-name">make_combo_order(action, qty, price)</span><span class="func-desc">Builds limit order for spread legs</span></li>
+      <li><span class="func-name">place_bull_put_spread(recommendation)</span><span class="func-desc">Master execution function — checks approval, connects to TWS, places order</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">alerts.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      Telegram notification system. Every significant trade event sends a formatted message to
+      Professor Dr. Tan's phone. Credentials stored as GitHub Secrets — never in code.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">alert_recommendation_ready(rec)</span><span class="func-desc">Sent Monday morning — trade details + link to approve on website</span></li>
+      <li><span class="func-name">alert_trade_executed(execution)</span><span class="func-desc">Sent after IBKR confirms fill — shows actual strike, premium, total credit</span></li>
+      <li><span class="func-name">alert_profit_target(position, pnl)</span><span class="func-desc">Sent when 50% profit target hit mid-week</span></li>
+      <li><span class="func-name">alert_stop_loss(position, pnl)</span><span class="func-desc">Sent if position moves against us — roll or close signal</span></li>
+      <li><span class="func-name">alert_thursday_close(n, pnl)</span><span class="func-desc">Sent Thursday EOD — weekly P&L summary</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">main.py</span>
+      <span class="file-type ft-python">Python</span>
+    </div>
+    <p class="file-desc">
+      Master controller. Entry point for all GitHub Actions workflows and manual runs.
+      Orchestrates the full pipeline by calling the other modules in sequence.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">run_monday_open()</span><span class="func-desc">Generates weekly recommendation, saves to JSON, sends Telegram alert</span></li>
+      <li><span class="func-name">run_daily_check()</span><span class="func-desc">Checks all open positions against profit/loss targets, closes if triggered</span></li>
+      <li><span class="func-name">run_execute()</span><span class="func-desc">Processes approval flag → calls executor.py → confirms fill via Telegram</span></li>
+      <li><span class="func-name">load_state() / save_state()</span><span class="func-desc">Read/write trade_state.json — single source of truth for all system state</span></li>
+    </ul>
+  </div>
+
+  <!-- DATA & CONFIG FILES -->
+  <div class="section-title">Data &amp; Configuration Files</div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">docs/data/trade_state.json</span>
+      <span class="file-type ft-json">JSON</span>
+    </div>
+    <p class="file-desc">
+      Single source of truth for all live system state. Updated by GitHub Actions after every run.
+      The website reads this file to display the dashboard. Professor Dr. Tan's approval is also
+      written here, which triggers execution on the next Actions run.
+    </p>
+    <ul class="func-list">
+      <li><span class="func-name">recommendation</span><span class="func-desc">Current week's trade details, approved flag, executed flag, intel scores</span></li>
+      <li><span class="func-name">open_positions</span><span class="func-desc">Array of active trades with entry price, current value, max risk</span></li>
+      <li><span class="func-name">trade_log</span><span class="func-desc">Historical record of every completed trade with P&L</span></li>
+      <li><span class="func-name">total_pnl / win_rate</span><span class="func-desc">Cumulative performance statistics shown on dashboard KPIs</span></li>
+    </ul>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">.github/workflows/monday_open.yml</span>
+      <span class="file-type ft-yaml">YAML</span>
+    </div>
+    <p class="file-desc">
+      GitHub Actions workflow. Runs automatically every Monday at 09:35 ET (14:35 UTC).
+      Can also be triggered manually via workflow_dispatch for testing. Calls main.py monday.
+    </p>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">.github/workflows/daily_check.yml</span>
+      <span class="file-type ft-yaml">YAML</span>
+    </div>
+    <p class="file-desc">
+      GitHub Actions workflow. Runs Monday–Friday at 15:45 ET (20:45 UTC) to check profit targets.
+      Thursday run includes forced close of all open positions. Calls main.py check.
+    </p>
+  </div>
+
+  <!-- WEBSITE FILES -->
+  <div class="section-title">Website Files (docs/ folder → ibkr-options-income.pages.dev)</div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">docs/index.html</span>
+      <span class="file-type ft-html">HTML</span>
+    </div>
+    <p class="file-desc">
+      Trading Command Center dashboard. Reads trade_state.json and renders live KPIs,
+      this week's recommendation, market intelligence bars, open positions, and trade log.
+      Approve button sets approved flag and triggers execution workflow.
+    </p>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">docs/master-prompt.html</span>
+      <span class="file-type ft-html">HTML</span>
+    </div>
+    <p class="file-desc">
+      This system's resume prompt for Claude. Paste the prompt into any new Claude chat session
+      to instantly restore full context — strategy, architecture, pending items, and credentials reference.
+    </p>
+  </div>
+
+  <div class="file-card">
+    <div class="file-header">
+      <span class="file-name">docs/system-guide.html</span>
+      <span class="file-type ft-html">HTML</span>
+    </div>
+    <p class="file-desc">This page. Complete file-by-file reference for the entire system.</p>
+  </div>
+
+  <!-- PENDING ITEMS -->
+  <div class="section-title">Pending Setup Items</div>
+  <div style="background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem;">
+    <div class="pending-item">
+      <span class="pending-num">1</span>
+      <span class="pending-text">Set up Telegram bot — get TELEGRAM_BOT_TOKEN from @BotFather and TELEGRAM_CHAT_ID from getUpdates API <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">2</span>
+      <span class="pending-text">Enable IBKR TWS API — TWS → Edit → Global Configuration → API → Settings → Enable ActiveX and Socket Clients → Port 7496 <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">3</span>
+      <span class="pending-text">Add GitHub Secrets — repo Settings → Secrets → TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">4</span>
+      <span class="pending-text">Wire approval button — update trade_state.json via GitHub API when Professor Dr. Tan clicks Approve <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">5</span>
+      <span class="pending-text">Live SPX price feed — replace placeholder in strategy.py with live IBKR market data call <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">6</span>
+      <span class="pending-text">First paper trade test — run main.py monday manually to validate full pipeline end-to-end <span class="tag">PENDING</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">7</span>
+      <span class="pending-text">Cloudflare Pages connected to GitHub repo — auto-deploys from /docs folder <span class="done">✅ DONE</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">8</span>
+      <span class="pending-text">All Python modules built and pushed to GitHub <span class="done">✅ DONE</span></span>
+    </div>
+    <div class="pending-item">
+      <span class="pending-num">9</span>
+      <span class="pending-text">GitHub Actions schedules configured (Monday + Daily) <span class="done">✅ DONE</span></span>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev
+</footer>
+</body>
+</html>
