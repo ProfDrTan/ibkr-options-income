@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Prompt | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a; --navy2: #111827; --gold: #c9a84c;
+    --teal:  #2dd4bf; --green: #22c55e; --red: #ef4444;
+    --text:  #e2e8f0; --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; }
+  nav .brand { color:var(--gold); font-size:1.1rem; font-weight:bold; letter-spacing:0.05em; }
+  nav .links { display:flex; gap:1.5rem; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.85rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+  .page { max-width:900px; margin:0 auto; padding:3rem 2rem; }
+  h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.5rem; }
+  .subtitle { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.9rem; margin-bottom:2.5rem; }
+  .section { margin-bottom:2rem; }
+  .section h2 { color:var(--teal); font-size:1rem; font-family:'Arial',sans-serif;
+                 text-transform:uppercase; letter-spacing:0.08em;
+                 border-bottom:1px solid #ffffff11; padding-bottom:0.6rem; margin-bottom:1rem; }
+  .prompt-box { background:var(--navy2); border:1px solid var(--gold)33; border-radius:10px;
+                 padding:1.8rem; position:relative; }
+  .prompt-box pre { font-family:'Courier New', monospace; font-size:0.82rem;
+                     color:var(--text); white-space:pre-wrap; line-height:1.7; }
+  .copy-btn { position:absolute; top:1rem; right:1rem; background:var(--teal);
+               color:var(--navy); border:none; border-radius:6px; padding:0.4rem 1rem;
+               font-size:0.75rem; font-family:'Arial',sans-serif; font-weight:bold;
+               cursor:pointer; letter-spacing:0.05em; }
+  .copy-btn:hover { opacity:0.85; }
+  .tag { display:inline-block; background:#2dd4bf22; color:var(--teal);
+          border:1px solid #2dd4bf44; border-radius:4px; padding:0.15rem 0.5rem;
+          font-size:0.75rem; font-family:'Arial',sans-serif; margin:0.2rem; }
+  .note { background:#c9a84c11; border-left:3px solid var(--gold); padding:1rem 1.2rem;
+           border-radius:0 6px 6px 0; margin-bottom:1.5rem;
+           font-family:'Arial',sans-serif; font-size:0.85rem; color:var(--text); line-height:1.6; }
+  footer { text-align:center; padding:1.5rem; color:var(--muted);
+            font-size:0.75rem; font-family:'Arial',sans-serif; border-top:1px solid #ffffff08; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="master-prompt.html" class="active">Master Prompt</a>
+    <a href="system-guide.html">System Guide</a>
+  </div>
+</nav>
+
+<div class="page">
+  <h1>Master Prompt</h1>
+  <p class="subtitle">Use this prompt to resume work on this system in any new Claude chat session.</p>
+
+  <div class="note">
+    💡 <strong>How to use:</strong> Start a new Claude chat, paste the Master Prompt below, and Claude will immediately understand the full context of this system — the strategy, the architecture, the files, and what needs to be done next. No re-explanation required.
+  </div>
+
+  <div class="section">
+    <h2>Full Session Resume Prompt</h2>
+    <div class="prompt-box">
+      <button class="copy-btn" onclick="copyPrompt('main-prompt')">COPY</button>
+      <pre id="main-prompt">You are assisting Professor Dr. Tan (Stanford University, IEEE Senior Member) with his IBKR Algorithmic Options Income System.
+
+SYSTEM OVERVIEW:
+This is a fully automated options income generation system trading SPX Bull Put Spreads on Interactive Brokers (IBKR). The system is designed to be hands-off — algorithms run on a schedule, generate weekly trade recommendations, and execute after Professor Dr. Tan approves via a website dashboard.
+
+LIVE INFRASTRUCTURE:
+- GitHub Repo: ProfDrTan/ibkr-options-income (private)
+- Website: ibkr-options-income.pages.dev (Cloudflare Pages, auto-deploys from /docs folder)
+- IBKR Account: U10500387 | Options Level 3 | Net Liq ~$471K
+- Strategy: SPX Bull Put Spreads | 10 spreads/week | Moderate risk profile
+- GitHub Actions: Monday 09:35 ET (generate recommendation) + Daily 15:45 ET (position check)
+- Telegram alerts: configured via GitHub Secrets (TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID)
+
+CODEBASE (all files in repo root unless noted):
+- config.py — All parameters: strikes, sizing, risk rules, IBKR connection settings
+- market_intel.py — CP3405 signal integration: almanac, macro, technical, LLM synthesis, human score → composite score
+- strategy.py — Strike selection logic, trade gate checks, recommendation builder
+- risk_manager.py — 50% profit target, stop loss, Thursday forced close, position sizing
+- executor.py — IBKR TWS API connection and order placement (ibapi library)
+- alerts.py — Telegram notifications for all trade events
+- main.py — Master controller: modes are monday | check | execute
+- docs/index.html — Trading command center website (Dashboard tab)
+- docs/master-prompt.html — This page
+- docs/system-guide.html — File-by-file system documentation
+- docs/data/trade_state.json — Live trade state (recommendation, positions, P&L log)
+- .github/workflows/monday_open.yml — Monday 09:35 ET scheduler
+- .github/workflows/daily_check.yml — Daily 15:45 ET scheduler
+
+APPROVAL WORKFLOW:
+1. GitHub Actions runs main.py monday at 09:35 ET every Monday
+2. Algorithm generates SPX Bull Put Spread recommendation
+3. trade_state.json updated and pushed to GitHub → website auto-updates
+4. Telegram alert sent to Professor Dr. Tan's phone
+5. Professor Dr. Tan reviews recommendation on website and clicks APPROVE
+6. On approval: main.py execute runs → order placed on IBKR → Telegram confirms fill
+
+STRATEGY PARAMETERS (from config.py):
+- Underlying: SPX (S&P 500 Index)
+- Spreads: 10 per week
+- Spread width: 10 points
+- Short put delta target: ~5 delta (5% OTM)
+- Min premium: $150 | Max premium: $250 per spread
+- Profit target: 50% of credit received
+- Stop loss: 200% of credit (roll trigger)
+- Thursday: Force close all positions (gamma risk removal)
+- VIX max: 25 (skip trade if above)
+- Min bullish composite score: 55/100
+
+MARKET INTELLIGENCE (CP3405 Integration):
+The system integrates Professor Dr. Tan's CP3405 DT3 course market intelligence agents:
+- Almanac agent → seasonal bias score
+- Macro agent → risk-on/risk-off environment
+- Technical agent → price action vs key MAs
+- LLM synthesis → ChatGPT/Gemini/DeepSeek consensus
+- Human score → Professor Dr. Tan's manual override
+Weighted composite score determines trade proceed/skip/veto.
+
+GITHUB API PATTERN (mandatory for all file operations):
+- Always GET current SHA before any PUT
+- Headers: Authorization: Bearer {TOKEN}, Accept: application/vnd.github+json, X-GitHub-Api-Version: 2022-11-28, User-Agent: ProfDrTan-Monitor/1.0
+- Base64: strip all whitespace before decoding (.replace(/\s/g,'') or Python equivalent)
+- PAT stored in memory — never ask Professor Dr. Tan to re-enter it
+
+PENDING ITEMS (what to work on next):
+1. Telegram setup — Professor Dr. Tan to provide TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
+2. IBKR TWS API — Enable in TWS: Edit → Global Configuration → API → Settings → Enable ActiveX and Socket Clients → Port 7496
+3. Add GitHub Secrets: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in repo settings
+4. Wire up approval button — update trade_state.json via GitHub API when Professor Dr. Tan approves
+5. Live SPX price feed — replace placeholder in strategy.py with live IBKR market data call
+6. First paper trade test — run main.py monday manually to validate full pipeline
+
+TONE AND STYLE:
+- Address as Professor Dr. Tan at all times
+- All file operations via GitHub API — never ask him to upload, copy-paste, or run commands manually
+- Cloudflare Pages auto-deploys ~60 seconds after GitHub push
+- Professor Dr. Tan verifies visually via browser hard reload
+- He communicates primarily via voice-to-text on mobile</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Quick Context Tags</h2>
+    <p style="font-family:'Arial',sans-serif; font-size:0.85rem; color:var(--muted); margin-bottom:0.8rem;">
+      For shorter sessions focused on a specific task, use these tags after pasting the Master Prompt:
+    </p>
+    <div>
+      <span class="tag">I need to set up Telegram alerts</span>
+      <span class="tag">Enable IBKR TWS API</span>
+      <span class="tag">Wire up the approval button</span>
+      <span class="tag">Connect live SPX price feed</span>
+      <span class="tag">Run first paper trade test</span>
+      <span class="tag">Add a new tab to the website</span>
+      <span class="tag">Update strategy parameters</span>
+      <span class="tag">Review last week's P&L</span>
+      <span class="tag">Integrate CP3405 signals</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Key Credentials Reference</h2>
+    <div class="prompt-box">
+      <pre>GitHub Repo:    ProfDrTan/ibkr-options-income (private)
+IBKR Account:   U10500387
+Website:        ibkr-options-income.pages.dev
+Cloudflare:     /docs folder → auto-deploy
+Trade State:    docs/data/trade_state.json
+GitHub PAT:     Stored in Claude memory (no expiry, Contents+Actions+Workflows R/W)
+Telegram:       Secrets → TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (pending setup)
+IBKR TWS Port:  7496 (live) | 7497 (paper)</pre>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev
+</footer>
+
+<script>
+function copyPrompt(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = 'COPIED ✓';
+    setTimeout(() => btn.textContent = 'COPY', 2000);
+  });
+}
+</script>
+</body>
+</html>
