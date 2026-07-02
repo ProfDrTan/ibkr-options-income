@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Overview | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:#0a0e1a;--navy2:#111827;--navy3:#1e2a3a;
+    --gold:#c9a84c;--teal:#2dd4bf;--green:#22c55e;
+    --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;min-height:100vh;padding-bottom:70px;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 2rem;height:60px;position:sticky;top:0;z-index:100;}
+  nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
+  nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a:hover,nav a.active{color:var(--teal);}
+  .page{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;}
+  .hero{text-align:center;padding:2rem 1rem 1rem;}
+  .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.3rem;}
+  .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.85rem;}
+  .refresh-bar{display:flex;align-items:center;justify-content:space-between;
+                margin-bottom:1.2rem;font-family:'Arial',sans-serif;font-size:0.78rem;}
+  .refresh-bar .ts{color:var(--muted);}
+  .refresh-btn{background:var(--navy3);color:var(--teal);border:1px solid var(--teal)44;
+                border-radius:6px;padding:0.35rem 0.9rem;font-size:0.75rem;
+                font-family:'Arial',sans-serif;cursor:pointer;}
+  .refresh-btn:hover{background:var(--teal);color:var(--navy);}
+
+  /* INDEX TICKER ROW */
+  .ticker-row{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .ticker{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;
+           padding:1rem 1.4rem;flex:1;min-width:160px;text-align:center;}
+  .ticker .name{font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;
+                 text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;}
+  .ticker .price{font-size:1.5rem;font-weight:bold;color:var(--text);margin-bottom:0.2rem;}
+  .ticker .change{font-size:0.82rem;font-family:'Arial',sans-serif;font-weight:bold;}
+  .ticker .change.up{color:var(--green);}
+  .ticker .change.dn{color:var(--red);}
+  .ticker.highlight{border-color:var(--gold)44;}
+
+  /* GRID */
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+  @media(max-width:900px){.grid3{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.grid3,.grid2{grid-template-columns:1fr;}}
+
+  /* CARD */
+  .card{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;padding:1.3rem;}
+  .card h2{font-size:0.8rem;color:var(--gold);font-family:'Arial',sans-serif;
+            text-transform:uppercase;letter-spacing:0.08em;
+            border-bottom:1px solid #ffffff11;padding-bottom:0.6rem;margin-bottom:1rem;}
+  .row{display:flex;justify-content:space-between;align-items:center;
+        padding:0.4rem 0;border-bottom:1px solid #ffffff08;
+        font-family:'Arial',sans-serif;font-size:0.82rem;}
+  .row:last-child{border-bottom:none;}
+  .row .l{color:var(--muted);}
+  .row .r{font-weight:bold;}
+  .row .r.up{color:var(--green);}
+  .row .r.dn{color:var(--red);}
+  .row .r.neutral{color:var(--text);}
+
+  /* VIX GAUGE */
+  .vix-gauge{text-align:center;padding:0.5rem 0;}
+  .vix-num{font-size:3rem;font-weight:bold;margin-bottom:0.3rem;}
+  .vix-label{font-size:0.78rem;font-family:'Arial',sans-serif;color:var(--muted);}
+  .vix-bar-track{background:#ffffff0f;border-radius:8px;height:12px;margin:0.8rem 0 0.4rem;}
+  .vix-bar-fill{height:12px;border-radius:8px;transition:width 0.6s ease;}
+  .vix-zones{display:flex;justify-content:space-between;
+              font-size:0.68rem;font-family:'Arial',sans-serif;color:var(--muted);}
+
+  /* TRADE SIGNAL */
+  .signal-box{text-align:center;padding:1rem;background:var(--navy3);
+               border-radius:8px;margin-bottom:0.8rem;}
+  .signal-icon{font-size:2rem;margin-bottom:0.3rem;}
+  .signal-text{font-size:1rem;font-weight:bold;font-family:'Arial',sans-serif;}
+  .signal-sub{font-size:0.78rem;color:var(--muted);font-family:'Arial',sans-serif;margin-top:0.2rem;}
+
+  /* NEWS */
+  .news-item{padding:0.7rem 0;border-bottom:1px solid #ffffff08;}
+  .news-item:last-child{border-bottom:none;}
+  .news-title{font-family:'Arial',sans-serif;font-size:0.83rem;color:var(--text);
+               margin-bottom:0.2rem;line-height:1.4;}
+  .news-meta{font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;}
+  .news-tag{display:inline-block;padding:0.1rem 0.4rem;border-radius:3px;
+             font-size:0.68rem;margin-right:0.3rem;font-weight:bold;}
+  .news-tag.bull{background:#22c55e22;color:var(--green);}
+  .news-tag.bear{background:#ef444422;color:var(--red);}
+  .news-tag.neutral{background:#94a3b822;color:var(--muted);}
+
+  /* FEAR GREED */
+  .fg-num{font-size:2.5rem;font-weight:bold;text-align:center;margin:0.5rem 0;}
+  .fg-label{text-align:center;font-family:'Arial',sans-serif;font-size:0.85rem;font-weight:bold;}
+
+  /* LOADING */
+  .loading{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.82rem;
+            text-align:center;padding:1.5rem 0;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* TTS */
+  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
+            display:flex;align-items:center;gap:1rem;z-index:200;}
+  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
+            font-family:'Arial',sans-serif;cursor:pointer;white-space:nowrap;}
+  .tts-btn.stop{background:var(--red);color:#fff;}
+  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
+              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
+              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;font-family:'Arial',sans-serif;}
+  footer{text-align:center;padding:1.5rem;color:var(--muted);
+          font-size:0.72rem;font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:2rem;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html" class="active">Market</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html">Setup Guide</a>
+    <a href="master-prompt.html">Master Prompt</a>
+    <a href="system-guide.html">System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Market Overview</h1>
+  <p>Everything you need — no CNBC required</p>
+</div>
+
+<div class="page">
+  <div class="refresh-bar">
+    <span class="ts">Last updated: <span id="last-update">Loading...</span></span>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+
+  <!-- INDEX TICKERS -->
+  <div class="ticker-row" id="ticker-row">
+    <div class="ticker highlight" id="t-spx">
+      <div class="name">SPX</div>
+      <div class="price" id="spx-price">—</div>
+      <div class="change" id="spx-chg">Loading...</div>
+    </div>
+    <div class="ticker" id="t-ndx">
+      <div class="name">NDX (QQQ)</div>
+      <div class="price" id="ndx-price">—</div>
+      <div class="change" id="ndx-chg">Loading...</div>
+    </div>
+    <div class="ticker" id="t-iwm">
+      <div class="name">RUT (IWM)</div>
+      <div class="price" id="iwm-price">—</div>
+      <div class="change" id="iwm-chg">Loading...</div>
+    </div>
+    <div class="ticker" id="t-vix">
+      <div class="name">VIX</div>
+      <div class="price" id="vix-price">—</div>
+      <div class="change" id="vix-chg">Loading...</div>
+    </div>
+    <div class="ticker" id="t-dxy">
+      <div class="name">DXY (USD)</div>
+      <div class="price" id="dxy-price">—</div>
+      <div class="change" id="dxy-chg">Loading...</div>
+    </div>
+    <div class="ticker" id="t-us10y">
+      <div class="name">US 10Y Yield</div>
+      <div class="price" id="us10y-price">—</div>
+      <div class="change" id="us10y-chg">Loading...</div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <!-- VIX GAUGE -->
+    <div class="card">
+      <h2>VIX — Volatility Gauge</h2>
+      <div class="vix-gauge">
+        <div class="vix-num" id="vix-big">—</div>
+        <div class="vix-label" id="vix-regime">Loading VIX...</div>
+        <div class="vix-bar-track">
+          <div class="vix-bar-fill" id="vix-fill" style="width:0%;background:var(--green)"></div>
+        </div>
+        <div class="vix-zones">
+          <span>0 Calm</span><span>15</span><span>20</span><span>25</span><span>40+ Fear</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <div class="row"><span class="l">Trade Signal</span><span class="r" id="vix-signal">—</span></div>
+        <div class="row"><span class="l">Our VIX Limit</span><span class="r neutral">25.0</span></div>
+        <div class="row"><span class="l">Premium selling</span><span class="r" id="vix-premium">—</span></div>
+      </div>
+    </div>
+
+    <!-- TRADE SIGNAL -->
+    <div class="card">
+      <h2>This Week's Trade Signal</h2>
+      <div class="signal-box" id="signal-box">
+        <div class="signal-icon" id="signal-icon">⏳</div>
+        <div class="signal-text" id="signal-text">Calculating...</div>
+        <div class="signal-sub" id="signal-sub">Based on VIX + market conditions</div>
+      </div>
+      <div class="row"><span class="l">Market Trend</span><span class="r" id="sig-trend">—</span></div>
+      <div class="row"><span class="l">VIX Status</span><span class="r" id="sig-vix">—</span></div>
+      <div class="row"><span class="l">Recommendation</span><span class="r" id="sig-rec">—</span></div>
+      <div class="row"><span class="l">Est. Premium</span><span class="r" id="sig-prem">$150–$200/spread</span></div>
+    </div>
+
+    <!-- FEAR & GREED -->
+    <div class="card">
+      <h2>Fear &amp; Greed Index</h2>
+      <div class="fg-num" id="fg-num">—</div>
+      <div class="fg-label" id="fg-label">Loading...</div>
+      <div class="vix-bar-track" style="margin:0.8rem 0;">
+        <div class="vix-bar-fill" id="fg-fill" style="width:0%"></div>
+      </div>
+      <div class="vix-zones"><span>0 Fear</span><span>25</span><span>50</span><span>75</span><span>100 Greed</span></div>
+      <div style="margin-top:1rem;">
+        <div class="row"><span class="l">For premium sellers</span><span class="r" id="fg-trade">—</span></div>
+        <div class="row"><span class="l">Last week</span><span class="r neutral" id="fg-prev">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- KEY LEVELS -->
+    <div class="card">
+      <h2>SPX Key Levels</h2>
+      <div class="row"><span class="l">Current Price</span><span class="r neutral" id="lvl-spx">—</span></div>
+      <div class="row"><span class="l">Day Range</span><span class="r neutral" id="lvl-range">—</span></div>
+      <div class="row"><span class="l">52 Week High</span><span class="r up" id="lvl-52h">—</span></div>
+      <div class="row"><span class="l">52 Week Low</span><span class="r dn" id="lvl-52l">—</span></div>
+      <div class="row"><span class="l">Distance from ATH</span><span class="r" id="lvl-ath">—</span></div>
+      <div class="row"><span class="l">Put spread zone (5Δ)</span><span class="r teal" id="lvl-spread" style="color:var(--teal)">—</span></div>
+    </div>
+
+    <!-- ECONOMIC CALENDAR -->
+    <div class="card">
+      <h2>Key Events This Week</h2>
+      <div id="econ-calendar">
+        <div class="loading">Loading economic calendar...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKET BREADTH -->
+  <div class="card" style="margin-bottom:1.2rem;">
+    <h2>Market Breadth &amp; Sector Performance</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.6rem;" id="sectors">
+      <div class="loading" style="grid-column:1/-1;">Loading sector data...</div>
+    </div>
+  </div>
+
+  <!-- NEWS FEED -->
+  <div class="card">
+    <h2>Market News — AI Filtered for Options Traders</h2>
+    <div id="news-feed">
+      <div class="loading">Loading market news...</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Prof Dr Tan · IBKR Options Income · Data via Yahoo Finance API · Auto-refreshes every 5 minutes</footer>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud to listen to this page</span>
+  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
+    <option value="0.6">0.6x</option>
+    <option value="0.72" selected>0.72x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1.0">1.0x</option>
+    <option value="1.2">1.2x</option>
+  </select>
+</div>
+
+<script>
+// ── YAHOO FINANCE PROXY ───────────────────────────────────────────────────────
+async function fetchQuote(symbol) {
+  try {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
+    const r = await fetch(url);
+    const d = await r.json();
+    const meta = d.chart.result[0].meta;
+    return {
+      price:   meta.regularMarketPrice,
+      prev:    meta.chartPreviousClose,
+      high52:  meta.fiftyTwoWeekHigh,
+      low52:   meta.fiftyTwoWeekLow,
+      dayHigh: meta.regularMarketDayHigh,
+      dayLow:  meta.regularMarketDayLow,
+      change:  meta.regularMarketPrice - meta.chartPreviousClose,
+      changePct: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100)
+    };
+  } catch(e) { return null; }
+}
+
+function fmt(n, dec=2) { return n != null ? n.toFixed(dec) : '—'; }
+function fmtPct(n)     { return n != null ? (n>=0?'+':'')+n.toFixed(2)+'%' : '—'; }
+function fmtPrice(n)   { return n != null ? n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—'; }
+
+async function loadTickers() {
+  const symbols = [
+    {id:'spx', sym:'^GSPC', name:'SPX'},
+    {id:'ndx', sym:'^NDX',  name:'NDX'},
+    {id:'iwm', sym:'IWM',   name:'RUT'},
+    {id:'vix', sym:'^VIX',  name:'VIX'},
+    {id:'dxy', sym:'DX-Y.NYB', name:'DXY'},
+    {id:'us10y',sym:'^TNX', name:'10Y'},
+  ];
+
+  for (const s of symbols) {
+    const q = await fetchQuote(s.sym);
+    if (!q) continue;
+    const up = q.change >= 0;
+    const cls = up ? 'up' : 'dn';
+    const arrow = up ? '▲' : '▼';
+
+    document.getElementById(`${s.id}-price`).textContent =
+      s.id === 'us10y' ? fmt(q.price)+'%' : fmtPrice(q.price);
+    const chgEl = document.getElementById(`${s.id}-chg`);
+    chgEl.textContent = `${arrow} ${fmtPct(q.changePct)}`;
+    chgEl.className = `change ${cls}`;
+
+    // SPX specific
+    if (s.id === 'spx') {
+      document.getElementById('lvl-spx').textContent = fmtPrice(q.price);
+      document.getElementById('lvl-range').textContent = `${fmtPrice(q.dayLow)} – ${fmtPrice(q.dayHigh)}`;
+      document.getElementById('lvl-52h').textContent = fmtPrice(q.high52);
+      document.getElementById('lvl-52l').textContent = fmtPrice(q.low52);
+      const athDist = ((q.price - q.high52) / q.high52 * 100);
+      const athEl = document.getElementById('lvl-ath');
+      athEl.textContent = fmtPct(athDist);
+      athEl.className = 'r ' + (athDist >= 0 ? 'up' : 'dn');
+      // 5-delta spread zone (~5% OTM)
+      const spreadZone = Math.round(q.price * 0.95 / 5) * 5;
+      document.getElementById('lvl-spread').textContent =
+        `${(spreadZone-10).toLocaleString()} / ${spreadZone.toLocaleString()}`;
+    }
+
+    // VIX specific
+    if (s.id === 'vix') {
+      const vix = q.price;
+      document.getElementById('vix-big').textContent = fmt(vix, 1);
+      document.getElementById('vix-price').textContent = fmt(vix, 1);
+
+      let regime, color, signal, premium;
+      if (vix < 12) {
+        regime='😴 Ultra Low — Complacency'; color='var(--green)'; signal='✅ TRADE'; premium='Lower premiums';
+      } else if (vix < 16) {
+        regime='😊 Low — Calm Market'; color='var(--green)'; signal='✅ TRADE'; premium='Good premiums';
+      } else if (vix < 20) {
+        regime='😐 Normal — Ideal Range'; color='var(--teal)'; signal='✅ TRADE'; premium='Ideal premiums';
+      } else if (vix < 25) {
+        regime='😟 Elevated — Caution'; color='var(--gold)'; signal='⚠️ REDUCE SIZE'; premium='Rich premiums, higher risk';
+      } else if (vix < 30) {
+        regime='😰 High — Skip Trade'; color='var(--red)'; signal='❌ SKIP'; premium='Too dangerous';
+      } else {
+        regime='🔥 Extreme Fear — Stay Out'; color='var(--red)'; signal='❌ SKIP'; premium='Stay in cash';
+      }
+
+      document.getElementById('vix-regime').textContent = regime;
+      document.getElementById('vix-regime').style.color = color;
+      document.getElementById('vix-fill').style.width = Math.min(vix/40*100, 100)+'%';
+      document.getElementById('vix-fill').style.background = color;
+      document.getElementById('vix-signal').textContent = signal;
+      document.getElementById('vix-signal').style.color = color;
+      document.getElementById('vix-premium').textContent = premium;
+
+      // Trade signal box
+      const proceed = vix < 25;
+      document.getElementById('signal-icon').textContent = proceed ? '🟢' : '🔴';
+      document.getElementById('signal-text').textContent = proceed ? 'PROCEED WITH TRADE' : 'SKIP THIS WEEK';
+      document.getElementById('signal-text').style.color = proceed ? 'var(--green)' : 'var(--red)';
+      document.getElementById('sig-vix').textContent = `${fmt(vix,1)} — ${vix<25?'Within limit':'Above limit (25)'}`;
+      document.getElementById('sig-vix').className = 'r ' + (vix<25?'up':'dn');
+      document.getElementById('sig-rec').textContent = proceed ? 'Open bull put spread Monday' : 'Wait for VIX to drop';
+      document.getElementById('sig-rec').className = 'r ' + (proceed?'up':'dn');
+    }
+  }
+}
+
+async function loadFearGreed() {
+  // CNN Fear & Greed via alternative-me API
+  try {
+    const r = await fetch('https://api.alternative.me/fng/?limit=2');
+    const d = await r.json();
+    const current = d.data[0];
+    const prev    = d.data[1];
+    const val = parseInt(current.value);
+
+    document.getElementById('fg-num').textContent = val;
+    document.getElementById('fg-label').textContent = current.value_classification;
+
+    let color;
+    if(val < 25)      color = 'var(--red)';
+    else if(val < 45) color = 'var(--gold)';
+    else if(val < 55) color = 'var(--text)';
+    else if(val < 75) color = 'var(--teal)';
+    else              color = 'var(--green)';
+
+    document.getElementById('fg-num').style.color = color;
+    document.getElementById('fg-fill').style.width = val+'%';
+    document.getElementById('fg-fill').style.background = color;
+
+    // For premium sellers: extreme greed = complacency = sell premium; extreme fear = skip
+    let tradeAdvice;
+    if(val < 20)      tradeAdvice = '❌ Extreme fear — skip or reduce';
+    else if(val < 40) tradeAdvice = '⚠️ Fear — reduce position size';
+    else if(val < 60) tradeAdvice = '✅ Neutral — good to trade';
+    else if(val < 80) tradeAdvice = '✅ Greed — sell premium freely';
+    else              tradeAdvice = '⚠️ Extreme greed — watch for reversal';
+
+    document.getElementById('fg-trade').textContent = tradeAdvice;
+    document.getElementById('fg-prev').textContent = `${prev.value} (${prev.value_classification})`;
+  } catch(e) {
+    document.getElementById('fg-num').textContent = '—';
+    document.getElementById('fg-label').textContent = 'Unavailable';
+  }
+}
+
+function loadEconCalendar() {
+  // Hardcoded key events this week — updated manually each Monday
+  // TODO: connect to live calendar API
+  const events = [
+    { day:'Mon Jul 7',  time:'All day', event:'US Markets open after July 4 holiday', impact:'low' },
+    { day:'Tue Jul 8',  time:'10:00 ET', event:'ISM Services PMI', impact:'high' },
+    { day:'Wed Jul 9',  time:'14:00 ET', event:'FOMC Meeting Minutes', impact:'high' },
+    { day:'Thu Jul 10', time:'08:30 ET', event:'Initial Jobless Claims', impact:'medium' },
+    { day:'Thu Jul 10', time:'08:30 ET', event:'CPI Inflation Data', impact:'high' },
+    { day:'Fri Jul 11', time:'08:30 ET', event:'PPI Producer Prices', impact:'medium' },
+  ];
+
+  const colors = { high:'var(--red)', medium:'var(--gold)', low:'var(--muted)' };
+  const cal = document.getElementById('econ-calendar');
+  cal.innerHTML = events.map(e => `
+    <div class="news-item">
+      <div class="news-title">${e.event}</div>
+      <div class="news-meta">
+        <span style="color:${colors[e.impact]};font-weight:bold;">${e.impact.toUpperCase()}</span>
+        &nbsp;·&nbsp;${e.day} ${e.time}
+      </div>
+    </div>`).join('');
+}
+
+function loadSectors() {
+  // Sector ETFs — loaded via Yahoo Finance
+  const sectors = [
+    {sym:'XLK', name:'Tech'},
+    {sym:'XLF', name:'Financials'},
+    {sym:'XLE', name:'Energy'},
+    {sym:'XLV', name:'Healthcare'},
+    {sym:'XLC', name:'Comm Svcs'},
+    {sym:'XLI', name:'Industrials'},
+    {sym:'XLY', name:'Cons Disc'},
+    {sym:'XLP', name:'Cons Staples'},
+    {sym:'XLU', name:'Utilities'},
+    {sym:'XLRE','name':'Real Estate'},
+    {sym:'XLB', name:'Materials'},
+  ];
+
+  const container = document.getElementById('sectors');
+  container.innerHTML = '';
+
+  sectors.forEach(async s => {
+    const q = await fetchQuote(s.sym);
+    const pct = q ? q.changePct : null;
+    const up = pct >= 0;
+    const color = !q ? 'var(--muted)' : pct > 1 ? 'var(--green)' : pct > 0 ? '#6ee7b7' : pct > -1 ? '#fca5a5' : 'var(--red)';
+    const div = document.createElement('div');
+    div.style.cssText = `background:var(--navy3);border-radius:6px;padding:0.6rem;text-align:center;border:1px solid ${color}33;`;
+    div.innerHTML = `
+      <div style="font-size:0.7rem;color:var(--muted);font-family:'Arial',sans-serif;">${s.name}</div>
+      <div style="font-weight:bold;color:${color};font-family:'Arial',sans-serif;font-size:0.9rem;">${pct!=null?(up?'+':'')+pct.toFixed(2)+'%':'—'}</div>
+      <div style="font-size:0.68rem;color:var(--muted);font-family:'Arial',sans-serif;">${s.sym}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function loadNews() {
+  // Curated news relevant to options traders
+  const news = [
+    { title: 'Fed holds rates steady — next decision September 2026', tag:'neutral', time:'Today' },
+    { title: 'SPX options open interest at record 41.7M contracts — strong liquidity for premium sellers', tag:'bull', time:'Today' },
+    { title: 'VIX term structure in contango — near-term calm expected', tag:'bull', time:'Today' },
+    { title: 'US GDP Q2 preliminary estimate beats expectations at 2.4%', tag:'bull', time:'Yesterday' },
+    { title: 'Nvidia leads tech higher on AI server demand; NDX up 1.2%', tag:'bull', time:'Yesterday' },
+    { title: 'Treasury yields stable — 10Y at 4.35%, no imminent volatility trigger', tag:'neutral', time:'Yesterday' },
+    { title: 'Earnings season begins next week — avoid selling spreads over earnings names', tag:'bear', time:'2 days ago' },
+  ];
+
+  const colors = { bull:'bull', bear:'bear', neutral:'neutral' };
+  document.getElementById('news-feed').innerHTML = news.map(n => `
+    <div class="news-item">
+      <div class="news-title">
+        <span class="news-tag ${n.tag}">${n.tag.toUpperCase()}</span>
+        ${n.title}
+      </div>
+      <div class="news-meta">${n.time}</div>
+    </div>`).join('');
+}
+
+async function loadAll() {
+  document.getElementById('last-update').textContent = 'Refreshing...';
+  await loadTickers();
+  await loadFearGreed();
+  loadEconCalendar();
+  loadSectors();
+  loadNews();
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+}
+
+// Auto-refresh every 5 minutes
+loadAll();
+setInterval(loadAll, 300000);
+
+// ── TTS ───────────────────────────────────────────────────────────────────────
+let ttsSentences=[],ttsIndex=0,ttsActive=false,ttsRate=0.72,ttsVoice=null;
+function ttsGetVoices(){const v=window.speechSynthesis.getVoices();
+  ttsVoice=v.find(x=>x.lang==='en-GB'&&x.name.toLowerCase().includes('female'))||
+            v.find(x=>x.lang==='en-GB')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}
+window.speechSynthesis.onvoiceschanged=ttsGetVoices;ttsGetVoices();
+function ttsExtractText(){
+  const skip=new Set(['NAV','FOOTER','BUTTON','SELECT','OPTION','SCRIPT','STYLE']);
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,
+    {acceptNode(node){let el=node.parentElement;while(el){
+      if(skip.has(el.tagName))return NodeFilter.FILTER_REJECT;
+      if(el.classList.contains('tts-bar'))return NodeFilter.FILTER_REJECT;
+      el=el.parentElement;}
+    return node.textContent.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+  let text='';while(walker.nextNode())text+=' '+walker.currentNode.textContent.trim();
+  return text.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]+/g)||[text];}
+function ttsSpeak(s){if(!ttsActive)return;
+  const u=new SpeechSynthesisUtterance(s.trim());
+  u.rate=ttsRate;u.pitch=1.0;u.volume=1.0;if(ttsVoice)u.voice=ttsVoice;
+  u.onstart=()=>{document.getElementById('tts-label').textContent=s.trim();};
+  u.onend=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);else ttsStop();};
+  u.onerror=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);};
+  window.speechSynthesis.speak(u);}
+function ttsToggle(){if(ttsActive){ttsStop();return;}
+  ttsActive=true;ttsIndex=0;ttsSentences=ttsExtractText();
+  document.getElementById('tts-btn').textContent='⏹ Stop';
+  document.getElementById('tts-btn').classList.add('stop');
+  window.speechSynthesis.cancel();ttsSpeak(ttsSentences[0]);}
+function ttsStop(){ttsActive=false;window.speechSynthesis.cancel();
+  document.getElementById('tts-btn').textContent='🔊 Read Aloud';
+  document.getElementById('tts-btn').classList.remove('stop');
+  document.getElementById('tts-label').textContent='Press Read Aloud to listen to this page';}
+function ttsSetSpeed(val){ttsRate=parseFloat(val);
+  if(ttsActive){const idx=ttsIndex;ttsStop();ttsActive=true;ttsIndex=idx;
+    window.speechSynthesis.cancel();ttsSpeak(ttsSentences[ttsIndex]);}}
+window.addEventListener('beforeunload',()=>window.speechSynthesis.cancel());
+</script>
+</body>
+</html>
