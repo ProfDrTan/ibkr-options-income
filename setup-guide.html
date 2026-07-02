@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup Guide | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:#0a0e1a;--navy2:#111827;--navy3:#1e2a3a;
+    --gold:#c9a84c;--teal:#2dd4bf;--green:#22c55e;
+    --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;min-height:100vh;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 2rem;height:60px;position:sticky;top:0;z-index:100;}
+  nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
+  nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a:hover,nav a.active{color:var(--teal);}
+  .page{max-width:1000px;margin:0 auto;padding:2rem;}
+  .hero{text-align:center;padding:2.5rem 1rem 1.5rem;}
+  .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.4rem;}
+  .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.88rem;}
+  .card{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;padding:1.5rem;margin-bottom:1.2rem;}
+  .card h2{font-size:0.85rem;color:var(--gold);font-family:'Arial',sans-serif;
+            text-transform:uppercase;letter-spacing:0.08em;
+            border-bottom:1px solid #ffffff11;padding-bottom:0.7rem;margin-bottom:1.2rem;}
+  .step{display:flex;gap:1.2rem;padding:1rem 0;border-bottom:1px solid #ffffff08;}
+  .step:last-child{border-bottom:none;}
+  .step-num{background:var(--teal);color:var(--navy);border-radius:50%;
+             width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+             font-weight:bold;font-family:'Arial',sans-serif;font-size:0.85rem;
+             flex-shrink:0;margin-top:0.1rem;}
+  .step-content{flex:1;}
+  .step-title{color:var(--gold);font-family:'Arial',sans-serif;font-size:0.9rem;
+               font-weight:bold;margin-bottom:0.4rem;}
+  .step-desc{color:var(--text);font-family:'Arial',sans-serif;font-size:0.83rem;line-height:1.7;}
+  .code{background:var(--navy3);border:1px solid #ffffff11;border-radius:6px;
+         padding:0.7rem 1rem;font-family:'Courier New',monospace;font-size:0.8rem;
+         color:var(--teal);margin:0.5rem 0;line-height:1.6;}
+  .done{display:inline-block;background:#22c55e22;color:var(--green);
+         border:1px solid #22c55e44;border-radius:4px;padding:0.1rem 0.5rem;
+         font-size:0.72rem;font-family:'Arial',sans-serif;margin-left:0.5rem;}
+  .pending{display:inline-block;background:#c9a84c22;color:var(--gold);
+            border:1px solid #c9a84c44;border-radius:4px;padding:0.1rem 0.5rem;
+            font-size:0.72rem;font-family:'Arial',sans-serif;margin-left:0.5rem;}
+  .note{background:#c9a84c0d;border-left:3px solid var(--gold);
+         padding:0.9rem 1.1rem;border-radius:0 6px 6px 0;margin:1rem 0;
+         font-family:'Arial',sans-serif;font-size:0.83rem;color:var(--text);line-height:1.6;}
+  .section-title{color:var(--teal);font-size:0.8rem;font-family:'Arial',sans-serif;
+                  text-transform:uppercase;letter-spacing:0.08em;
+                  margin:2rem 0 1rem;border-bottom:1px solid #ffffff11;padding-bottom:0.5rem;}
+  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
+            display:flex;align-items:center;gap:1rem;z-index:200;}
+  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
+            font-family:'Arial',sans-serif;cursor:pointer;letter-spacing:0.05em;white-space:nowrap;}
+  .tts-btn.stop{background:var(--red);color:#fff;}
+  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
+              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
+              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;font-family:'Arial',sans-serif;}
+  body{padding-bottom:60px;}
+  footer{text-align:center;padding:2rem;color:var(--muted);
+          font-size:0.72rem;font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:3rem;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html" class="active">Setup Guide</a>
+    <a href="master-prompt.html" >Master Prompt</a>
+    <a href="system-guide.html" >System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Setup Guide</h1>
+  <p>Complete step-by-step guide to replicate this system — from zero to automated income</p>
+</div>
+
+<div class="page">
+
+  <div class="note">
+    📖 This guide documents exactly how Prof Dr Tan built this system. Every step is reproducible
+    by any working professional with zero prior trading or coding experience.
+    Estimated total setup time: <strong style="color:var(--teal)">under 2 hours.</strong>
+  </div>
+
+  <div class="section-title">Phase 1 — Brokerage Account Setup</div>
+  <div class="card">
+    <h2>Step 1 — Open an IBKR Account</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Go to interactivebrokers.com and open an individual account <span class="done">✅ Done</span></div>
+        <div class="step-desc">Choose Individual account type. Fund with minimum USD 10,000 for meaningful income.
+        Prof Dr Tan's account: U10500387 with Net Liquidation ~USD 471K.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Request Options Trading Level 3 <span class="done">✅ Done</span></div>
+        <div class="step-desc">Go to Client Portal → Settings → Trading Permissions → Options → Request Level 3.
+        Level 3 unlocks spreads (bull put spreads, iron condors). This is what we use.
+        Approval typically takes 1-2 business days.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Enable TWS API <span class="done">✅ Done</span></div>
+        <div class="step-desc">Open Trader Workstation (TWS) → Edit → Global Configuration → API → Settings.
+        Check: Enable ActiveX and Socket Clients. Uncheck: Read-Only API. Socket port: 7496.
+        Click Apply → OK. This allows the algorithm to place orders automatically.</div>
+        <div class="code">TWS → Edit → Global Configuration → API → Settings
+☑ Enable ActiveX and Socket Clients
+☐ Read-Only API (must be UNCHECKED)
+Socket port: 7496
+→ Apply → OK</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Phase 2 — Telegram Alert Bot</div>
+  <div class="card">
+    <h2>Step 2 — Create Your Trading Alert Bot</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Open Telegram and find @BotFather <span class="done">✅ Done</span></div>
+        <div class="step-desc">Search for @BotFather (blue verified checkmark). Tap it and send /newbot.
+        Give your bot a name and username ending in _bot.</div>
+        <div class="code">Search: @BotFather (verified ✓)
+Send: /newbot
+Name: IBKR Options Income
+Username: ibkr_options_yourname_bot
+→ Copy the token BotFather gives you</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Get your Chat ID <span class="done">✅ Done</span></div>
+        <div class="step-desc">Search for your new bot in Telegram and send it any message (e.g. "hello").
+        Then open this URL in your browser — replacing TOKEN with your bot token:</div>
+        <div class="code">https://api.telegram.org/botTOKEN/getUpdates
+→ Find chat id: YOUR_CHAT_ID
+→ Copy that number</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Add secrets to GitHub <span class="done">✅ Done</span></div>
+        <div class="step-desc">Go to your GitHub repo → Settings → Secrets and variables → Actions → New repository secret.</div>
+        <div class="code">Name: TELEGRAM_BOT_TOKEN  Value: your_bot_token
+Name: TELEGRAM_CHAT_ID   Value: your_chat_id</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Phase 3 — GitHub Repository & Website</div>
+  <div class="card">
+    <h2>Step 3 — Deploy the System</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Fork or clone this repository <span class="done">✅ Done</span></div>
+        <div class="step-desc">Go to github.com/ProfDrTan/ibkr-options-income and fork it to your own GitHub account.
+        This gives you all the algorithm code, GitHub Actions schedules, and website files.</div>
+        <div class="code">github.com/ProfDrTan/ibkr-options-income
+→ Fork → your-username/ibkr-options-income</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Enable GitHub Pages <span class="done">✅ Done</span></div>
+        <div class="step-desc">Go to your forked repo → Settings → Pages → Deploy from branch → main / (root) → Save.
+        Your website will be live at: your-username.github.io/ibkr-options-income</div>
+        <div class="code">Repo → Settings → Pages
+Source: Deploy from branch
+Branch: main  /  (root)
+→ Save</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Update config.py with your IBKR account number</div>
+        <div class="step-desc">Edit config.py in your repo and replace U10500387 with your own IBKR account number.
+        Also set your preferred number of spreads and risk parameters.</div>
+        <div class="code">IBKR_ACCOUNT = "YOUR_ACCOUNT_NUMBER"
+NUM_SPREADS  = 5   # start conservative
+MAX_TOTAL_RISK = 5000  # USD</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Phase 4 — First Trade</div>
+  <div class="card">
+    <h2>Step 4 — Paper Trade First, Then Go Live</h2>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Paper trade for 2 weeks first</div>
+        <div class="step-desc">Change IBKR_PORT to 7497 in config.py to connect to the paper trading account.
+        Run the exact same algorithm. Watch the recommendations and outcomes for 2 weeks
+        before switching to live trading. This builds confidence and catches any issues.</div>
+        <div class="code">config.py → IBKR_PORT = 7497  # paper trading
+After 2 weeks → IBKR_PORT = 7496  # live trading</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Monday morning — approve your first trade</div>
+        <div class="step-desc">Every Monday at 09:35 ET, you receive a Telegram alert with the week's SPX Bull Put Spread recommendation.
+        Open your website dashboard, review the trade details and intel scores, then tap APPROVE.
+        The algorithm executes on IBKR and sends a confirmation when filled.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Income target — moderate profile</div>
+        <div class="step-desc">10 spreads × ~$175 credit = ~$1,750 gross per week. That is approximately $7,000/month
+        on roughly $10,000 capital at risk. The system closes at 50% profit mid-week whenever possible,
+        freeing capital for the following week. All positions are closed by Thursday to avoid weekend risk.</div>
+        <div class="code">Weekly target:  ~$875 (50% profit capture)
+Monthly target: ~$3,500
+Annual target:  ~$42,000
+Capital at risk: ~$10,000/week (10 × $1,000)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Setup Checklist</div>
+  <div class="card">
+    <h2>Your Progress</h2>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">IBKR account opened and funded <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">Options Level 3 approved <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">TWS API enabled, Read-Only unchecked, port 7496 <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">Telegram bot created and Chat ID confirmed <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">GitHub repo live with all algorithm files <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">GitHub Secrets added (TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID) <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num" style="background:var(--green)">✓</div>
+      <div class="step-content"><div class="step-title">Website live at profdrtan.github.io/ibkr-options-income <span class="done">✅</span></div></div></div>
+    <div class="step"><div class="step-num">8</div>
+      <div class="step-content"><div class="step-title">First Monday alert received and trade approved <span class="pending">MONDAY</span></div></div></div>
+    <div class="step"><div class="step-num">9</div>
+      <div class="step-content"><div class="step-title">First trade executed on IBKR <span class="pending">MONDAY</span></div></div></div>
+  </div>
+
+</div>
+
+<footer>Prof Dr Tan · IBKR Options Income System · profdrtan.github.io/ibkr-options-income</footer>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud to listen to this page</span>
+  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
+    <option value="0.6">0.6x</option>
+    <option value="0.72" selected>0.72x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1.0">1.0x</option>
+    <option value="1.2">1.2x</option>
+  </select>
+</div>
+<script>
+let ttsSentences=[],ttsIndex=0,ttsActive=false,ttsRate=0.72,ttsVoice=null;
+function ttsGetVoices(){const v=window.speechSynthesis.getVoices();
+  ttsVoice=v.find(x=>x.lang==='en-GB'&&x.name.toLowerCase().includes('female'))||
+            v.find(x=>x.lang==='en-GB')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}
+window.speechSynthesis.onvoiceschanged=ttsGetVoices;ttsGetVoices();
+function ttsExtractText(){
+  const skip=new Set(['NAV','FOOTER','BUTTON','SELECT','OPTION','SCRIPT','STYLE']);
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,
+    {acceptNode(node){let el=node.parentElement;while(el){
+      if(skip.has(el.tagName))return NodeFilter.FILTER_REJECT;
+      if(el.classList.contains('tts-bar'))return NodeFilter.FILTER_REJECT;
+      el=el.parentElement;}
+    return node.textContent.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+  let text='';while(walker.nextNode())text+=' '+walker.currentNode.textContent.trim();
+  return text.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]+/g)||[text];}
+function ttsSpeak(s){if(!ttsActive)return;
+  const u=new SpeechSynthesisUtterance(s.trim());
+  u.rate=ttsRate;u.pitch=1.0;u.volume=1.0;if(ttsVoice)u.voice=ttsVoice;
+  u.onstart=()=>{document.getElementById('tts-label').textContent=s.trim();};
+  u.onend=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);else ttsStop();};
+  u.onerror=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);};
+  window.speechSynthesis.speak(u);}
+function ttsToggle(){if(ttsActive){ttsStop();return;}
+  ttsActive=true;ttsIndex=0;ttsSentences=ttsExtractText();
+  document.getElementById('tts-btn').textContent='⏹ Stop';
+  document.getElementById('tts-btn').classList.add('stop');
+  window.speechSynthesis.cancel();ttsSpeak(ttsSentences[0]);}
+function ttsStop(){ttsActive=false;window.speechSynthesis.cancel();
+  document.getElementById('tts-btn').textContent='🔊 Read Aloud';
+  document.getElementById('tts-btn').classList.remove('stop');
+  document.getElementById('tts-label').textContent='Press Read Aloud to listen to this page';}
+function ttsSetSpeed(val){ttsRate=parseFloat(val);
+  if(ttsActive){const idx=ttsIndex;ttsStop();ttsActive=true;ttsIndex=idx;
+    window.speechSynthesis.cancel();ttsSpeak(ttsSentences[ttsIndex]);}}
+window.addEventListener('beforeunload',()=>window.speechSynthesis.cancel());
+</script>
+</body>
+</html>
