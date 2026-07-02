@@ -285,22 +285,29 @@
 <script>
 // ── YAHOO FINANCE PROXY ───────────────────────────────────────────────────────
 async function fetchQuote(symbol) {
-  try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
-    const r = await fetch(url);
-    const d = await r.json();
-    const meta = d.chart.result[0].meta;
-    return {
-      price:   meta.regularMarketPrice,
-      prev:    meta.chartPreviousClose,
-      high52:  meta.fiftyTwoWeekHigh,
-      low52:   meta.fiftyTwoWeekLow,
-      dayHigh: meta.regularMarketDayHigh,
-      dayLow:  meta.regularMarketDayLow,
-      change:  meta.regularMarketPrice - meta.chartPreviousClose,
-      changePct: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100)
-    };
-  } catch(e) { return null; }
+  // Try multiple CORS-friendly proxies
+  const proxies = [
+    `https://corsproxy.io/?url=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`)}`,
+  ];
+  for (const url of proxies) {
+    try {
+      const r = await fetch(url);
+      const d = await r.json();
+      const meta = d.chart.result[0].meta;
+      return {
+        price:     meta.regularMarketPrice,
+        prev:      meta.chartPreviousClose,
+        high52:    meta.fiftyTwoWeekHigh,
+        low52:     meta.fiftyTwoWeekLow,
+        dayHigh:   meta.regularMarketDayHigh,
+        dayLow:    meta.regularMarketDayLow,
+        change:    meta.regularMarketPrice - meta.chartPreviousClose,
+        changePct: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100)
+      };
+    } catch(e) { continue; }
+  }
+  return null;
 }
 
 function fmt(n, dec=2) { return n != null ? n.toFixed(dec) : '—'; }
