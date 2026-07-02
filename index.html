@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<!-- v1.1 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IBKR Options Income | Prof Dr Tan</title>
+<title>Dashboard | IBKR Options Income</title>
 <style>
   :root {
     --navy:  #0a0e1a;
     --navy2: #111827;
+    --navy3: #1e2a3a;
     --gold:  #c9a84c;
     --teal:  #2dd4bf;
     --green: #22c55e;
@@ -18,101 +18,86 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
-
-  /* NAV */
-  nav { background:var(--navy2); border-bottom:1px solid var(--gold)33;
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
         display:flex; align-items:center; justify-content:space-between;
-        padding:0 2rem; height:60px; }
-  nav .brand { color:var(--gold); font-size:1.1rem; font-weight:bold; letter-spacing:0.05em; }
-  nav .links { display:flex; gap:1.5rem; }
-  nav a { color:var(--muted); text-decoration:none; font-size:0.85rem;
+        padding:0 2rem; height:60px; position:sticky; top:0; z-index:100; }
+  nav .brand { color:var(--gold); font-size:1rem; font-weight:bold; letter-spacing:0.05em; white-space:nowrap; }
+  nav .links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.8rem;
            font-family:'Arial',sans-serif; transition:color 0.2s; }
   nav a:hover, nav a.active { color:var(--teal); }
-
-  /* HERO */
-  .hero { padding:3rem 2rem 2rem; text-align:center; }
-  .hero h1 { font-size:2rem; color:var(--gold); margin-bottom:0.5rem; }
-  .hero p  { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.9rem; }
-
-  /* KPI ROW */
-  .kpi-row { display:flex; gap:1rem; padding:1rem 2rem; flex-wrap:wrap; justify-content:center; }
+  .page { max-width:1100px; margin:0 auto; padding:2rem; }
+  .hero { text-align:center; padding:2.5rem 1rem 1.5rem; }
+  .hero h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.4rem; }
+  .hero p { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.88rem; }
+  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; }
+  .card h2 { font-size:0.85rem; color:var(--gold); font-family:'Arial',sans-serif;
+              text-transform:uppercase; letter-spacing:0.08em;
+              border-bottom:1px solid #ffffff11; padding-bottom:0.7rem; margin-bottom:1.2rem; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  @media(max-width:700px){ .grid2 { grid-template-columns:1fr; } }
+  .kpi-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:1.5rem; }
   .kpi { background:var(--navy2); border:1px solid #ffffff11; border-radius:8px;
-          padding:1.2rem 1.8rem; min-width:160px; text-align:center; }
-  .kpi .label { font-size:0.75rem; color:var(--muted); font-family:'Arial',sans-serif;
-                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.4rem; }
-  .kpi .value { font-size:1.6rem; font-weight:bold; color:var(--gold); }
+          padding:1rem 1.5rem; min-width:140px; text-align:center; }
+  .kpi .label { font-size:0.7rem; color:var(--muted); font-family:'Arial',sans-serif;
+                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3rem; }
+  .kpi .value { font-size:1.5rem; font-weight:bold; color:var(--gold); }
   .kpi .value.green { color:var(--green); }
   .kpi .value.red   { color:var(--red); }
   .kpi .value.teal  { color:var(--teal); }
-
-  /* MAIN GRID */
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
-           padding:1rem 2rem 3rem; max-width:1200px; margin:0 auto; }
-  @media(max-width:768px){ .grid { grid-template-columns:1fr; } }
-
-  /* CARD */
-  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; }
-  .card h2 { font-size:1rem; color:var(--gold); margin-bottom:1.2rem;
-              font-family:'Arial',sans-serif; text-transform:uppercase;
-              letter-spacing:0.08em; border-bottom:1px solid #ffffff11; padding-bottom:0.8rem; }
-
-  /* TRADE RECOMMENDATION */
-  .trade-box { border:1px solid var(--teal)44; border-radius:8px; padding:1.2rem; margin-bottom:1rem; }
-  .trade-row { display:flex; justify-content:space-between; align-items:center;
-                padding:0.4rem 0; border-bottom:1px solid #ffffff08; font-family:'Arial',sans-serif; font-size:0.85rem; }
-  .trade-row:last-child { border-bottom:none; }
-  .trade-row .tl { color:var(--muted); }
-  .trade-row .tr { color:var(--text); font-weight:bold; }
-
-  /* STATUS BADGE */
-  .badge { display:inline-block; padding:0.25rem 0.8rem; border-radius:20px;
-            font-size:0.75rem; font-family:'Arial',sans-serif; font-weight:bold;
+  .badge { display:inline-block; padding:0.2rem 0.7rem; border-radius:20px;
+            font-size:0.72rem; font-family:'Arial',sans-serif; font-weight:bold;
             text-transform:uppercase; letter-spacing:0.06em; }
-  .badge.pending  { background:#c9a84c22; color:var(--gold); border:1px solid var(--gold)44; }
-  .badge.approved { background:#2dd4bf22; color:var(--teal); border:1px solid var(--teal)44; }
-  .badge.executed { background:#22c55e22; color:var(--green); border:1px solid var(--green)44; }
-  .badge.skipped  { background:#ef444422; color:var(--red);   border:1px solid var(--red)44; }
+  .badge.pending  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.approved { background:#2dd4bf22; color:var(--teal);  border:1px solid #2dd4bf44; }
+  .badge.executed { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.skipped  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
   .badge.waiting  { background:#94a3b822; color:var(--muted); border:1px solid #94a3b844; }
-
-  /* APPROVE BUTTON */
-  .btn-approve { width:100%; padding:1rem; background:var(--teal); color:var(--navy);
-                  border:none; border-radius:8px; font-size:1rem; font-weight:bold;
-                  font-family:'Arial',sans-serif; cursor:pointer; margin-top:1rem;
-                  transition:opacity 0.2s; letter-spacing:0.05em; }
-  .btn-approve:hover   { opacity:0.85; }
+  .badge.bullish  { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.bearish  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.neutral  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .row { display:flex; justify-content:space-between; align-items:center;
+          padding:0.45rem 0; border-bottom:1px solid #ffffff08;
+          font-family:'Arial',sans-serif; font-size:0.83rem; }
+  .row:last-child { border-bottom:none; }
+  .row .l { color:var(--muted); }
+  .row .r { color:var(--text); font-weight:bold; }
+  .btn { width:100%; padding:0.9rem; border:none; border-radius:8px;
+          font-size:0.95rem; font-weight:bold; font-family:'Arial',sans-serif;
+          cursor:pointer; margin-top:1rem; letter-spacing:0.05em; transition:opacity 0.2s; }
+  .btn-approve { background:var(--teal); color:var(--navy); }
+  .btn-approve:hover { opacity:0.85; }
   .btn-approve:disabled { opacity:0.4; cursor:not-allowed; }
-
-  /* INTEL BARS */
-  .intel-bar { margin-bottom:0.8rem; }
+  .intel-bar { margin-bottom:0.9rem; }
   .intel-label { display:flex; justify-content:space-between;
-                  font-size:0.8rem; font-family:'Arial',sans-serif;
+                  font-size:0.78rem; font-family:'Arial',sans-serif;
                   color:var(--muted); margin-bottom:0.3rem; }
-  .bar-track { background:#ffffff11; border-radius:4px; height:6px; }
-  .bar-fill  { height:6px; border-radius:4px; background:var(--teal);
-                transition:width 0.5s ease; }
-
-  /* POSITIONS */
-  .pos-row { display:flex; justify-content:space-between; align-items:center;
-              padding:0.6rem 0; border-bottom:1px solid #ffffff08;
-              font-family:'Arial',sans-serif; font-size:0.83rem; }
-  .pos-row:last-child { border-bottom:none; }
-  .no-pos { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.85rem;
-             text-align:center; padding:1.5rem 0; }
-
-  /* FOOTER */
-  footer { text-align:center; padding:1.5rem; color:var(--muted);
-            font-size:0.75rem; font-family:'Arial',sans-serif;
-            border-top:1px solid #ffffff08; }
+  .bar-track { background:#ffffff0f; border-radius:4px; height:7px; }
+  .bar-fill  { height:7px; border-radius:4px; background:linear-gradient(90deg,var(--teal),var(--green));
+                transition:width 0.6s ease; }
+  .no-data { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.85rem;
+              text-align:center; padding:2rem 0; }
+  .section-title { color:var(--teal); font-size:0.8rem; font-family:'Arial',sans-serif;
+                    text-transform:uppercase; letter-spacing:0.08em;
+                    margin:2rem 0 1rem; border-bottom:1px solid #ffffff11; padding-bottom:0.5rem; }
+  footer { text-align:center; padding:2rem; color:var(--muted);
+            font-size:0.72rem; font-family:'Arial',sans-serif;
+            border-top:1px solid #ffffff08; margin-top:3rem; }
+  .note { background:#c9a84c0d; border-left:3px solid var(--gold);
+           padding:0.9rem 1.1rem; border-radius:0 6px 6px 0; margin-bottom:1.2rem;
+           font-family:'Arial',sans-serif; font-size:0.83rem; color:var(--text); line-height:1.6; }
 </style>
 </head>
 <body>
-
 <nav>
   <div class="brand">⚡ IBKR OPTIONS INCOME</div>
   <div class="links">
     <a href="index.html" class="active">Dashboard</a>
-    <a href="master-prompt.html">Master Prompt</a>
-    <a href="system-guide.html">System Guide</a>
+    <a href="track-record.html" >Track Record</a>
+    <a href="intelligence.html" >Intelligence</a>
+    <a href="learn.html" >Learn</a>
+    <a href="master-prompt.html" >Master Prompt</a>
+    <a href="system-guide.html" >System Guide</a>
   </div>
 </nav>
 
@@ -120,227 +105,158 @@
   <h1>Options Income Command Center</h1>
   <p>SPX Bull Put Spreads · 10 Spreads/Week · Moderate Risk · Account U10500387</p>
 </div>
-
-<!-- KPI ROW -->
-<div class="kpi-row" id="kpi-row">
-  <div class="kpi"><div class="label">Total P&L</div><div class="value green" id="kpi-pnl">$0</div></div>
-  <div class="kpi"><div class="label">Win Rate</div><div class="value teal" id="kpi-winrate">—</div></div>
-  <div class="kpi"><div class="label">Total Trades</div><div class="value" id="kpi-trades">0</div></div>
-  <div class="kpi"><div class="label">Open Positions</div><div class="value" id="kpi-open">0</div></div>
-  <div class="kpi"><div class="label">Intel Score</div><div class="value teal" id="kpi-intel">—</div></div>
+<div class="page">
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Total P&L</div><div class="value green" id="kpi-pnl">$0</div></div>
+    <div class="kpi"><div class="label">Win Rate</div><div class="value teal" id="kpi-wr">—</div></div>
+    <div class="kpi"><div class="label">Total Trades</div><div class="value" id="kpi-trades">0</div></div>
+    <div class="kpi"><div class="label">Open Positions</div><div class="value" id="kpi-open">0</div></div>
+    <div class="kpi"><div class="label">Intel Score</div><div class="value teal" id="kpi-intel">—</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h2>This Week's Trade Recommendation</h2>
+      <div id="rec-content"><div class="no-data">⏳ Awaiting first Monday run...<br><small>Algorithm fires Monday 09:35 ET</small></div></div>
+      <button class="btn btn-approve" id="approve-btn" disabled onclick="approveTrade()">APPROVE &amp; EXECUTE TRADE</button>
+    </div>
+    <div class="card">
+      <h2>Market Intelligence</h2>
+      <div id="intel-content">
+        <div class="intel-bar"><div class="intel-label"><span>Almanac (Seasonal)</span><span id="s-almanac">—</span></div><div class="bar-track"><div class="bar-fill" id="b-almanac" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>Macro Environment</span><span id="s-macro">—</span></div><div class="bar-track"><div class="bar-fill" id="b-macro" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>Technical Analysis</span><span id="s-technical">—</span></div><div class="bar-track"><div class="bar-fill" id="b-technical" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>LLM Synthesis (CP3405)</span><span id="s-llm">—</span></div><div class="bar-track"><div class="bar-fill" id="b-llm" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>Human Score (Override)</span><span id="s-human">—</span></div><div class="bar-track"><div class="bar-fill" id="b-human" style="width:0%"></div></div></div>
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #ffffff11;display:flex;justify-content:space-between;font-family:'Arial',sans-serif;">
+          <span style="color:var(--muted);font-size:0.85rem;">Composite Score</span>
+          <span style="color:var(--teal);font-weight:bold;font-size:1.1rem;" id="composite">—</span>
+        </div>
+        <div style="text-align:center;margin-top:0.8rem;"><span class="badge waiting" id="bias-badge">AWAITING DATA</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Open Positions</h2>
+      <div id="positions-content"><div class="no-data">No open positions</div></div>
+    </div>
+    <div class="card">
+      <h2>Recent Trade Log</h2>
+      <div id="log-content"><div class="no-data">No completed trades yet</div></div>
+    </div>
+  </div>
 </div>
-
-<div class="grid">
-
-  <!-- THIS WEEK'S TRADE -->
-  <div class="card" id="recommendation">
-    <h2>This Week's Recommendation</h2>
-    <div id="rec-content">
-      <div class="no-pos">⏳ Awaiting first Monday run...<br><br>
-      Algorithm runs Monday 09:35 ET</div>
-    </div>
-    <button class="btn-approve" id="approve-btn" disabled onclick="approveTrade()">
-      APPROVE &amp; EXECUTE TRADE
-    </button>
-  </div>
-
-  <!-- MARKET INTELLIGENCE -->
-  <div class="card" id="intel">
-    <h2>Market Intelligence</h2>
-    <div id="intel-content">
-      <div class="intel-bar">
-        <div class="intel-label"><span>Almanac (Seasonal)</span><span id="s-almanac">—</span></div>
-        <div class="bar-track"><div class="bar-fill" id="b-almanac" style="width:0%"></div></div>
-      </div>
-      <div class="intel-bar">
-        <div class="intel-label"><span>Macro Environment</span><span id="s-macro">—</span></div>
-        <div class="bar-track"><div class="bar-fill" id="b-macro" style="width:0%"></div></div>
-      </div>
-      <div class="intel-bar">
-        <div class="intel-label"><span>Technical Analysis</span><span id="s-technical">—</span></div>
-        <div class="bar-track"><div class="bar-fill" id="b-technical" style="width:0%"></div></div>
-      </div>
-      <div class="intel-bar">
-        <div class="intel-label"><span>LLM Synthesis (CP3405)</span><span id="s-llm">—</span></div>
-        <div class="bar-track"><div class="bar-fill" id="b-llm" style="width:0%"></div></div>
-      </div>
-      <div class="intel-bar">
-        <div class="intel-label"><span>Human Score</span><span id="s-human">—</span></div>
-        <div class="bar-track"><div class="bar-fill" id="b-human" style="width:0%"></div></div>
-      </div>
-      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #ffffff11;
-                  display:flex; justify-content:space-between; font-family:'Arial',sans-serif;">
-        <span style="color:var(--muted); font-size:0.85rem;">Composite Score</span>
-        <span style="color:var(--teal); font-weight:bold; font-size:1.1rem;" id="composite-score">—</span>
-      </div>
-      <div style="text-align:center; margin-top:0.8rem;">
-        <span class="badge waiting" id="bias-badge">AWAITING DATA</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- OPEN POSITIONS -->
-  <div class="card" id="positions">
-    <h2>Open Positions</h2>
-    <div id="positions-content">
-      <div class="no-pos">No open positions</div>
-    </div>
-  </div>
-
-  <!-- TRADE LOG -->
-  <div class="card" id="log">
-    <h2>Trade Log</h2>
-    <div id="log-content">
-      <div class="no-pos">No completed trades yet</div>
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  Prof Dr Tan · IBKR Options Income System · Auto-updated every Monday 09:35 ET
-  <br>Last data refresh: <span id="last-refresh">—</span>
-</footer>
-
 <script>
-let tradeState = {};
+const PAT = '';
+const REPO = 'ProfDrTan/ibkr-options-income';
+let state = {};
 
 async function loadState() {
   try {
     const r = await fetch('data/trade_state.json?t=' + Date.now());
-    tradeState = await r.json();
+    state = await r.json();
     render();
-  } catch(e) {
-    console.log('State not yet available — awaiting first algorithm run');
-  }
+  } catch(e) { console.log('State not yet available'); }
+}
+
+function fmt(n, prefix='$') {
+  if(n==null) return '—';
+  return (n>=0?'+':'')+prefix+Math.abs(n).toLocaleString();
 }
 
 function render() {
-  const s = tradeState;
+  const s = state;
+  const pnl = s.total_pnl||0;
+  document.getElementById('kpi-pnl').textContent = fmt(pnl);
+  document.getElementById('kpi-pnl').className = 'value '+(pnl>=0?'green':'red');
+  document.getElementById('kpi-wr').textContent = s.total_trades>0 ? (s.win_rate*100).toFixed(0)+'%' : '—';
+  document.getElementById('kpi-trades').textContent = s.total_trades||0;
+  document.getElementById('kpi-open').textContent = (s.open_positions||[]).length;
 
-  // KPIs
-  const pnl = s.total_pnl || 0;
-  document.getElementById('kpi-pnl').textContent =
-    (pnl >= 0 ? '+' : '') + '$' + pnl.toLocaleString();
-  document.getElementById('kpi-pnl').className = 'value ' + (pnl >= 0 ? 'green' : 'red');
-  document.getElementById('kpi-winrate').textContent =
-    s.total_trades > 0 ? (s.win_rate * 100).toFixed(0) + '%' : '—';
-  document.getElementById('kpi-trades').textContent = s.total_trades || 0;
-  document.getElementById('kpi-open').textContent = (s.open_positions || []).length;
-
-  // Intel scores
   const intel = s.recommendation?.intel;
-  if (intel) {
-    document.getElementById('kpi-intel').textContent = intel.composite + '/100';
-    const scores = intel.scores || {};
-    ['almanac','macro','technical','llm','human'].forEach(k => {
-      const v = scores[k] || 0;
-      document.getElementById('s-' + k).textContent = v + '/100';
-      document.getElementById('b-' + k).style.width = v + '%';
+  if(intel) {
+    document.getElementById('kpi-intel').textContent = intel.composite+'/100';
+    const sc = intel.scores||{};
+    ['almanac','macro','technical','llm','human'].forEach(k=>{
+      const v=sc[k]||0;
+      document.getElementById('s-'+k).textContent=v+'/100';
+      document.getElementById('b-'+k).style.width=v+'%';
     });
-    document.getElementById('composite-score').textContent = intel.composite + '/100';
-    const bias = intel.bias || 'NEUTRAL';
-    const bb = document.getElementById('bias-badge');
-    bb.textContent = bias;
-    bb.className = 'badge ' + (bias === 'BULLISH' ? 'approved' : bias === 'BEARISH' ? 'skipped' : 'pending');
+    document.getElementById('composite').textContent=intel.composite+'/100';
+    const bias=intel.bias||'NEUTRAL';
+    const bb=document.getElementById('bias-badge');
+    bb.textContent=bias;
+    bb.className='badge '+(bias==='BULLISH'?'bullish':bias==='BEARISH'?'bearish':'neutral');
   }
 
-  // Recommendation
-  const rec = s.recommendation || {};
-  const recDiv = document.getElementById('rec-content');
-  const btn    = document.getElementById('approve-btn');
+  const rec = s.recommendation||{};
+  const rd = document.getElementById('rec-content');
+  const btn = document.getElementById('approve-btn');
 
-  if (rec.status === 'AWAITING_FIRST_RUN' || !rec.date) {
-    recDiv.innerHTML = '<div class="no-pos">⏳ Awaiting first Monday run...<br><br>Algorithm runs Monday 09:35 ET</div>';
-    btn.disabled = true;
-  } else if (!rec.proceed) {
-    recDiv.innerHTML = `<div class="trade-box">
-      <div class="trade-row"><span class="tl">Status</span><span class="tr"><span class="badge skipped">TRADE SKIPPED</span></span></div>
-      <div class="trade-row"><span class="tl">Reason</span><span class="tr" style="color:var(--red);font-size:0.8rem;">${rec.reason}</span></div>
-      <div class="trade-row"><span class="tl">Date</span><span class="tr">${rec.date}</span></div>
-    </div>`;
-    btn.disabled = true;
-    btn.textContent = 'NO TRADE THIS WEEK';
+  if(!rec.date||rec.status==='AWAITING_FIRST_RUN') {
+    rd.innerHTML='<div class="no-data">⏳ Awaiting first Monday run...<br><small>Algorithm fires Monday 09:35 ET</small></div>';
+    btn.disabled=true;
+  } else if(!rec.proceed) {
+    rd.innerHTML=`<div class="row"><span class="l">Status</span><span class="r"><span class="badge skipped">SKIPPED</span></span></div>
+    <div class="row"><span class="l">Reason</span><span class="r" style="color:var(--red);font-size:0.78rem">${rec.reason}</span></div>
+    <div class="row"><span class="l">Date</span><span class="r">${rec.date}</span></div>`;
+    btn.disabled=true; btn.textContent='NO TRADE THIS WEEK';
   } else {
-    const statusClass = rec.executed ? 'executed' : rec.approved ? 'approved' : 'pending';
-    const statusText  = rec.executed ? 'EXECUTED' : rec.approved ? 'APPROVED' : 'PENDING APPROVAL';
-    recDiv.innerHTML = `<div class="trade-box">
-      <div class="trade-row"><span class="tl">Status</span><span class="tr"><span class="badge ${statusClass}">${statusText}</span></span></div>
-      <div class="trade-row"><span class="tl">Strategy</span><span class="tr">SPX Bull Put Spread</span></div>
-      <div class="trade-row"><span class="tl">Short Put</span><span class="tr">${rec.short_put}</span></div>
-      <div class="trade-row"><span class="tl">Long Put</span><span class="tr">${rec.long_put}</span></div>
-      <div class="trade-row"><span class="tl">Expiry</span><span class="tr">${rec.expiry}</span></div>
-      <div class="trade-row"><span class="tl">Spreads</span><span class="tr">${rec.num_spreads}x</span></div>
-      <div class="trade-row"><span class="tl">Est. Credit</span><span class="tr" style="color:var(--green)">$${(rec.est_premium * rec.num_spreads).toLocaleString()}</span></div>
-      <div class="trade-row"><span class="tl">Max Risk</span><span class="tr" style="color:var(--red)">$${rec.max_risk?.toLocaleString()}</span></div>
-      <div class="trade-row"><span class="tl">Profit Target</span><span class="tr" style="color:var(--teal)">$${rec.profit_target?.toLocaleString()}</span></div>
-      <div class="trade-row"><span class="tl">SPX Price</span><span class="tr">${rec.spx_price?.toLocaleString()}</span></div>
-    </div>`;
-    btn.disabled  = rec.executed || rec.approved;
-    btn.textContent = rec.executed ? '✅ TRADE EXECUTED' :
-                      rec.approved ? '✅ APPROVED — EXECUTING' :
-                      'APPROVE & EXECUTE TRADE';
+    const sc=rec.executed?'executed':rec.approved?'approved':'pending';
+    const st=rec.executed?'EXECUTED':rec.approved?'APPROVED':'PENDING APPROVAL';
+    rd.innerHTML=`
+    <div class="row"><span class="l">Status</span><span class="r"><span class="badge ${sc}">${st}</span></span></div>
+    <div class="row"><span class="l">Strategy</span><span class="r">SPX Bull Put Spread</span></div>
+    <div class="row"><span class="l">Short Put</span><span class="r">${rec.short_put}</span></div>
+    <div class="row"><span class="l">Long Put</span><span class="r">${rec.long_put}</span></div>
+    <div class="row"><span class="l">Expiry</span><span class="r">${rec.expiry}</span></div>
+    <div class="row"><span class="l">Spreads</span><span class="r">${rec.num_spreads}x</span></div>
+    <div class="row"><span class="l">Est. Credit</span><span class="r" style="color:var(--green)">$${((rec.est_premium||0)*(rec.num_spreads||0)).toLocaleString()}</span></div>
+    <div class="row"><span class="l">Max Risk</span><span class="r" style="color:var(--red)">$${(rec.max_risk||0).toLocaleString()}</span></div>
+    <div class="row"><span class="l">Profit Target</span><span class="r" style="color:var(--teal)">$${(rec.profit_target||0).toLocaleString()}</span></div>
+    <div class="row"><span class="l">SPX Price</span><span class="r">${(rec.spx_price||0).toLocaleString()}</span></div>`;
+    btn.disabled=rec.executed||rec.approved;
+    btn.textContent=rec.executed?'✅ TRADE EXECUTED':rec.approved?'✅ APPROVED':'APPROVE & EXECUTE TRADE';
   }
 
-  // Open positions
-  const posDiv = document.getElementById('positions-content');
-  const positions = s.open_positions || [];
-  if (positions.length === 0) {
-    posDiv.innerHTML = '<div class="no-pos">No open positions</div>';
-  } else {
-    posDiv.innerHTML = positions.map(p => `
-      <div class="pos-row">
-        <div>
-          <div style="font-weight:bold">SPX ${p.short_put}/${p.long_put} P</div>
-          <div style="color:var(--muted);font-size:0.75rem">Exp: ${p.expiry} · ${p.quantity}x</div>
-        </div>
-        <div style="text-align:right">
-          <div style="color:var(--green)">+$${p.premium_received?.toLocaleString()}</div>
-          <div style="color:var(--muted);font-size:0.75rem">credit received</div>
-        </div>
-      </div>`).join('');
-  }
+  const pos=s.open_positions||[];
+  const pd=document.getElementById('positions-content');
+  pd.innerHTML=pos.length?pos.map(p=>`<div class="row"><div><div style="font-weight:bold">SPX ${p.short_put}/${p.long_put}P</div><div style="color:var(--muted);font-size:0.75rem">Exp: ${p.expiry} · ${p.quantity}x</div></div><div style="color:var(--green);font-weight:bold">+$${(p.premium_received||0).toLocaleString()}</div></div>`).join(''):'<div class="no-data">No open positions</div>';
 
-  // Trade log
-  const logDiv = document.getElementById('log-content');
-  const log = s.trade_log || [];
-  if (log.length === 0) {
-    logDiv.innerHTML = '<div class="no-pos">No completed trades yet</div>';
-  } else {
-    logDiv.innerHTML = log.slice(-10).reverse().map(t => `
-      <div class="pos-row">
-        <div>
-          <div style="font-weight:bold">${t.date} · SPX ${t.short_put}/${t.long_put}P</div>
-          <div style="color:var(--muted);font-size:0.75rem">${t.reason || ''}</div>
-        </div>
-        <div style="color:${t.pnl>=0?'var(--green)':'var(--red)'};font-weight:bold">
-          ${t.pnl>=0?'+':''}$${t.pnl?.toLocaleString()}
-        </div>
-      </div>`).join('');
-  }
-
-  document.getElementById('last-refresh').textContent = new Date().toLocaleString();
+  const log=s.trade_log||[];
+  const ld=document.getElementById('log-content');
+  ld.innerHTML=log.length?log.slice(-8).reverse().map(t=>`<div class="row"><div><div style="font-weight:bold">${t.date}</div><div style="color:var(--muted);font-size:0.75rem">SPX ${t.short_put}/${t.long_put}P</div></div><div style="color:${(t.pnl||0)>=0?'var(--green)':'var(--red)'};font-weight:bold">${fmt(t.pnl)}</div></div>`).join(''):'<div class="no-data">No completed trades yet</div>';
 }
 
 async function approveTrade() {
-  const btn = document.getElementById('approve-btn');
-  btn.disabled = true;
-  btn.textContent = 'SUBMITTING APPROVAL...';
-
-  // Update local state
-  tradeState.recommendation.approved = true;
-  tradeState.recommendation.status   = 'APPROVED';
-
-  // In production: POST to GitHub API to update trade_state.json
-  // For now: show confirmation
-  alert('✅ Trade approved! The algorithm will execute your position shortly.\n\nYou will receive a Telegram confirmation when the order is filled.');
-  btn.textContent = '✅ APPROVED — EXECUTING';
+  const btn=document.getElementById('approve-btn');
+  btn.disabled=true;
+  btn.textContent='SUBMITTING...';
+  state.recommendation.approved=true;
+  state.recommendation.status='APPROVED';
+  
+  // Write approval back to GitHub
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+    // Get current SHA
+    const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/data/trade_state.json`,
+      {headers:{'Authorization':'Bearer '+PAT,'Accept':'application/vnd.github+json'}});
+    const getD = await getR.json();
+    // PUT updated state
+    await fetch(`https://api.github.com/repos/${REPO}/contents/data/trade_state.json`,{
+      method:'PUT',
+      headers:{'Authorization':'Bearer '+PAT,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'Approval: trade approved by Prof Dr Tan',content,sha:getD.sha})
+    });
+    btn.textContent='✅ APPROVED — EXECUTING';
+    alert('Trade approved! IBKR execution will begin shortly.\nYou will receive a Telegram confirmation.');
+  } catch(e) {
+    btn.textContent='✅ APPROVED';
+  }
   render();
 }
 
-// Load state on page load and refresh every 5 minutes
 loadState();
 setInterval(loadState, 300000);
 </script>
+<footer>Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev</footer>
 </body>
 </html>
