@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a;
+    --navy2: #111827;
+    --navy3: #1e2a3a;
+    --gold:  #c9a84c;
+    --teal:  #2dd4bf;
+    --green: #22c55e;
+    --red:   #ef4444;
+    --text:  #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; position:sticky; top:0; z-index:100; }
+  nav .brand { color:var(--gold); font-size:1rem; font-weight:bold; letter-spacing:0.05em; white-space:nowrap; }
+  nav .links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.8rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+  .page { max-width:1100px; margin:0 auto; padding:2rem; }
+  .hero { text-align:center; padding:2.5rem 1rem 1.5rem; }
+  .hero h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.4rem; }
+  .hero p { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.88rem; }
+  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; }
+  .card h2 { font-size:0.85rem; color:var(--gold); font-family:'Arial',sans-serif;
+              text-transform:uppercase; letter-spacing:0.08em;
+              border-bottom:1px solid #ffffff11; padding-bottom:0.7rem; margin-bottom:1.2rem; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  @media(max-width:700px){ .grid2 { grid-template-columns:1fr; } }
+  .kpi-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:1.5rem; }
+  .kpi { background:var(--navy2); border:1px solid #ffffff11; border-radius:8px;
+          padding:1rem 1.5rem; min-width:140px; text-align:center; }
+  .kpi .label { font-size:0.7rem; color:var(--muted); font-family:'Arial',sans-serif;
+                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3rem; }
+  .kpi .value { font-size:1.5rem; font-weight:bold; color:var(--gold); }
+  .kpi .value.green { color:var(--green); }
+  .kpi .value.red   { color:var(--red); }
+  .kpi .value.teal  { color:var(--teal); }
+  .badge { display:inline-block; padding:0.2rem 0.7rem; border-radius:20px;
+            font-size:0.72rem; font-family:'Arial',sans-serif; font-weight:bold;
+            text-transform:uppercase; letter-spacing:0.06em; }
+  .badge.pending  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.approved { background:#2dd4bf22; color:var(--teal);  border:1px solid #2dd4bf44; }
+  .badge.executed { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.skipped  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.waiting  { background:#94a3b822; color:var(--muted); border:1px solid #94a3b844; }
+  .badge.bullish  { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.bearish  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.neutral  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .row { display:flex; justify-content:space-between; align-items:center;
+          padding:0.45rem 0; border-bottom:1px solid #ffffff08;
+          font-family:'Arial',sans-serif; font-size:0.83rem; }
+  .row:last-child { border-bottom:none; }
+  .row .l { color:var(--muted); }
+  .row .r { color:var(--text); font-weight:bold; }
+  .btn { width:100%; padding:0.9rem; border:none; border-radius:8px;
+          font-size:0.95rem; font-weight:bold; font-family:'Arial',sans-serif;
+          cursor:pointer; margin-top:1rem; letter-spacing:0.05em; transition:opacity 0.2s; }
+  .btn-approve { background:var(--teal); color:var(--navy); }
+  .btn-approve:hover { opacity:0.85; }
+  .btn-approve:disabled { opacity:0.4; cursor:not-allowed; }
+  .intel-bar { margin-bottom:0.9rem; }
+  .intel-label { display:flex; justify-content:space-between;
+                  font-size:0.78rem; font-family:'Arial',sans-serif;
+                  color:var(--muted); margin-bottom:0.3rem; }
+  .bar-track { background:#ffffff0f; border-radius:4px; height:7px; }
+  .bar-fill  { height:7px; border-radius:4px; background:linear-gradient(90deg,var(--teal),var(--green));
+                transition:width 0.6s ease; }
+  .no-data { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.85rem;
+              text-align:center; padding:2rem 0; }
+  .section-title { color:var(--teal); font-size:0.8rem; font-family:'Arial',sans-serif;
+                    text-transform:uppercase; letter-spacing:0.08em;
+                    margin:2rem 0 1rem; border-bottom:1px solid #ffffff11; padding-bottom:0.5rem; }
+  footer { text-align:center; padding:2rem; color:var(--muted);
+            font-size:0.72rem; font-family:'Arial',sans-serif;
+            border-top:1px solid #ffffff08; margin-top:3rem; }
+  .note { background:#c9a84c0d; border-left:3px solid var(--gold);
+           padding:0.9rem 1.1rem; border-radius:0 6px 6px 0; margin-bottom:1.2rem;
+           font-family:'Arial',sans-serif; font-size:0.83rem; color:var(--text); line-height:1.6; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html" >Dashboard</a>
+    <a href="track-record.html" >Track Record</a>
+    <a href="intelligence.html" >Intelligence</a>
+    <a href="learn.html" class="active">Learn</a>
+    <a href="master-prompt.html" >Master Prompt</a>
+    <a href="system-guide.html" >System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Learn</h1>
+  <p>From zero to systematic options income — bite-sized concepts explained plainly</p>
+</div>
+<div class="page">
+  <div class="note">
+    📚 These concepts form the foundation of the upcoming book <em>"The 3-Hour Trader"</em> by Prof Dr Tan.
+    No prior trading knowledge required.
+  </div>
+
+  <div class="section-title">Module 1 — Why Options Income Works</div>
+  <div class="grid2">
+    <div class="card">
+      <h2>What Is Theta Decay?</h2>
+      <p style="font-family:'Arial',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.8;">
+        Every options contract has an expiry date. As time passes, the option loses value — 
+        this erosion is called <strong style="color:var(--teal)">theta decay</strong>.<br><br>
+        When you <em>sell</em> an option, you collect this time value upfront as cash. 
+        The option then decays in your favour as each day passes.<br><br>
+        Think of it like being the insurance company — you collect the premium, 
+        and time works for you, not against you.
+      </p>
+    </div>
+    <div class="card">
+      <h2>What Is a Bull Put Spread?</h2>
+      <p style="font-family:'Arial',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.8;">
+        A bull put spread has two legs:<br><br>
+        <strong style="color:var(--green)">SELL</strong> a put option at a higher strike (collect premium)<br>
+        <strong style="color:var(--red)">BUY</strong> a put option at a lower strike (pay small premium as insurance)<br><br>
+        The difference is your credit — cash in your account immediately.<br><br>
+        Your maximum loss is capped at the spread width minus credit received.
+        <strong style="color:var(--teal)">Your risk is defined from the start.</strong>
+      </p>
+    </div>
+    <div class="card">
+      <h2>Why SPX?</h2>
+      <p style="font-family:'Arial',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.8;">
+        SPX (S&P 500 Index) options are the most liquid in the world.<br><br>
+        ✅ Cash settled — no shares ever assigned<br>
+        ✅ 60/40 tax treatment (US traders)<br>
+        ✅ Weekly expiries — income every single week<br>
+        ✅ Tight bid-ask spreads — better fills<br>
+        ✅ Open Interest 40M+ contracts
+      </p>
+    </div>
+    <div class="card">
+      <h2>What Is High Probability?</h2>
+      <p style="font-family:'Arial',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.8;">
+        We sell puts at <strong style="color:var(--teal)">5 delta</strong> — meaning the market 
+        assigns only a 5% probability of the option expiring in the money.<br><br>
+        Put differently: we win approximately <strong style="color:var(--green)">95% of weeks</strong> 
+        if we follow the system consistently.<br><br>
+        The occasional loss is managed by our stop loss and Thursday close rules — 
+        so no single bad week can wipe out months of gains.
+      </p>
+    </div>
+  </div>
+
+  <div class="section-title">Module 2 — The System Rules</div>
+  <div class="card">
+    <h2>The 5 Rules That Protect You Always</h2>
+    <div style="font-family:'Arial',sans-serif;font-size:0.85rem;line-height:1.8;">
+      <div class="row"><span class="l">Rule 1</span><span class="r" style="color:var(--teal)">Only sell defined-risk spreads — never naked options</span></div>
+      <div class="row"><span class="l">Rule 2</span><span class="r" style="color:var(--teal)">Close at 50% profit — never get greedy</span></div>
+      <div class="row"><span class="l">Rule 3</span><span class="r" style="color:var(--teal)">Close all positions by Thursday — remove overnight gamma risk</span></div>
+      <div class="row"><span class="l">Rule 4</span><span class="r" style="color:var(--teal)">Skip the trade if VIX is above 25 — respect extreme volatility</span></div>
+      <div class="row"><span class="l">Rule 5</span><span class="r" style="color:var(--teal)">Never risk more than 3% of account on any single week</span></div>
+    </div>
+  </div>
+
+  <div class="section-title">Module 3 — Coming Soon</div>
+  <div class="grid2">
+    <div class="card"><h2>How to Read the Intel Scores</h2><div class="no-data" style="padding:1rem 0">🔒 Coming soon</div></div>
+    <div class="card"><h2>Your First Paper Trade</h2><div class="no-data" style="padding:1rem 0">🔒 Coming soon</div></div>
+    <div class="card"><h2>Scaling from $500 to $5,000/month</h2><div class="no-data" style="padding:1rem 0">🔒 Coming soon</div></div>
+    <div class="card"><h2>When Things Go Wrong — The Recovery Plan</h2><div class="no-data" style="padding:1rem 0">🔒 Coming soon</div></div>
+  </div>
+</div>
+<footer>Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev</footer>
+</body>
+</html>
