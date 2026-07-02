@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Record | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a;
+    --navy2: #111827;
+    --navy3: #1e2a3a;
+    --gold:  #c9a84c;
+    --teal:  #2dd4bf;
+    --green: #22c55e;
+    --red:   #ef4444;
+    --text:  #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; position:sticky; top:0; z-index:100; }
+  nav .brand { color:var(--gold); font-size:1rem; font-weight:bold; letter-spacing:0.05em; white-space:nowrap; }
+  nav .links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.8rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+  .page { max-width:1100px; margin:0 auto; padding:2rem; }
+  .hero { text-align:center; padding:2.5rem 1rem 1.5rem; }
+  .hero h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.4rem; }
+  .hero p { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.88rem; }
+  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; }
+  .card h2 { font-size:0.85rem; color:var(--gold); font-family:'Arial',sans-serif;
+              text-transform:uppercase; letter-spacing:0.08em;
+              border-bottom:1px solid #ffffff11; padding-bottom:0.7rem; margin-bottom:1.2rem; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+  @media(max-width:700px){ .grid2 { grid-template-columns:1fr; } }
+  .kpi-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:1.5rem; }
+  .kpi { background:var(--navy2); border:1px solid #ffffff11; border-radius:8px;
+          padding:1rem 1.5rem; min-width:140px; text-align:center; }
+  .kpi .label { font-size:0.7rem; color:var(--muted); font-family:'Arial',sans-serif;
+                 text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3rem; }
+  .kpi .value { font-size:1.5rem; font-weight:bold; color:var(--gold); }
+  .kpi .value.green { color:var(--green); }
+  .kpi .value.red   { color:var(--red); }
+  .kpi .value.teal  { color:var(--teal); }
+  .badge { display:inline-block; padding:0.2rem 0.7rem; border-radius:20px;
+            font-size:0.72rem; font-family:'Arial',sans-serif; font-weight:bold;
+            text-transform:uppercase; letter-spacing:0.06em; }
+  .badge.pending  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.approved { background:#2dd4bf22; color:var(--teal);  border:1px solid #2dd4bf44; }
+  .badge.executed { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.skipped  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.waiting  { background:#94a3b822; color:var(--muted); border:1px solid #94a3b844; }
+  .badge.bullish  { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.bearish  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.neutral  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .row { display:flex; justify-content:space-between; align-items:center;
+          padding:0.45rem 0; border-bottom:1px solid #ffffff08;
+          font-family:'Arial',sans-serif; font-size:0.83rem; }
+  .row:last-child { border-bottom:none; }
+  .row .l { color:var(--muted); }
+  .row .r { color:var(--text); font-weight:bold; }
+  .btn { width:100%; padding:0.9rem; border:none; border-radius:8px;
+          font-size:0.95rem; font-weight:bold; font-family:'Arial',sans-serif;
+          cursor:pointer; margin-top:1rem; letter-spacing:0.05em; transition:opacity 0.2s; }
+  .btn-approve { background:var(--teal); color:var(--navy); }
+  .btn-approve:hover { opacity:0.85; }
+  .btn-approve:disabled { opacity:0.4; cursor:not-allowed; }
+  .intel-bar { margin-bottom:0.9rem; }
+  .intel-label { display:flex; justify-content:space-between;
+                  font-size:0.78rem; font-family:'Arial',sans-serif;
+                  color:var(--muted); margin-bottom:0.3rem; }
+  .bar-track { background:#ffffff0f; border-radius:4px; height:7px; }
+  .bar-fill  { height:7px; border-radius:4px; background:linear-gradient(90deg,var(--teal),var(--green));
+                transition:width 0.6s ease; }
+  .no-data { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.85rem;
+              text-align:center; padding:2rem 0; }
+  .section-title { color:var(--teal); font-size:0.8rem; font-family:'Arial',sans-serif;
+                    text-transform:uppercase; letter-spacing:0.08em;
+                    margin:2rem 0 1rem; border-bottom:1px solid #ffffff11; padding-bottom:0.5rem; }
+  footer { text-align:center; padding:2rem; color:var(--muted);
+            font-size:0.72rem; font-family:'Arial',sans-serif;
+            border-top:1px solid #ffffff08; margin-top:3rem; }
+  .note { background:#c9a84c0d; border-left:3px solid var(--gold);
+           padding:0.9rem 1.1rem; border-radius:0 6px 6px 0; margin-bottom:1.2rem;
+           font-family:'Arial',sans-serif; font-size:0.83rem; color:var(--text); line-height:1.6; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html" >Dashboard</a>
+    <a href="track-record.html" class="active">Track Record</a>
+    <a href="intelligence.html" >Intelligence</a>
+    <a href="learn.html" >Learn</a>
+    <a href="master-prompt.html" >Master Prompt</a>
+    <a href="system-guide.html" >System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Track Record</h1>
+  <p>Live performance history — every trade documented transparently</p>
+</div>
+<div class="page">
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Total P&L</div><div class="value green" id="tr-pnl">$0</div></div>
+    <div class="kpi"><div class="label">Win Rate</div><div class="value teal" id="tr-wr">—</div></div>
+    <div class="kpi"><div class="label">Total Trades</div><div class="value" id="tr-trades">0</div></div>
+    <div class="kpi"><div class="label">Avg Win</div><div class="value green" id="tr-avgwin">—</div></div>
+    <div class="kpi"><div class="label">Avg Loss</div><div class="value red" id="tr-avgloss">—</div></div>
+    <div class="kpi"><div class="label">Best Week</div><div class="value teal" id="tr-best">—</div></div>
+  </div>
+  <div class="card">
+    <h2>Weekly P&L History</h2>
+    <div id="weekly-chart" style="min-height:120px;">
+      <div class="no-data">No trade history yet — first trade opens Monday 09:35 ET</div>
+    </div>
+  </div>
+  <div style="margin-top:1.2rem;" class="card">
+    <h2>Complete Trade Log</h2>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-family:'Arial',sans-serif;font-size:0.82rem;" id="trade-table">
+        <thead>
+          <tr style="border-bottom:1px solid #ffffff22;">
+            <th style="padding:0.6rem;text-align:left;color:var(--muted);font-weight:normal;">Date</th>
+            <th style="padding:0.6rem;text-align:left;color:var(--muted);font-weight:normal;">Strategy</th>
+            <th style="padding:0.6rem;text-align:right;color:var(--muted);font-weight:normal;">Credit</th>
+            <th style="padding:0.6rem;text-align:right;color:var(--muted);font-weight:normal;">P&L</th>
+            <th style="padding:0.6rem;text-align:center;color:var(--muted);font-weight:normal;">Result</th>
+            <th style="padding:0.6rem;text-align:left;color:var(--muted);font-weight:normal;">Close Reason</th>
+          </tr>
+        </thead>
+        <tbody id="trade-tbody">
+          <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">No trades yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+async function loadState() {
+  try {
+    const r = await fetch('data/trade_state.json?t='+Date.now());
+    const s = await r.json();
+    render(s);
+  } catch(e) {}
+}
+function render(s) {
+  const log = s.trade_log||[];
+  const wins = log.filter(t=>t.pnl>0);
+  const losses = log.filter(t=>t.pnl<=0);
+  const totalPnl = log.reduce((a,t)=>a+(t.pnl||0),0);
+  const avgWin = wins.length ? wins.reduce((a,t)=>a+t.pnl,0)/wins.length : 0;
+  const avgLoss = losses.length ? losses.reduce((a,t)=>a+t.pnl,0)/losses.length : 0;
+  const best = log.length ? Math.max(...log.map(t=>t.pnl||0)) : 0;
+
+  document.getElementById('tr-pnl').textContent = (totalPnl>=0?'+':'')+'$'+Math.abs(totalPnl).toLocaleString();
+  document.getElementById('tr-wr').textContent = log.length ? (wins.length/log.length*100).toFixed(0)+'%' : '—';
+  document.getElementById('tr-trades').textContent = log.length;
+  document.getElementById('tr-avgwin').textContent = avgWin ? '+$'+avgWin.toFixed(0) : '—';
+  document.getElementById('tr-avgloss').textContent = avgLoss ? '$'+avgLoss.toFixed(0) : '—';
+  document.getElementById('tr-best').textContent = best ? '+$'+best.toLocaleString() : '—';
+
+  if(log.length) {
+    const tbody = document.getElementById('trade-tbody');
+    tbody.innerHTML = log.slice().reverse().map(t=>`
+      <tr style="border-bottom:1px solid #ffffff08;">
+        <td style="padding:0.6rem;color:var(--text)">${t.date||'—'}</td>
+        <td style="padding:0.6rem;color:var(--muted)">SPX ${t.short_put||''}/${t.long_put||''}P</td>
+        <td style="padding:0.6rem;text-align:right;color:var(--green)">+$${(t.credit||0).toLocaleString()}</td>
+        <td style="padding:0.6rem;text-align:right;color:${(t.pnl||0)>=0?'var(--green)':'var(--red)'};font-weight:bold">${(t.pnl>=0?'+':'')+'$'+(Math.abs(t.pnl)||0).toLocaleString()}</td>
+        <td style="padding:0.6rem;text-align:center"><span class="badge ${(t.pnl||0)>=0?'executed':'skipped'}">${(t.pnl||0)>=0?'WIN':'LOSS'}</span></td>
+        <td style="padding:0.6rem;color:var(--muted);font-size:0.75rem">${t.reason||'—'}</td>
+      </tr>`).join('');
+  }
+}
+loadState();
+</script>
+<footer>Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev</footer>
+</body>
+</html>
