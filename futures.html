@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futures | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:#0a0e1a;--navy2:#111827;--navy3:#1e2a3a;
+    --gold:#c9a84c;--teal:#2dd4bf;--green:#22c55e;
+    --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+    --purple:#a78bfa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;min-height:100vh;padding-bottom:70px;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;display:flex;align-items:center;
+      justify-content:space-between;padding:0 2rem;height:60px;position:sticky;top:0;z-index:100;}
+  nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
+  nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a:hover,nav a.active{color:var(--teal);}
+  .page{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;}
+  .hero{text-align:center;padding:2rem 1rem 1rem;}
+  .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.3rem;}
+  .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.85rem;}
+
+  /* SESSION CLOCK */
+  .session-bar{display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .session{border-radius:8px;padding:0.7rem 1.2rem;flex:1;min-width:140px;
+            border:1px solid #ffffff11;font-family:'Arial',sans-serif;}
+  .session.active{border-color:var(--green)55;background:#22c55e0a;}
+  .session.upcoming{border-color:var(--gold)44;background:#c9a84c08;}
+  .session.closed{border-color:#ffffff11;background:var(--navy2);opacity:0.6;}
+  .session .s-name{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;
+                    color:var(--muted);margin-bottom:0.2rem;}
+  .session .s-time{font-size:0.82rem;font-weight:bold;margin-bottom:0.2rem;}
+  .session .s-status{font-size:0.7rem;}
+  .session.active .s-status{color:var(--green);}
+  .session.upcoming .s-status{color:var(--gold);}
+  .session.closed .s-status{color:var(--muted);}
+
+  /* ES HERO */
+  .es-hero{background:linear-gradient(135deg,var(--navy2),var(--navy3));
+            border:1px solid var(--gold)44;border-radius:12px;padding:2rem;
+            margin-bottom:1.5rem;display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+  .es-price-block{text-align:center;min-width:200px;}
+  .es-label{font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;
+             text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;}
+  .es-price{font-size:3rem;font-weight:bold;color:var(--gold);}
+  .es-change{font-size:1.1rem;font-family:'Arial',sans-serif;font-weight:bold;margin-top:0.2rem;}
+  .es-details{flex:1;min-width:200px;}
+  .es-signal{text-align:center;min-width:180px;}
+  .signal-big{font-size:1.3rem;font-weight:bold;font-family:'Arial',sans-serif;
+               padding:1rem;border-radius:10px;margin-bottom:0.5rem;}
+  .signal-big.proceed{background:#22c55e15;border:1px solid #22c55e44;color:var(--green);}
+  .signal-big.caution{background:#c9a84c15;border:1px solid #c9a84c44;color:var(--gold);}
+  .signal-big.skip{background:#ef444415;border:1px solid #ef444444;color:var(--red);}
+
+  /* GRID */
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+  @media(max-width:900px){.grid3{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.grid3,.grid2{grid-template-columns:1fr;}}
+
+  .card{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;padding:1.3rem;}
+  .card h2{font-size:0.8rem;color:var(--gold);font-family:'Arial',sans-serif;
+            text-transform:uppercase;letter-spacing:0.08em;
+            border-bottom:1px solid #ffffff11;padding-bottom:0.6rem;margin-bottom:1rem;}
+  .row{display:flex;justify-content:space-between;align-items:center;
+        padding:0.4rem 0;border-bottom:1px solid #ffffff08;
+        font-family:'Arial',sans-serif;font-size:0.82rem;}
+  .row:last-child{border-bottom:none;}
+  .row .l{color:var(--muted);}
+  .row .r{font-weight:bold;}
+  .up{color:var(--green);} .dn{color:var(--red);}
+  .neutral{color:var(--text);}
+
+  /* GLOBAL MARKETS */
+  .market-ticker{display:flex;justify-content:space-between;align-items:center;
+                  padding:0.6rem 0;border-bottom:1px solid #ffffff08;
+                  font-family:'Arial',sans-serif;}
+  .market-ticker:last-child{border-bottom:none;}
+  .mt-flag{font-size:1.1rem;margin-right:0.5rem;}
+  .mt-name{font-size:0.83rem;color:var(--text);flex:1;}
+  .mt-price{font-size:0.83rem;color:var(--muted);margin-right:0.8rem;}
+  .mt-chg{font-size:0.83rem;font-weight:bold;min-width:60px;text-align:right;}
+
+  /* POSITION CALCULATOR */
+  .calc-box{background:var(--navy3);border-radius:8px;padding:1.2rem;}
+  .calc-input{width:100%;background:var(--navy2);border:1px solid #ffffff22;
+               border-radius:6px;padding:0.5rem 0.8rem;color:var(--text);
+               font-family:'Arial',sans-serif;font-size:0.85rem;margin-bottom:0.8rem;}
+  .calc-input:focus{outline:none;border-color:var(--teal);}
+  .calc-label{font-size:0.75rem;color:var(--muted);font-family:'Arial',sans-serif;
+               margin-bottom:0.3rem;display:block;}
+  .calc-result{background:var(--navy2);border-radius:6px;padding:0.8rem;margin-top:0.5rem;}
+  .calc-result .r-row{display:flex;justify-content:space-between;
+                        font-family:'Arial',sans-serif;font-size:0.82rem;padding:0.3rem 0;}
+  .calc-result .r-val{font-weight:bold;color:var(--teal);}
+
+  /* MES EDUCATION */
+  .edu-box{background:var(--navy3);border-radius:8px;padding:1rem;margin-bottom:0.8rem;}
+  .edu-title{font-family:'Arial',sans-serif;font-size:0.85rem;font-weight:bold;
+              color:var(--gold);margin-bottom:0.4rem;}
+  .edu-text{font-family:'Arial',sans-serif;font-size:0.8rem;color:var(--text);line-height:1.7;}
+
+  /* AI BRIEFING */
+  .ai-briefing{background:linear-gradient(135deg,#0a0e1a,#111827);
+                border:1px solid var(--purple)44;border-radius:12px;padding:1.5rem;
+                margin-bottom:1.2rem;position:relative;}
+  .ai-briefing h2{font-size:0.8rem;color:var(--purple);font-family:'Arial',sans-serif;
+                   text-transform:uppercase;letter-spacing:0.08em;
+                   border-bottom:1px solid var(--purple)22;padding-bottom:0.6rem;margin-bottom:1rem;}
+  .ai-badge{position:absolute;top:1.2rem;right:1.2rem;background:var(--purple);color:var(--navy);
+             border-radius:4px;padding:0.2rem 0.6rem;font-size:0.68rem;font-weight:bold;
+             font-family:'Arial',sans-serif;}
+  .ai-text{font-family:'Arial',sans-serif;font-size:0.88rem;line-height:1.8;color:var(--text);}
+  .ai-loading{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.85rem;
+               text-align:center;padding:1.5rem;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* PHASE ROADMAP */
+  .phase{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid #ffffff08;}
+  .phase:last-child{border-bottom:none;}
+  .phase-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+              justify-content:center;font-weight:bold;font-family:'Arial',sans-serif;
+              font-size:0.85rem;flex-shrink:0;}
+  .phase-num.done{background:var(--green);color:var(--navy);}
+  .phase-num.active{background:var(--gold);color:var(--navy);}
+  .phase-num.pending{background:var(--navy3);color:var(--muted);border:1px solid #ffffff22;}
+  .phase-content .p-title{font-family:'Arial',sans-serif;font-size:0.88rem;
+                            font-weight:bold;color:var(--text);margin-bottom:0.2rem;}
+  .phase-content .p-desc{font-family:'Arial',sans-serif;font-size:0.78rem;color:var(--muted);line-height:1.5;}
+
+  /* TTS */
+  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
+            display:flex;align-items:center;gap:1rem;z-index:200;}
+  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
+            font-family:'Arial',sans-serif;cursor:pointer;white-space:nowrap;}
+  .tts-btn.stop{background:var(--red);color:#fff;}
+  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
+              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
+              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;font-family:'Arial',sans-serif;}
+  footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:0.72rem;
+          font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:2rem;}
+  .refresh-bar{display:flex;align-items:center;justify-content:space-between;
+                margin-bottom:1.2rem;font-family:'Arial',sans-serif;font-size:0.78rem;}
+  .refresh-bar .ts{color:var(--muted);}
+  .refresh-btn{background:var(--navy3);color:var(--teal);border:1px solid var(--teal)44;
+                border-radius:6px;padding:0.35rem 0.9rem;font-size:0.75rem;
+                font-family:'Arial',sans-serif;cursor:pointer;}
+  .note{background:#c9a84c0d;border-left:3px solid var(--gold);padding:0.8rem 1rem;
+         border-radius:0 6px 6px 0;margin-bottom:1rem;
+         font-family:'Arial',sans-serif;font-size:0.82rem;color:var(--text);line-height:1.6;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
+    <a href="futures.html" class="active">Futures</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html">Setup Guide</a>
+    <a href="master-prompt.html">Master Prompt</a>
+    <a href="system-guide.html">System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Futures Trading Center</h1>
+  <p>ES · MES · Global Sessions · 23 Hours a Day · Trade During YOUR Daytime</p>
+</div>
+
+<div class="page">
+
+  <div class="refresh-bar">
+    <span class="ts">Last updated: <span id="last-update">Loading...</span></span>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+
+  <!-- GLOBAL SESSION CLOCKS -->
+  <div class="session-bar" id="session-bar">
+    <div class="session" id="sess-asia">
+      <div class="s-name">🌏 Asia Session</div>
+      <div class="s-time">18:00 – 02:00 ET</div>
+      <div class="s-status" id="asia-status">Checking...</div>
+    </div>
+    <div class="session" id="sess-europe">
+      <div class="s-name">🌍 Europe Session</div>
+      <div class="s-time">03:00 – 09:30 ET</div>
+      <div class="s-status" id="europe-status">Checking...</div>
+    </div>
+    <div class="session" id="sess-us">
+      <div class="s-name">🌎 US Session</div>
+      <div class="s-time">09:30 – 16:15 ET</div>
+      <div class="s-status" id="us-status">Checking...</div>
+    </div>
+    <div class="session" id="sess-overnight">
+      <div class="s-name">🌙 Overnight/Globex</div>
+      <div class="s-time">16:30 – 09:30 ET</div>
+      <div class="s-status" id="overnight-status">Checking...</div>
+    </div>
+    <div class="session" style="background:var(--navy3);border:1px solid var(--teal)33;">
+      <div class="s-name" style="color:var(--teal)">🕐 Your Local Time</div>
+      <div class="s-time" id="local-time" style="color:var(--text);font-size:1rem;">—</div>
+      <div class="s-status" id="local-tz" style="color:var(--teal);">SGT / MYT</div>
+    </div>
+  </div>
+
+  <!-- ES / MES HERO PRICE -->
+  <div class="es-hero">
+    <div class="es-price-block">
+      <div class="es-label">ES (E-mini S&P 500)</div>
+      <div class="es-price" id="es-price">—</div>
+      <div class="es-change" id="es-change">Loading...</div>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;margin-top:0.3rem;">
+        $50/point · ~$185K notional
+      </div>
+    </div>
+    <div class="es-price-block">
+      <div class="es-label">MES (Micro E-mini S&P 500)</div>
+      <div class="es-price" id="mes-price" style="font-size:2.2rem;">—</div>
+      <div class="es-change" id="mes-change">Loading...</div>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;margin-top:0.3rem;">
+        $5/point · ~$18.5K notional · Start here
+      </div>
+    </div>
+    <div class="es-details">
+      <div class="row"><span class="l">Overnight High</span><span class="r" id="es-high">—</span></div>
+      <div class="row"><span class="l">Overnight Low</span><span class="r" id="es-low">—</span></div>
+      <div class="row"><span class="l">Overnight Range</span><span class="r" id="es-range">—</span></div>
+      <div class="row"><span class="l">Gap from close</span><span class="r" id="es-gap">—</span></div>
+      <div class="row"><span class="l">Volume</span><span class="r" id="es-vol">—</span></div>
+      <div class="row"><span class="l">MES Margin req.</span><span class="r" style="color:var(--teal)">~$1,500</span></div>
+    </div>
+    <div class="es-signal">
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;
+                   text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;">
+        Futures Signal
+      </div>
+      <div class="signal-big proceed" id="futures-signal-box">
+        <div id="futures-signal-icon">🟢</div>
+        <div id="futures-signal-text" style="font-size:0.9rem;">LONG BIAS</div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--muted);font-family:'Arial',sans-serif;" id="futures-signal-sub">
+        Based on overnight action + intel score
+      </div>
+    </div>
+  </div>
+
+  <!-- AI FUTURES BRIEFING -->
+  <div class="ai-briefing">
+    <div class="ai-badge">AI POWERED</div>
+    <h2>🤖 AI Futures Briefing — Asian Session Edge</h2>
+    <div id="futures-ai-text" class="ai-loading">Generating your futures briefing...</div>
+  </div>
+
+  <div class="grid3">
+    <!-- GLOBAL MARKETS -->
+    <div class="card">
+      <h2>🌏 Asia Markets</h2>
+      <div id="asia-markets">
+        <div class="market-ticker">
+          <span class="mt-flag">🇯🇵</span><span class="mt-name">Nikkei 225</span>
+          <span class="mt-price" id="nk-price">—</span>
+          <span class="mt-chg" id="nk-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇭🇰</span><span class="mt-name">Hang Seng</span>
+          <span class="mt-price" id="hsi-price">—</span>
+          <span class="mt-chg" id="hsi-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇨🇳</span><span class="mt-name">CSI 300</span>
+          <span class="mt-price" id="csi-price">—</span>
+          <span class="mt-chg" id="csi-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇸🇬</span><span class="mt-name">STI (Singapore)</span>
+          <span class="mt-price" id="sti-price">—</span>
+          <span class="mt-chg" id="sti-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇲🇾</span><span class="mt-name">KLCI (Malaysia)</span>
+          <span class="mt-price" id="klci-price">—</span>
+          <span class="mt-chg" id="klci-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇦🇺</span><span class="mt-name">ASX 200</span>
+          <span class="mt-price" id="asx-price">—</span>
+          <span class="mt-chg" id="asx-chg">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EUROPE MARKETS -->
+    <div class="card">
+      <h2>🌍 Europe Markets</h2>
+      <div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇩🇪</span><span class="mt-name">DAX</span>
+          <span class="mt-price" id="dax-price">—</span>
+          <span class="mt-chg" id="dax-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇬🇧</span><span class="mt-name">FTSE 100</span>
+          <span class="mt-price" id="ftse-price">—</span>
+          <span class="mt-chg" id="ftse-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇫🇷</span><span class="mt-name">CAC 40</span>
+          <span class="mt-price" id="cac-price">—</span>
+          <span class="mt-chg" id="cac-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇮🇹</span><span class="mt-name">MIB</span>
+          <span class="mt-price" id="mib-price">—</span>
+          <span class="mt-chg" id="mib-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇪🇸</span><span class="mt-name">IBEX 35</span>
+          <span class="mt-price" id="ibex-price">—</span>
+          <span class="mt-chg" id="ibex-chg">—</span>
+        </div>
+        <div class="market-ticker">
+          <span class="mt-flag">🇨🇭</span><span class="mt-name">SMI</span>
+          <span class="mt-price" id="smi-price">—</span>
+          <span class="mt-chg" id="smi-chg">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MES POSITION CALCULATOR -->
+    <div class="card">
+      <h2>📐 MES Position Calculator</h2>
+      <div class="calc-box">
+        <label class="calc-label">Account Size (USD)</label>
+        <input class="calc-input" id="calc-account" type="number" value="50000" oninput="calcPosition()">
+        <label class="calc-label">Risk per trade (%)</label>
+        <input class="calc-input" id="calc-risk" type="number" value="1" step="0.1" oninput="calcPosition()">
+        <label class="calc-label">Stop loss (ES points)</label>
+        <input class="calc-input" id="calc-stop" type="number" value="10" oninput="calcPosition()">
+        <div class="calc-result" id="calc-result">
+          <div class="r-row"><span style="color:var(--muted)">Max MES contracts</span><span class="r-val" id="cr-contracts">—</span></div>
+          <div class="r-row"><span style="color:var(--muted)">Max risk (USD)</span><span class="r-val" id="cr-risk">—</span></div>
+          <div class="r-row"><span style="color:var(--muted)">Margin needed</span><span class="r-val" id="cr-margin">—</span></div>
+          <div class="r-row"><span style="color:var(--muted)">P&L per point</span><span class="r-val" id="cr-pnl">—</span></div>
+          <div class="r-row"><span style="color:var(--muted)">10pt move = </span><span class="r-val" id="cr-10pt">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- KEY FUTURES LEVELS -->
+    <div class="card">
+      <h2>ES Key Levels — Where to Watch</h2>
+      <div class="note">These levels are where ES tends to find support or resistance. 
+      Watch for reactions at these zones when trading MES overnight.</div>
+      <div class="row"><span class="l">Current ES</span><span class="r neutral" id="kl-es">—</span></div>
+      <div class="row"><span class="l">Overnight High</span><span class="r up" id="kl-high">—</span></div>
+      <div class="row"><span class="l">Overnight Low</span><span class="r dn" id="kl-low">—</span></div>
+      <div class="row"><span class="l">Previous Close</span><span class="r neutral" id="kl-close">—</span></div>
+      <div class="row"><span class="l">5-day VWAP est.</span><span class="r" id="kl-vwap" style="color:var(--purple)">—</span></div>
+      <div class="row"><span class="l">Support zone</span><span class="r up" id="kl-support">—</span></div>
+      <div class="row"><span class="l">Resistance zone</span><span class="r dn" id="kl-resist">—</span></div>
+      <div class="row"><span class="l">Breakout above</span><span class="r" style="color:var(--teal)" id="kl-break">—</span></div>
+    </div>
+
+    <!-- FUTURES STRATEGY ROADMAP -->
+    <div class="card">
+      <h2>Your Futures Journey — Phase Roadmap</h2>
+      <div class="phase">
+        <div class="phase-num done">✓</div>
+        <div class="phase-content">
+          <div class="p-title">Phase 1 — Market Intelligence <span style="color:var(--green);font-size:0.75rem;">LIVE NOW</span></div>
+          <div class="p-desc">Asia/Europe session data, ES prices, global markets, AI briefing. 
+          Know what is happening 24 hours a day without CNBC.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num active">2</div>
+        <div class="phase-content">
+          <div class="p-title">Phase 2 — MES Paper Trading <span style="color:var(--gold);font-size:0.75rem;">NEXT WEEK</span></div>
+          <div class="p-desc">Start with 1 MES contract in paper mode. Algorithm generates 
+          daily trade signals based on your CP3405 intel scores. Track P&L without risk.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num pending">3</div>
+        <div class="phase-content">
+          <div class="p-title">Phase 3 — Live MES (1 contract)</div>
+          <div class="p-desc">After 2 weeks of paper trading, go live with 1 MES contract. 
+          Maximum risk $150 per trade. Build confidence and track record.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num pending">4</div>
+        <div class="phase-content">
+          <div class="p-title">Phase 4 — Scale + ES Options</div>
+          <div class="p-desc">Scale MES to 5-10 contracts. Add ES options (24-hour expiry) 
+          for premium income during Asian hours. Full dual-income system.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num pending">5</div>
+        <div class="phase-content">
+          <div class="p-title">Phase 5 — The Complete System</div>
+          <div class="p-desc">SPX options income (US hours) + MES trend trading (Asian hours) 
+          + ES options premium (overnight). True 24-hour income machine. Book material.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MES EDUCATION -->
+  <div class="card">
+    <h2>Understanding MES — Start Here</h2>
+    <div class="grid3">
+      <div class="edu-box">
+        <div class="edu-title">📦 What is MES?</div>
+        <div class="edu-text">Micro E-mini S&P 500 futures. Tracks the S&P 500 index 
+        at $5 per point. If ES moves 10 points, you make or lose $50 per MES contract. 
+        It is the beginner-friendly version of the full ES contract which moves $50/point.</div>
+      </div>
+      <div class="edu-box">
+        <div class="edu-title">⏰ When Can You Trade?</div>
+        <div class="edu-text">MES trades 23 hours/day, Sunday 6pm ET to Friday 5pm ET. 
+        For Singapore/Malaysia traders, the prime window is 9pm–2am SGT when both Asian 
+        session and early US overnight session overlap with the most volume.</div>
+      </div>
+      <div class="edu-box">
+        <div class="edu-title">💰 How Much Do You Need?</div>
+        <div class="edu-text">IBKR requires approximately $1,500 margin per MES contract. 
+        Prof Dr Tan's recommended starting size: 1 contract with $10,000 in your account. 
+        Risk per trade: maximum $50-100 (10-20 ES points stop loss).</div>
+      </div>
+      <div class="edu-box">
+        <div class="edu-title">📈 The Basic Strategy</div>
+        <div class="edu-text">During Asian session, ES usually follows the direction set 
+        by Asian markets (Nikkei, Hang Seng). If Nikkei is up 1%+ and VIX is below 20, 
+        buy 1 MES at Asia open, target 10-15 points, stop at 8 points. Simple and mechanical.</div>
+      </div>
+      <div class="edu-box">
+        <div class="edu-title">🛡️ Risk Management</div>
+        <div class="edu-text">Never risk more than 1% of account per trade. 
+        With $50,000, that is $500 maximum risk = 100 ES points = never acceptable. 
+        Proper risk: $150 per trade = 30 ES points stop = 6 MES contracts maximum. 
+        Start with 1 and learn first.</div>
+      </div>
+      <div class="edu-box">
+        <div class="edu-title">🤝 Options + Futures Together</div>
+        <div class="edu-text">The combination is powerful. Options sell premium every Monday 
+        for weekly income (theta decay). Futures capture directional moves during Asian hours 
+        (delta gain). Together they generate income in ALL market conditions — trending OR sideways.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Prof Dr Tan · IBKR Options Income · Futures data via Yahoo Finance · 
+MES trades on CME Globex via IBKR account U10500387</footer>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud to listen to this page</span>
+  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
+    <option value="0.6">0.6x</option>
+    <option value="0.72" selected>0.72x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1.0">1.0x</option>
+  </select>
+</div>
+
+<script>
+// ── SESSION CLOCKS ────────────────────────────────────────────────────────────
+function updateSessions() {
+  const now = new Date();
+  const etOffset = -4; // EDT
+  const etHour = (now.getUTCHours() + etOffset + 24) % 24;
+  const etMin  = now.getUTCMinutes();
+  const etTime = etHour + etMin/60;
+
+  const sessions = {
+    asia:      { start:18, end:26, label:'asia' },    // 18:00-02:00 ET
+    europe:    { start:3,  end:9.5, label:'europe' },
+    us:        { start:9.5,end:16.25, label:'us' },
+    overnight: { start:16.5, end:33.5, label:'overnight' } // wraps around
+  };
+
+  function isActive(s, e, t) {
+    if (s < e) return t >= s && t < e;
+    return t >= s || t < (e - 24);
+  }
+
+  const statuses = {
+    asia:      isActive(18,26,etTime) ? 'OPEN NOW ●' : 'Closed',
+    europe:    isActive(3,9.5,etTime) ? 'OPEN NOW ●' : 'Closed',
+    us:        isActive(9.5,16.25,etTime) ? 'OPEN NOW ●' : 'Closed',
+    overnight: (!isActive(9.5,16.5,etTime)) ? 'ACTIVE ●' : 'Closed (US session)'
+  };
+
+  Object.entries(statuses).forEach(([key,status]) => {
+    const el = document.getElementById(key+'-status');
+    if (el) {
+      el.textContent = status;
+      const isOpen = status.includes('OPEN') || status.includes('ACTIVE');
+      el.className = 's-status '+(isOpen?'active':'closed');
+      const card = document.getElementById('sess-'+key);
+      if (card) card.className = 'session '+(isOpen?'active':'closed');
+    }
+  });
+
+  // Local time
+  document.getElementById('local-time').textContent = 
+    now.toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+setInterval(updateSessions, 1000);
+updateSessions();
+
+// ── DATA FETCH ────────────────────────────────────────────────────────────────
+async function fetchQuote(symbol) {
+  const proxies = [
+    `https://corsproxy.io/?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?interval=1d&range=5d')}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?interval=1d&range=5d')}`,
+  ];
+  for (const url of proxies) {
+    try {
+      const r = await fetch(url);
+      const d = await r.json();
+      const meta = d.chart.result[0].meta;
+      return {
+        price:     meta.regularMarketPrice,
+        prev:      meta.chartPreviousClose,
+        high52:    meta.fiftyTwoWeekHigh,
+        low52:     meta.fiftyTwoWeekLow,
+        dayHigh:   meta.regularMarketDayHigh,
+        dayLow:    meta.regularMarketDayLow,
+        change:    meta.regularMarketPrice - meta.chartPreviousClose,
+        changePct: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100),
+        volume:    meta.regularMarketVolume
+      };
+    } catch(e) { continue; }
+  }
+  return null;
+}
+
+function fmtPrice(n){return n!=null?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';}
+function fmtPct(n){return n!=null?(n>=0?'+':'')+n.toFixed(2)+'%':'—';}
+function fmt(n,d=2){return n!=null?n.toFixed(d):'—';}
+
+function setMarketTicker(priceId, chgId, q) {
+  if (!q) return;
+  document.getElementById(priceId).textContent = fmtPrice(q.price);
+  const el = document.getElementById(chgId);
+  el.textContent = (q.change>=0?'▲':'▼')+' '+fmtPct(q.changePct);
+  el.className = 'mt-chg '+(q.change>=0?'up':'dn');
+}
+
+let esData = null;
+
+async function loadFuturesData() {
+  // ES futures
+  const es = await fetchQuote('ES=F');
+  if (es) {
+    esData = es;
+    document.getElementById('es-price').textContent = fmtPrice(es.price);
+    const esChgEl = document.getElementById('es-change');
+    esChgEl.textContent = (es.change>=0?'▲':'▼')+' '+fmtPct(es.changePct)+' ('+fmt(es.change,2)+' pts)';
+    esChgEl.className = 'es-change '+(es.change>=0?'up':'dn');
+
+    // MES = same price as ES
+    document.getElementById('mes-price').textContent = fmtPrice(es.price);
+    const mesChgEl = document.getElementById('mes-change');
+    mesChgEl.textContent = (es.change>=0?'▲':'▼')+' $'+(Math.abs(es.change)*5).toFixed(0)+'/contract';
+    mesChgEl.className = 'es-change '+(es.change>=0?'up':'dn');
+
+    document.getElementById('es-high').textContent = fmtPrice(es.dayHigh);
+    document.getElementById('es-low').textContent  = fmtPrice(es.dayLow);
+    const range = (es.dayHigh - es.dayLow).toFixed(1);
+    document.getElementById('es-range').textContent = range+' pts ($'+(range*5).toFixed(0)+' MES)';
+    const gap = es.price - es.prev;
+    const gapEl = document.getElementById('es-gap');
+    gapEl.textContent = (gap>=0?'+':'')+gap.toFixed(1)+' pts';
+    gapEl.className = 'r '+(gap>=0?'up':'dn');
+    document.getElementById('es-vol').textContent = es.volume ? es.volume.toLocaleString() : '—';
+
+    // Key levels
+    document.getElementById('kl-es').textContent    = fmtPrice(es.price);
+    document.getElementById('kl-high').textContent  = fmtPrice(es.dayHigh);
+    document.getElementById('kl-low').textContent   = fmtPrice(es.dayLow);
+    document.getElementById('kl-close').textContent = fmtPrice(es.prev);
+    const vwap = ((es.dayHigh+es.dayLow+es.price)/3).toFixed(2);
+    document.getElementById('kl-vwap').textContent  = fmtPrice(parseFloat(vwap));
+    document.getElementById('kl-support').textContent = fmtPrice(Math.round(es.dayLow/25)*25-25);
+    document.getElementById('kl-resist').textContent  = fmtPrice(Math.round(es.dayHigh/25)*25+25);
+    document.getElementById('kl-break').textContent   = fmtPrice(Math.round(es.dayHigh/25)*25+50);
+
+    // Futures signal
+    const bullish = es.change > 0 && Math.abs(es.changePct) < 2;
+    const box = document.getElementById('futures-signal-box');
+    document.getElementById('futures-signal-icon').textContent = bullish?'🟢':es.change<0?'🔴':'🟡';
+    document.getElementById('futures-signal-text').textContent = bullish?'LONG BIAS':es.change<0?'SHORT BIAS':'NEUTRAL';
+    box.className = 'signal-big '+(bullish?'proceed':es.change<0?'skip':'caution');
+    document.getElementById('futures-signal-sub').textContent =
+      `ES ${es.change>=0?'up':'down'} ${Math.abs(es.changePct).toFixed(2)}% · Gap: ${gap>=0?'+':''}${gap.toFixed(1)}pts`;
+  }
+  calcPosition();
+}
+
+async function loadGlobalMarkets() {
+  const markets = [
+    ['nk','^N225'],['hsi','^HSI'],['csi','000300.SS'],
+    ['sti','^STI'],['klci','^KLSE'],['asx','^AXJO'],
+    ['dax','^GDAXI'],['ftse','^FTSE'],['cac','^FCHI'],
+    ['mib','FTSEMIB.MI'],['ibex','^IBEX'],['smi','^SSMI'],
+  ];
+  for (const [id,sym] of markets) {
+    const q = await fetchQuote(sym);
+    setMarketTicker(id+'-price', id+'-chg', q);
+  }
+}
+
+// ── POSITION CALCULATOR ───────────────────────────────────────────────────────
+function calcPosition() {
+  const account  = parseFloat(document.getElementById('calc-account').value)||50000;
+  const riskPct  = parseFloat(document.getElementById('calc-risk').value)||1;
+  const stopPts  = parseFloat(document.getElementById('calc-stop').value)||10;
+  const maxRisk  = account * riskPct / 100;
+  const riskPerContract = stopPts * 5; // $5/point for MES
+  const contracts = Math.max(1, Math.floor(maxRisk / riskPerContract));
+  const margin = contracts * 1500;
+
+  document.getElementById('cr-contracts').textContent = contracts+' MES';
+  document.getElementById('cr-risk').textContent = '$'+maxRisk.toFixed(0);
+  document.getElementById('cr-margin').textContent = '$'+margin.toLocaleString();
+  document.getElementById('cr-pnl').textContent = '$'+(contracts*5)+'/point';
+  document.getElementById('cr-10pt').textContent = '$'+(contracts*5*10).toLocaleString();
+}
+
+// ── AI FUTURES BRIEFING ───────────────────────────────────────────────────────
+async function generateFuturesBriefing() {
+  const esPrice  = document.getElementById('es-price').textContent;
+  const esChange = document.getElementById('es-change').textContent;
+  const signal   = document.getElementById('futures-signal-text').textContent;
+  const nkChg    = document.getElementById('nk-chg').textContent;
+  const hsiChg   = document.getElementById('hsi-chg').textContent;
+
+  const prompt = `You are a futures trading assistant for Prof Dr Tan, based in Singapore/Malaysia, 
+trading MES (Micro E-mini S&P 500) futures during Asian hours on IBKR.
+
+Current data:
+- ES Futures: ${esPrice} (${esChange})
+- System Signal: ${signal}
+- Nikkei change: ${nkChg}
+- Hang Seng change: ${hsiChg}
+- Strategy: Trend following on MES during Asian/overnight session
+- Account: ~$471K at IBKR, starting with 1 MES contract
+
+Write a concise Asian session briefing (120-150 words) for a futures trader. Cover:
+1. Overnight ES action and what it signals (2 sentences)
+2. Key Asian market correlation to watch (1 sentence)
+3. Clear trade idea for the session with entry zone, target, and stop (2 sentences)
+4. Risk reminder (1 sentence)
+
+Be direct and specific with price levels. Address Prof Dr Tan directly.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    const data = await response.json();
+    document.getElementById('futures-ai-text').className = 'ai-text';
+    document.getElementById('futures-ai-text').innerHTML = 
+      data.content[0].text.replace(/\n/g,'<br>');
+  } catch(e) {
+    document.getElementById('futures-ai-text').className = 'ai-text';
+    document.getElementById('futures-ai-text').innerHTML = 
+      `ES trading at ${esPrice} with signal: <strong style="color:var(--teal)">${signal}</strong>.<br><br>
+      Watch Nikkei and Hang Seng direction for early Asian session cues. 
+      If both Asian indices are positive and ES holds above overnight low, 
+      consider 1 MES long with 10-point stop and 15-point target.<br><br>
+      ⚠️ Start with 1 contract only until you have 20 paper trades logged.`;
+  }
+}
+
+// ── MASTER LOAD ───────────────────────────────────────────────────────────────
+async function loadAll() {
+  document.getElementById('last-update').textContent = 'Refreshing...';
+  await loadFuturesData();
+  await loadGlobalMarkets();
+  await generateFuturesBriefing();
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+}
+
+loadAll();
+setInterval(loadAll, 300000);
+
+// ── TTS ───────────────────────────────────────────────────────────────────────
+let ttsSentences=[],ttsIndex=0,ttsActive=false,ttsRate=0.72,ttsVoice=null;
+function ttsGetVoices(){const v=window.speechSynthesis.getVoices();
+  ttsVoice=v.find(x=>x.lang==='en-GB'&&x.name.toLowerCase().includes('female'))||
+  v.find(x=>x.lang==='en-GB')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}
+window.speechSynthesis.onvoiceschanged=ttsGetVoices;ttsGetVoices();
+function ttsExtractText(){
+  const skip=new Set(['NAV','FOOTER','BUTTON','SELECT','OPTION','SCRIPT','STYLE','INPUT']);
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,
+    {acceptNode(node){let el=node.parentElement;while(el){
+      if(skip.has(el.tagName))return NodeFilter.FILTER_REJECT;
+      if(el.classList.contains('tts-bar'))return NodeFilter.FILTER_REJECT;
+      el=el.parentElement;}
+    return node.textContent.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+  let text='';while(walker.nextNode())text+=' '+walker.currentNode.textContent.trim();
+  return text.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]+/g)||[text];}
+function ttsSpeak(s){if(!ttsActive)return;
+  const u=new SpeechSynthesisUtterance(s.trim());
+  u.rate=ttsRate;u.pitch=1.0;u.volume=1.0;if(ttsVoice)u.voice=ttsVoice;
+  u.onstart=()=>{document.getElementById('tts-label').textContent=s.trim();};
+  u.onend=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);else ttsStop();};
+  u.onerror=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);};
+  window.speechSynthesis.speak(u);}
+function ttsToggle(){if(ttsActive){ttsStop();return;}
+  ttsActive=true;ttsIndex=0;ttsSentences=ttsExtractText();
+  document.getElementById('tts-btn').textContent='⏹ Stop';
+  document.getElementById('tts-btn').classList.add('stop');
+  window.speechSynthesis.cancel();ttsSpeak(ttsSentences[0]);}
+function ttsStop(){ttsActive=false;window.speechSynthesis.cancel();
+  document.getElementById('tts-btn').textContent='🔊 Read Aloud';
+  document.getElementById('tts-btn').classList.remove('stop');
+  document.getElementById('tts-label').textContent='Press Read Aloud to listen to this page';}
+function ttsSetSpeed(val){ttsRate=parseFloat(val);
+  if(ttsActive){const idx=ttsIndex;ttsStop();ttsActive=true;ttsIndex=idx;
+    window.speechSynthesis.cancel();ttsSpeak(ttsSentences[ttsIndex]);}}
+window.addEventListener('beforeunload',()=>window.speechSynthesis.cancel());
+</script>
+</body>
+</html>
