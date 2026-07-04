@@ -11,233 +11,380 @@
     --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;min-height:100vh;}
-  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 2rem;height:60px;position:sticky;top:0;z-index:100;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;
+       min-height:100vh;padding-bottom:40px;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;display:flex;
+      align-items:center;justify-content:space-between;padding:0 2rem;height:60px;
+      position:sticky;top:0;z-index:100;}
   nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
   nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
-  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;
+         font-family:'Arial',sans-serif;transition:color 0.2s;}
   nav a:hover,nav a.active{color:var(--teal);}
-  .page{max-width:1000px;margin:0 auto;padding:2rem;}
-  .hero{text-align:center;padding:2.5rem 1rem 1.5rem;}
+  .page{max-width:960px;margin:0 auto;padding:2rem;}
+  .hero{text-align:center;padding:2rem 1rem 1.5rem;}
   .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.4rem;}
   .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.88rem;}
-  .card{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;padding:1.5rem;margin-bottom:1.2rem;}
-  .card h2{font-size:0.85rem;color:var(--gold);font-family:'Arial',sans-serif;
-            text-transform:uppercase;letter-spacing:0.08em;
-            border-bottom:1px solid #ffffff11;padding-bottom:0.7rem;margin-bottom:1.2rem;}
-  .step{display:flex;gap:1.2rem;padding:1rem 0;border-bottom:1px solid #ffffff08;}
-  .step:last-child{border-bottom:none;}
-  .step-num{background:var(--teal);color:var(--navy);border-radius:50%;
-             width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-             font-weight:bold;font-family:'Arial',sans-serif;font-size:0.85rem;
-             flex-shrink:0;margin-top:0.1rem;}
-  .step-content{flex:1;}
-  .step-title{color:var(--gold);font-family:'Arial',sans-serif;font-size:0.9rem;
-               font-weight:bold;margin-bottom:0.4rem;}
-  .step-desc{color:var(--text);font-family:'Arial',sans-serif;font-size:0.83rem;line-height:1.7;}
-  .code{background:var(--navy3);border:1px solid #ffffff11;border-radius:6px;
-         padding:0.7rem 1rem;font-family:'Courier New',monospace;font-size:0.8rem;
-         color:var(--teal);margin:0.5rem 0;line-height:1.6;}
-  .done{display:inline-block;background:#22c55e22;color:var(--green);
-         border:1px solid #22c55e44;border-radius:4px;padding:0.1rem 0.5rem;
-         font-size:0.72rem;font-family:'Arial',sans-serif;margin-left:0.5rem;}
-  .pending{display:inline-block;background:#c9a84c22;color:var(--gold);
-            border:1px solid #c9a84c44;border-radius:4px;padding:0.1rem 0.5rem;
-            font-size:0.72rem;font-family:'Arial',sans-serif;margin-left:0.5rem;}
-  .note{background:#c9a84c0d;border-left:3px solid var(--gold);
-         padding:0.9rem 1.1rem;border-radius:0 6px 6px 0;margin:1rem 0;
-         font-family:'Arial',sans-serif;font-size:0.83rem;color:var(--text);line-height:1.6;}
+  .note{background:#c9a84c0d;border-left:3px solid var(--gold);padding:0.9rem 1.2rem;
+         border-radius:0 6px 6px 0;margin-bottom:1.5rem;
+         font-family:'Arial',sans-serif;font-size:0.85rem;color:var(--text);line-height:1.6;}
+  .section{margin-bottom:1.5rem;}
   .section-title{color:var(--teal);font-size:0.8rem;font-family:'Arial',sans-serif;
                   text-transform:uppercase;letter-spacing:0.08em;
-                  margin:2rem 0 1rem;border-bottom:1px solid #ffffff11;padding-bottom:0.5rem;}
-            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
-            display:flex;align-items:center;gap:1rem;z-index:200;}
-            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
-            font-family:'Arial',sans-serif;cursor:pointer;letter-spacing:0.05em;white-space:nowrap;}
-              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;font-family:'Arial',sans-serif;}
-  body{padding-bottom:60px;}
-  footer{text-align:center;padding:2rem;color:var(--muted);
-          font-size:0.72rem;font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:3rem;}
-
-  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
-            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
-            display:flex;align-items:center;gap:1rem;z-index:200;}
-  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
-            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
-            font-family:'Arial',sans-serif;cursor:pointer;white-space:nowrap;}
-  .tts-btn.stop{background:var(--red);color:#fff;}
-  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
-              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
-              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;
-              font-family:'Arial',sans-serif;}
-  .tts-word{display:inline;border-radius:3px;cursor:pointer;padding:0 1px;}
-  .tts-word:hover{background:rgba(201,168,76,0.25);outline:1px dashed rgba(201,168,76,0.5);}
-  .tts-word.tts-active{background:var(--gold)!important;color:var(--navy)!important;
-                        border-radius:3px;padding:0 2px;box-shadow:0 0 6px var(--gold)88;}
-  body{padding-bottom:65px;}
+                  margin-bottom:0.8rem;border-bottom:1px solid #ffffff11;
+                  padding-bottom:0.5rem;}
+  .prompt-box{background:var(--navy2);border:1px solid var(--gold)33;border-radius:10px;
+               padding:1.5rem;position:relative;}
+  .prompt-text{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--text);
+                white-space:pre-wrap;line-height:1.75;
+                max-height:500px;overflow-y:auto;}
+  .copy-btn{position:absolute;top:1rem;right:1rem;background:var(--teal);color:var(--navy);
+             border:none;border-radius:6px;padding:0.4rem 1rem;font-size:0.75rem;
+             font-family:'Arial',sans-serif;font-weight:bold;cursor:pointer;
+             letter-spacing:0.05em;transition:opacity 0.2s;}
+  .copy-btn:hover{opacity:0.85;}
+  .copy-btn.copied{background:var(--green);}
+  .tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+  .tag{background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);
+        padding:0.3rem 0.8rem;border-radius:4px;font-size:0.75rem;
+        font-family:'Arial',sans-serif;cursor:pointer;transition:all 0.2s;}
+  .tag:hover{background:var(--teal);color:var(--navy);}
+  .ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  @media(max-width:600px){.ref-grid{grid-template-columns:1fr;}}
+  .ref-card{background:var(--navy2);border:1px solid #ffffff11;border-radius:8px;padding:1rem;}
+  .ref-card h3{font-size:0.78rem;color:var(--gold);font-family:'Arial',sans-serif;
+                text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.7rem;}
+  .ref-row{display:flex;justify-content:space-between;padding:0.3rem 0;
+            border-bottom:1px solid #ffffff08;font-family:'Arial',sans-serif;font-size:0.78rem;}
+  .ref-row:last-child{border-bottom:none;}
+  .ref-row .l{color:var(--muted);}
+  .ref-row .r{color:var(--text);font-weight:bold;font-size:0.72rem;
+               text-align:right;word-break:break-all;max-width:60%;}
+  .ref-row .r a{color:var(--teal);text-decoration:none;}
+  .ref-row .r a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="brand">&#9889; IBKR OPTIONS INCOME</div>
   <div class="links">
-    <a href="index.html" >Dashboard</a>
-    <a href="market.html" >Market</a>
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
     <a href="futures.html">Futures</a>
     <a href="futures-rankings.html">Rankings</a>
-    <a href="track-record.html" >Track Record</a>
-    <a href="intelligence.html" >Intelligence</a>
-    <a href="learn.html" >Learn</a>
-    <a href="setup-guide.html" >Setup Guide</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html">Setup Guide</a>
     <a href="master-prompt.html" class="active">Master Prompt</a>
-    <a href="system-guide.html" >System Guide</a>
+    <a href="system-guide.html">System Guide</a>
   </div>
 </nav>
 
 <div class="hero">
   <h1>Master Prompt</h1>
-  <p>Paste this into any new Claude chat to instantly resume full context</p>
+  <p>Copy and paste into any new Claude chat to instantly resume full context</p>
 </div>
 
 <div class="page">
+
   <div class="note">
-    💡 <strong>How to use:</strong> Start a new Claude chat, paste the prompt below, and Claude immediately
-    knows the full system — strategy, architecture, credentials reference, pending items, and what to do next.
-    No re-explanation required.
+    &#128161; <strong>How to use:</strong> Open a new Claude chat at claude.ai.
+    Copy the prompt below. Paste it as your first message.
+    Claude will immediately know everything about your system, strategy, credentials reference,
+    and exactly what to work on next. No re-explanation needed ever.
   </div>
 
-  <div class="card">
-    <h2>Full Resume Prompt <button onclick="copyPrompt()" style="float:right;background:var(--teal);color:var(--navy);border:none;border-radius:6px;padding:0.3rem 0.9rem;font-size:0.75rem;font-weight:bold;font-family:'Arial',sans-serif;cursor:pointer;">COPY</button></h2>
-    <div class="code" id="prompt-text" style="color:var(--text);white-space:pre-wrap;line-height:1.8;max-height:600px;overflow-y:auto;">You are assisting Professor Dr. Tan (Stanford University, IEEE Senior Member) with his IBKR Algorithmic Options Income System.
+  <!-- MAIN MASTER PROMPT -->
+  <div class="section">
+    <div class="section-title">&#128196; Complete Master Prompt — Copy This</div>
+    <div class="prompt-box">
+      <button class="copy-btn" id="copy-main" onclick="copyText('main-prompt','copy-main')">COPY</button>
+      <div class="prompt-text" id="main-prompt">You are assisting Professor Dr. Tan (陳德強 / Tan Teik Kheong), Stanford University affiliated academic, IEEE Senior Member with 40 years experience across Cisco, NXP Semiconductors, Accenture, FINRA, and IMDA Singapore. He teaches CP5640 (Digital Technologies for Management) and CP3405 (Design Thinking 3). Based in Singapore/Malaysia. Communicates via voice-to-text on Samsung Galaxy Note 5 — expect run-on sentences and homophone errors, parse for intent.
 
-SYSTEM OVERVIEW:
-Fully automated SPX Bull Put Spread income system on IBKR. Hands-off — algorithm runs on schedule, generates weekly recommendations, executes after Prof Dr Tan approves via website.
+════════════════════════════════════════
+SYSTEM 1 — IBKR ALGORITHMIC OPTIONS INCOME
+════════════════════════════════════════
 
-LIVE INFRASTRUCTURE:
-- GitHub Repo: ProfDrTan/ibkr-options-income (public)
-- Website: profdrtan.github.io/ibkr-options-income (GitHub Pages, auto-deploys from root)
-- IBKR Account: U10500387 | Options Level 3 | Net Liq ~USD 471K
-- Strategy: SPX Bull Put Spreads | 10 spreads/week | Moderate risk
-- GitHub Actions: Monday 09:35 ET (generate recommendation) + Daily 15:45 ET (position check)
-- Telegram bot: @ibkr_options_profdrtan_bot | token in GitHub Secret TELEGRAM_BOT_TOKEN | chat_id in TELEGRAM_CHAT_ID
+LIVE WEBSITE: profdrtan.github.io/ibkr-options-income
+GITHUB REPO:  github.com/ProfDrTan/ibkr-options-income (public)
+GITHUB PAT:   Stored in Claude memory (no expiry, Contents+Actions+Workflows R/W)
 
-COMPLETED SETUP (as of July 2, 2026):
-✅ IBKR account U10500387 — Options Level 3 approved
-✅ TWS API enabled — port 7496, Read-Only API unchecked
-✅ Telegram bot created — @ibkr_options_profdrtan_bot, chat_id=1129639290
-✅ GitHub Secrets added — TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
-✅ GitHub Pages live — profdrtan.github.io/ibkr-options-income
-✅ All Python modules built and pushed
-✅ GitHub Actions schedules configured (Monday + Daily)
-✅ Website has 7 tabs: Dashboard, Track Record, Intelligence, Learn, Setup Guide, Master Prompt, System Guide
-✅ Read-aloud on all pages (UK English female, 0.72x, sentence chaining)
+WEBSITE TABS (all at repo root → GitHub Pages):
+  index.html            Dashboard: KPIs, recommendation, approve button, positions
+  market.html           Market Overview: live tickers, AI briefing, Fear&Greed, sectors
+  futures.html          Futures Trading Center: ES/MES prices, global sessions, MES calculator
+  futures-rankings.html Futures Rankings: 27 contracts ranked, heatmap, correlation to SPX
+  track-record.html     Full P&L history, win rate, trade table
+  intelligence.html     5-agent intel scores with descriptions
+  learn.html            Educational modules (theta decay, bull put spread, rules)
+  setup-guide.html      Public step-by-step setup guide
+  master-prompt.html    This page
+  system-guide.html     File-by-file technical reference
+  tts.js                Shared TTS: word-level gold highlight + click-to-jump, all browsers
+
+IBKR ACCOUNT: U10500387 | Options Level 3 | Net Liq ~USD 471K
+STRATEGY: SPX Bull Put Spreads | 10 spreads/week | Moderate risk profile
+IBKR TWS: Port 7496 (live) | Read-Only API: UNCHECKED | API enabled
+
+TELEGRAM BOT: @ibkr_options_profdrtan_bot
+  Token:   GitHub Secret TELEGRAM_BOT_TOKEN
+  Chat ID: GitHub Secret TELEGRAM_CHAT_ID (1129639290)
 
 CODEBASE (repo root):
-- config.py — All parameters: IBKR_ACCOUNT=U10500387, NUM_SPREADS=10, SPREAD_WIDTH=10, TARGET_DELTA=0.05, PROFIT_TARGET=50%, VIX_MAX=25
-- market_intel.py — 5-agent scoring: almanac(15%) + macro(20%) + technical(25%) + llm(20%) + human(20%)
-- strategy.py — Strike selection, gate checks, recommendation builder
-- risk_manager.py — 50% profit target, 200% stop loss, Thursday forced close
-- executor.py — IBKR TWS API order placement (ibapi library, port 7496)
-- alerts.py — Telegram notifications for all trade events
-- main.py — Master controller: modes are monday | check | execute
-- data/trade_state.json — Live state: recommendation, positions, P&L log
-- .github/workflows/monday_open.yml — Monday 09:35 ET (14:35 UTC)
-- .github/workflows/daily_check.yml — Daily 15:45 ET (20:45 UTC)
-
-WEBSITE PAGES (all at repo root):
-- index.html — Dashboard: KPIs, recommendation, intel bars, approve button, positions, trade log
-- track-record.html — Full P&L history, win rate, trade table
-- intelligence.html — 5 agent scores with descriptions
-- learn.html — Educational modules (theta decay, bull put spread, high probability rules)
-- setup-guide.html — Public step-by-step setup guide
-- master-prompt.html — This page
-- system-guide.html — File-by-file technical reference
+  config.py        All parameters: IBKR_ACCOUNT=U10500387, NUM_SPREADS=10,
+                   SPREAD_WIDTH=10, TARGET_DELTA=0.05, PROFIT_TARGET=50%,
+                   MAX_LOSS=200%, VIX_MAX=25, MIN_SCORE=55
+  market_intel.py  5-agent scoring: almanac(15%)+macro(20%)+technical(25%)+llm(20%)+human(20%)
+  strategy.py      Strike selection, gate checks, recommendation builder
+  risk_manager.py  50% profit target, 200% stop loss, Thursday forced close
+  executor.py      IBKR TWS API order placement (ibapi, port 7496)
+  alerts.py        Telegram notifications for all trade events
+  main.py          Master controller: modes = monday | check | execute
+  data/trade_state.json  Live state: recommendation, positions, P&L log
+  .github/workflows/monday_open.yml   Monday 09:35 ET (14:35 UTC)
+  .github/workflows/daily_check.yml   Daily 15:45 ET (20:45 UTC)
 
 APPROVAL WORKFLOW:
-1. Monday 09:35 ET — GitHub Actions runs main.py monday
-2. Algorithm generates SPX Bull Put Spread recommendation
-3. data/trade_state.json updated → GitHub Pages auto-updates website
-4. Telegram alert sent to Prof Dr Tan's phone
-5. Prof Dr Tan reviews on website and clicks APPROVE
-6. executor.py connects to IBKR TWS port 7496 → places order
-7. Telegram confirmation sent when filled
+  1. Monday 09:35 ET — GitHub Actions runs main.py monday
+  2. Algorithm generates SPX Bull Put Spread recommendation
+  3. data/trade_state.json updated → website auto-updates
+  4. Telegram alert sent to Prof Dr Tan's phone
+  5. Prof Dr Tan reviews on website → clicks APPROVE
+  6. executor.py connects IBKR TWS port 7496 → places order
+  7. Telegram confirmation when filled
+
+COMPLETED SETUP (July 2, 2026):
+  ✅ IBKR account U10500387 — Options Level 3 approved
+  ✅ TWS API enabled — port 7496, Read-Only unchecked
+  ✅ Telegram bot wired — @ibkr_options_profdrtan_bot
+  ✅ GitHub Secrets — TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+  ✅ GitHub Pages live — profdrtan.github.io/ibkr-options-income
+  ✅ All Python modules built and pushed
+  ✅ GitHub Actions schedules configured
+  ✅ 10 website tabs with read-aloud on all pages
+  ✅ Word-level TTS highlighting (tts.js) — gold highlight, click-to-jump
+  ✅ Market tab: live tickers, AI briefing, Fear&Greed, sectors, earnings calendar
+  ✅ Futures tab: ES/MES live, global sessions clock, MES position calculator
+  ✅ Futures Rankings: 27 contracts ranked with heatmap and SPX correlation
+  ⏳ First live trade — Monday 09:35pm Malaysia time
 
 PENDING ITEMS:
-1. First live test — run main.py monday manually to validate full pipeline
-2. Wire approval button to update trade_state.json via GitHub API
-3. Connect live SPX price feed in strategy.py (currently placeholder 7469)
-4. First paper trade Monday to validate before going live
+  1. Wire approve button to write trade_state.json via GitHub API
+  2. Connect live SPX price feed in strategy.py (replace placeholder)
+  3. First paper trade test to validate full pipeline end-to-end
+  4. Scale to live trading after 2 weeks paper validation
 
-GITHUB API RULES (mandatory):
-- Always GET current SHA before any PUT
-- Headers: Authorization Bearer TOKEN, Accept application/vnd.github+json, X-GitHub-Api-Version 2022-11-28, User-Agent ProfDrTan-Monitor/1.0
-- PAT stored in Claude memory — no expiry, Contents+Actions+Workflows R/W
-- Never ask Prof Dr Tan to upload files or run commands manually
+FUTURES TRADING (Phase 1 live, Phase 2 next week):
+  MES = Micro E-mini S&P 500, $5/point, ~$1,500 margin/contract
+  Strategy: Trend following during Asian session (9pm-2am SGT)
+  IBKR account already approved for Futures trading
+  Roadmap: Phase1=Intel(done) → Phase2=Paper → Phase3=1contract → Phase4=Scale → Phase5=Full system
 
-STRATEGY PARAMETERS:
-- Underlying: SPX | 10 spreads/week | 10-point wide | 5-delta short put
-- Min premium $150 | Max premium $250 | Profit target 50% | Stop 200%
-- Thursday forced close | VIX max 25 | Min composite score 55/100
+BOOK IN PROGRESS: "The 3-Hour Trader"
+  How working professionals use AI + options to generate weekly income
+  CP3405 student pipeline is the origin story
+  Live track record from this system is the proof
+  Target audience: Singapore/Malaysia/Asia working professionals
 
-BOOK IN PROGRESS:
-"The 3-Hour Trader" — how working professionals use AI and options to generate weekly income without watching the market. CP3405 student pipeline is the origin story. Live track record from this system is the proof.</div>
-  </div>
+════════════════════════════════════════
+SYSTEM 2 — AI POWER SHIFT
+════════════════════════════════════════
 
-  <div class="card">
-    <h2>Quick Tags — Add After the Prompt</h2>
-    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;font-family:'Arial',sans-serif;font-size:0.8rem;">
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Wire the approval button</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Connect live SPX price feed</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Run first paper trade test</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Add a new tab to the website</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Update strategy parameters</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Review last week P&L</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Integrate CP3405 signals</span>
-      <span style="background:var(--navy3);border:1px solid var(--teal)33;color:var(--teal);padding:0.3rem 0.7rem;border-radius:4px;">Work on The 3-Hour Trader book</span>
+LIVE WEBSITE:  ai-power-shift.pages.dev (Cloudflare Pages)
+GITHUB REPO:   github.com/ProfDrTan/ai-power-shift (public)
+FILES: index.html, book.html, for-my-father.html, tts.js
+
+BOOK: "The AI PowerShift: Who Owns the Intelligence, Who Pays the Rent,
+       and Who Gets Left Behind"
+  Prof Dr Tan's third book. Core thesis: AI is a power-transfer story —
+  from apps to infrastructure, from public markets to private capital.
+  Publication-ready PDF manuscript exists.
+  Bilingual English/Mandarin dedication pages.
+  Full read-aloud site with sentence chaining.
+
+TTS ON BOOK SITE:
+  book.html has its own paragraph+word reader (play/pause/EN/ZH buttons)
+  Word-level gold highlighting upgraded July 3 2026
+  onboundary for desktop, timer fallback for Chrome Android
+  for-my-father.html has dedicated read-aloud for Prof Dr Tan's father
+    (Tan Mung Lee 陳孟利, age 94, Mandarin-speaking)
+
+DESIGN: Deep navy #0a0e1a, gold #c9a84c, teal #2dd4bf, Georgia serif body
+
+════════════════════════════════════════
+SYSTEM 3 — CP3405 COURSE (DT3 TR2 2026)
+════════════════════════════════════════
+
+COURSE WEBSITE: dt3-tr2-26-course-website (Cloudflare Pages)
+GITHUB REPO:    github.com/ProfDrTan/dt3-tr2-26-course-website
+5 student teams building AI market intelligence pipelines predicting SPX/NDX/IWM
+Multi-agent: Almanac R3, Macro R4, Technical R5, LLM synthesis, Human Score R7
+Study week early July 2026. Pipeline Audit Day was Monday July 6.
+
+════════════════════════════════════════
+GITHUB API RULES (MANDATORY — always follow)
+════════════════════════════════════════
+
+- Always GET current SHA before any PUT on existing files
+- New files: omit SHA field entirely
+- Headers: Authorization: Bearer TOKEN | Accept: application/vnd.github+json
+           X-GitHub-Api-Version: 2022-11-28 | User-Agent: ProfDrTan-Monitor/1.0
+- Base64: strip all whitespace before decoding
+- PAT stored in Claude memory — no expiry — never ask Prof Dr Tan to re-enter
+- Cloudflare Pages: ibkr site uses GitHub Pages not Cloudflare
+- GitHub Pages: serves from repo root, branch main
+- Deploy time: ~2-3 minutes after push
+- Hard refresh: Ctrl+Shift+R to bust cache
+
+════════════════════════════════════════
+STANDING RULES (always apply)
+════════════════════════════════════════
+
+- Address as "Professor Dr. Tan" always
+- Diagnose before fixing — never speculate on root causes
+- Deliver complete immediately-usable files — no manual editing required
+- All file ops via GitHub API — never ask him to upload or copy-paste
+- Student-facing writing must sound like Prof Dr Tan's own voice
+- When something is wrong, fix it — don't explain it
+- ZIP filename convention: YYMMDD_HHMM_Cl_description.zip
+- Never associate Prof Dr Tan with Asia e University
+- Affiliation: Stanford University + IEEE Senior Member
+- TTS system: tts.js is shared file — update it once to fix all pages
+- Word highlight: gold #c9a84c on active word, timer fallback for Android
+
+════════════════════════════════════════
+QUICK CONTEXT TAGS — add after pasting prompt
+════════════════════════════════════════
+
+"Wire the approve button on the trading dashboard"
+"Connect live SPX price feed to strategy.py"
+"Run first paper trade test end to end"
+"Add a new tab to the trading website"
+"Work on The 3-Hour Trader book"
+"Update the AI Power Shift site"
+"Help with CP3405 student pipeline"
+"Fix the TTS word highlighting"
+"Build the futures paper trading algorithm"
+"Update the master prompt page with latest status"</div>
+    </div>
+
+    <div class="tags">
+      <div class="tag" onclick="copyTag('Wire the approve button on the trading dashboard')">Wire approve button</div>
+      <div class="tag" onclick="copyTag('Connect live SPX price feed to strategy.py')">Live SPX price feed</div>
+      <div class="tag" onclick="copyTag('Run first paper trade test end to end')">Paper trade test</div>
+      <div class="tag" onclick="copyTag('Work on The 3-Hour Trader book')">3-Hour Trader book</div>
+      <div class="tag" onclick="copyTag('Update the AI Power Shift site')">AI Power Shift</div>
+      <div class="tag" onclick="copyTag('Build the futures paper trading algorithm')">Futures algorithm</div>
+      <div class="tag" onclick="copyTag('Fix the TTS word highlighting')">Fix TTS</div>
+      <div class="tag" onclick="copyTag('Help with CP3405 student pipeline')">CP3405</div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Key References</h2>
-    <div class="code">Website:        profdrtan.github.io/ibkr-options-income
-GitHub Repo:    github.com/ProfDrTan/ibkr-options-income
-IBKR Account:   U10500387 | Options Level 3 | Port 7496
-Telegram Bot:   @ibkr_options_profdrtan_bot | chat_id: 1129639290
-GitHub Secrets: TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (set)
-PAT:            Stored in Claude memory (no expiry)
-Strategy:       SPX Bull Put Spreads | 10x/week | Moderate
-Book:           "The 3-Hour Trader" (in progress)</div>
+  <!-- QUICK REFERENCE -->
+  <div class="section">
+    <div class="section-title">&#128279; Quick Reference</div>
+    <div class="ref-grid">
+      <div class="ref-card">
+        <h3>Trading System</h3>
+        <div class="ref-row"><span class="l">Website</span><span class="r"><a href="https://profdrtan.github.io/ibkr-options-income" target="_blank">profdrtan.github.io/ibkr-options-income</a></span></div>
+        <div class="ref-row"><span class="l">GitHub Repo</span><span class="r"><a href="https://github.com/ProfDrTan/ibkr-options-income" target="_blank">ProfDrTan/ibkr-options-income</a></span></div>
+        <div class="ref-row"><span class="l">IBKR Account</span><span class="r">U10500387 | Level 3</span></div>
+        <div class="ref-row"><span class="l">TWS Port</span><span class="r">7496 (live) | 7497 (paper)</span></div>
+        <div class="ref-row"><span class="l">Telegram Bot</span><span class="r">@ibkr_options_profdrtan_bot</span></div>
+        <div class="ref-row"><span class="l">Strategy</span><span class="r">SPX Bull Put Spreads | 10x/week</span></div>
+        <div class="ref-row"><span class="l">First trade</span><span class="r">Monday 09:35pm MYT</span></div>
+      </div>
+      <div class="ref-card">
+        <h3>AI Power Shift</h3>
+        <div class="ref-row"><span class="l">Website</span><span class="r"><a href="https://ai-power-shift.pages.dev" target="_blank">ai-power-shift.pages.dev</a></span></div>
+        <div class="ref-row"><span class="l">GitHub Repo</span><span class="r"><a href="https://github.com/ProfDrTan/ai-power-shift" target="_blank">ProfDrTan/ai-power-shift</a></span></div>
+        <div class="ref-row"><span class="l">Book</span><span class="r">The AI PowerShift (3rd book)</span></div>
+        <div class="ref-row"><span class="l">TTS</span><span class="r">Word-level gold highlight</span></div>
+      </div>
+      <div class="ref-card">
+        <h3>CP3405 Course</h3>
+        <div class="ref-row"><span class="l">Repo</span><span class="r"><a href="https://github.com/ProfDrTan/dt3-tr2-26-course-website" target="_blank">dt3-tr2-26-course-website</a></span></div>
+        <div class="ref-row"><span class="l">Teams</span><span class="r">5 teams | 56 students</span></div>
+        <div class="ref-row"><span class="l">Status</span><span class="r">Study week | Sprint 6 upcoming</span></div>
+      </div>
+      <div class="ref-card">
+        <h3>Books In Progress</h3>
+        <div class="ref-row"><span class="l">Book 1</span><span class="r">The AI PowerShift (ready)</span></div>
+        <div class="ref-row"><span class="l">Book 2</span><span class="r">The 3-Hour Trader (building)</span></div>
+        <div class="ref-row"><span class="l">Book 3</span><span class="r">AI at Work (Ch1 drafted)</span></div>
+        <div class="ref-row"><span class="l">Repo</span><span class="r"><a href="https://github.com/ProfDrTan/ai-playbook" target="_blank">ProfDrTan/ai-playbook</a></span></div>
+      </div>
+    </div>
   </div>
+
+  <!-- STATUS CHECKLIST -->
+  <div class="section">
+    <div class="section-title">&#9989; Current Status — July 3, 2026</div>
+    <div class="prompt-box" style="padding:1.2rem;">
+      <div style="font-family:'Arial',sans-serif;font-size:0.82rem;line-height:2;">
+        <div>&#9989; IBKR account U10500387 — Options Level 3 | TWS API enabled | port 7496</div>
+        <div>&#9989; Telegram bot @ibkr_options_profdrtan_bot — secrets in GitHub</div>
+        <div>&#9989; GitHub Pages live — 10 tabs, read-aloud on all, word highlight</div>
+        <div>&#9989; Market tab — live tickers, AI briefing, Fear&amp;Greed, sectors, earnings</div>
+        <div>&#9989; Futures tab — ES/MES live, session clocks, MES calculator, AI briefing</div>
+        <div>&#9989; Rankings tab — 27 futures ranked, heatmap, SPX correlation</div>
+        <div>&#9989; AI Power Shift — word-level TTS upgraded on book.html</div>
+        <div>&#9989; tts.js shared across all pages — one fix updates everything</div>
+        <div style="color:var(--gold);">&#9203; First Monday trade alert — Monday 09:35pm MYT (July 7)</div>
+        <div style="color:var(--gold);">&#9203; Wire approve button via GitHub API</div>
+        <div style="color:var(--gold);">&#9203; Connect live SPX price feed</div>
+        <div style="color:var(--gold);">&#9203; Paper trade validation (2 weeks)</div>
+        <div style="color:var(--gold);">&#9203; MES paper trading Phase 2</div>
+        <div style="color:var(--gold);">&#9203; The 3-Hour Trader — book chapters</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<footer>Prof Dr Tan · IBKR Options Income System · profdrtan.github.io/ibkr-options-income</footer>
-
-
-
 <script>
-function copyPrompt(){
-  const text=document.getElementById('prompt-text').textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    event.target.textContent='COPIED ✓';
-    setTimeout(()=>event.target.textContent='COPY',2000);
+function copyText(sourceId, btnId) {
+  const text = document.getElementById(sourceId).textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    const btn = document.getElementById(btnId);
+    btn.textContent = 'COPIED ✓';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'COPY';
+      btn.classList.remove('copied');
+    }, 2500);
+  }).catch(function() {
+    // Fallback for mobile
+    const el = document.getElementById(sourceId);
+    const range = document.createRange();
+    range.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    const btn = document.getElementById(btnId);
+    btn.textContent = 'COPIED ✓';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'COPY';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+
+function copyTag(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    // Brief visual feedback
+    event.target.style.background = 'var(--green)';
+    event.target.style.color = 'var(--navy)';
+    setTimeout(function() {
+      event.target.style.background = '';
+      event.target.style.color = '';
+    }, 1000);
   });
 }
 </script>
-<div class="tts-bar">
-  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">&#128266; Read Aloud</button>
-  <span class="tts-label" id="tts-label">Press Read Aloud &#183; Click any word to jump to that point</span>
-  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
-    <option value="0.6">0.6x</option>
-    <option value="0.72" selected>0.72x</option>
-    <option value="0.85">0.85x</option>
-    <option value="1.0">1.0x</option>
-    <option value="1.2">1.2x</option>
-  </select>
-</div>
-<script src="tts.js"></script>
 </body>
 </html>
