@@ -87,23 +87,35 @@
            padding:0.9rem 1.1rem; border-radius:0 6px 6px 0; margin-bottom:1.2rem;
            font-family:'Arial',sans-serif; font-size:0.83rem; color:var(--text); line-height:1.6; }
 
-  .tts-bar { position:fixed; bottom:0; left:0; right:0; background:var(--navy2);
               border-top:1px solid #c9a84c33; padding:0.7rem 2rem;
               display:flex; align-items:center; gap:1rem; z-index:200; }
-  .tts-btn { background:var(--gold); color:var(--navy); border:none; border-radius:6px;
               padding:0.5rem 1.2rem; font-size:0.8rem; font-weight:bold;
               font-family:'Arial',sans-serif; cursor:pointer; letter-spacing:0.05em;
               transition:opacity 0.2s; white-space:nowrap; }
-  .tts-btn:hover { opacity:0.85; }
-  .tts-btn.stop { background:var(--red); color:#fff; }
-  .tts-label { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.78rem;
                 flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .tts-speed { background:var(--navy3); color:var(--text); border:1px solid #ffffff22;
                 border-radius:4px; padding:0.3rem 0.5rem; font-size:0.78rem;
                 font-family:'Arial',sans-serif; }
   body { padding-bottom:60px; }
 
   .navy3 { background:var(--navy3); }
+
+  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
+            display:flex;align-items:center;gap:1rem;z-index:200;}
+  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
+            font-family:'Arial',sans-serif;cursor:pointer;white-space:nowrap;}
+  .tts-btn.stop{background:var(--red);color:#fff;}
+  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
+              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
+              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;
+              font-family:'Arial',sans-serif;}
+  .tts-word{display:inline;border-radius:3px;cursor:pointer;padding:0 1px;}
+  .tts-word:hover{background:rgba(201,168,76,0.25);outline:1px dashed rgba(201,168,76,0.5);}
+  .tts-word.tts-active{background:var(--gold)!important;color:var(--navy)!important;
+                        border-radius:3px;padding:0 2px;box-shadow:0 0 6px var(--gold)88;}
+  body{padding-bottom:65px;}
 </style>
 </head>
 <body>
@@ -203,9 +215,14 @@
 </div>
 <footer>Prof Dr Tan · IBKR Options Income System · ibkr-options-income.pages.dev</footer>
 
+
+
+
+
+
 <div class="tts-bar">
-  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
-  <span class="tts-label" id="tts-label">Press Read Aloud to listen to this page</span>
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">&#128266; Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud &#183; Click any word to jump to that point</span>
   <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
     <option value="0.6">0.6x</option>
     <option value="0.72" selected>0.72x</option>
@@ -214,112 +231,6 @@
     <option value="1.2">1.2x</option>
   </select>
 </div>
-
-
-<script>
-// ── WEB SPEECH API READ ALOUD ─────────────────────────────────────────────
-let ttsSentences = [];
-let ttsIndex = 0;
-let ttsActive = false;
-let ttsRate = 0.72;
-let ttsVoice = null;
-
-function ttsGetVoices() {
-  const voices = window.speechSynthesis.getVoices();
-  // Prefer UK English female
-  ttsVoice = voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes('female')) ||
-             voices.find(v => v.lang === 'en-GB') ||
-             voices.find(v => v.lang.startsWith('en')) ||
-             voices[0] || null;
-}
-
-window.speechSynthesis.onvoiceschanged = ttsGetVoices;
-ttsGetVoices();
-
-function ttsExtractText() {
-  // Get all readable text from page — skip nav, footer, code, buttons
-  const skip = new Set(['NAV','FOOTER','BUTTON','SELECT','OPTION','SCRIPT','STYLE']);
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    { acceptNode(node) {
-        let el = node.parentElement;
-        while(el) {
-          if(skip.has(el.tagName)) return NodeFilter.FILTER_REJECT;
-          if(el.classList.contains('tts-bar')) return NodeFilter.FILTER_REJECT;
-          el = el.parentElement;
-        }
-        return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-    }}
-  );
-  let text = '';
-  while(walker.nextNode()) text += ' ' + walker.currentNode.textContent.trim();
-  // Split into sentences
-  return text.replace(/\s+/g,' ').trim()
-             .match(/[^.!?]+[.!?]+/g) || [text];
-}
-
-function ttsSpeak(sentence) {
-  if(!ttsActive) return;
-  const utt = new SpeechSynthesisUtterance(sentence.trim());
-  utt.rate = ttsRate;
-  utt.pitch = 1.0;
-  utt.volume = 1.0;
-  if(ttsVoice) utt.voice = ttsVoice;
-  utt.onstart = () => {
-    document.getElementById('tts-label').textContent = sentence.trim();
-  };
-  utt.onend = () => {
-    ttsIndex++;
-    if(ttsActive && ttsIndex < ttsSentences.length) {
-      ttsSpeak(ttsSentences[ttsIndex]);
-    } else {
-      ttsStop();
-    }
-  };
-  utt.onerror = () => {
-    ttsIndex++;
-    if(ttsActive && ttsIndex < ttsSentences.length) {
-      ttsSpeak(ttsSentences[ttsIndex]);
-    }
-  };
-  window.speechSynthesis.speak(utt);
-}
-
-function ttsToggle() {
-  if(ttsActive) { ttsStop(); return; }
-  ttsActive = true;
-  ttsIndex = 0;
-  ttsSentences = ttsExtractText();
-  document.getElementById('tts-btn').textContent = '⏹ Stop';
-  document.getElementById('tts-btn').classList.add('stop');
-  window.speechSynthesis.cancel();
-  ttsSpeak(ttsSentences[0]);
-}
-
-function ttsStop() {
-  ttsActive = false;
-  window.speechSynthesis.cancel();
-  document.getElementById('tts-btn').textContent = '🔊 Read Aloud';
-  document.getElementById('tts-btn').classList.remove('stop');
-  document.getElementById('tts-label').textContent = 'Press Read Aloud to listen to this page';
-}
-
-function ttsSetSpeed(val) {
-  ttsRate = parseFloat(val);
-  if(ttsActive) {
-    const idx = ttsIndex;
-    ttsStop();
-    ttsActive = true;
-    ttsIndex = idx;
-    window.speechSynthesis.cancel();
-    ttsSpeak(ttsSentences[ttsIndex]);
-  }
-}
-
-// Stop on page unload
-window.addEventListener('beforeunload', () => window.speechSynthesis.cancel());
-</script>
-
+<script src="tts.js"></script>
 </body>
 </html>
