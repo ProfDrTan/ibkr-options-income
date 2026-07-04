@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Futures Rankings | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:#0a0e1a;--navy2:#111827;--navy3:#1e2a3a;
+    --gold:#c9a84c;--teal:#2dd4bf;--green:#22c55e;
+    --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+    --purple:#a78bfa;--orange:#fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;min-height:100vh;padding-bottom:70px;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;display:flex;align-items:center;
+      justify-content:space-between;padding:0 2rem;height:60px;position:sticky;top:0;z-index:100;}
+  nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
+  nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a:hover,nav a.active{color:var(--teal);}
+  .page{max-width:1400px;margin:0 auto;padding:1.5rem 2rem;}
+  .hero{text-align:center;padding:1.5rem 1rem 1rem;}
+  .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.3rem;}
+  .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.85rem;}
+  .refresh-bar{display:flex;align-items:center;justify-content:space-between;
+                margin-bottom:1.2rem;font-family:'Arial',sans-serif;font-size:0.78rem;}
+  .refresh-bar .ts{color:var(--muted);}
+  .refresh-btn{background:var(--navy3);color:var(--teal);border:1px solid var(--teal)44;
+                border-radius:6px;padding:0.35rem 0.9rem;font-size:0.75rem;
+                font-family:'Arial',sans-serif;cursor:pointer;}
+  .refresh-btn:hover{background:var(--teal);color:var(--navy);}
+
+  /* RANK TABLE */
+  .rank-table{width:100%;border-collapse:collapse;font-family:'Arial',sans-serif;
+               font-size:0.82rem;margin-bottom:1.5rem;}
+  .rank-table thead tr{border-bottom:2px solid #c9a84c33;}
+  .rank-table th{padding:0.7rem 0.8rem;text-align:left;color:var(--gold);font-size:0.72rem;
+                  text-transform:uppercase;letter-spacing:0.06em;font-weight:bold;
+                  white-space:nowrap;}
+  .rank-table th.right{text-align:right;}
+  .rank-table th.center{text-align:center;}
+  .rank-table tbody tr{border-bottom:1px solid #ffffff08;transition:background 0.15s;}
+  .rank-table tbody tr:hover{background:#ffffff05;}
+  .rank-table td{padding:0.65rem 0.8rem;vertical-align:middle;}
+  .rank-table td.right{text-align:right;}
+  .rank-table td.center{text-align:center;}
+
+  .rank-num{font-weight:bold;color:var(--muted);font-size:0.75rem;min-width:24px;}
+  .rank-num.top{color:var(--gold);}
+  .rank-num.bottom{color:var(--red);}
+
+  .fut-name{font-weight:bold;color:var(--text);}
+  .fut-cat{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
+
+  .price-cell{font-weight:bold;color:var(--text);font-size:0.88rem;}
+  .chg-cell{font-weight:bold;font-size:0.88rem;}
+  .chg-cell.up{color:var(--green);}
+  .chg-cell.dn{color:var(--red);}
+  .chg-cell.flat{color:var(--muted);}
+
+  /* HEAT BAR */
+  .heat-bar-wrap{width:120px;background:#ffffff0a;border-radius:4px;height:8px;
+                  position:relative;overflow:hidden;}
+  .heat-bar{height:8px;border-radius:4px;position:absolute;top:0;}
+  .heat-bar.pos{background:var(--green);right:50%;}
+  .heat-bar.neg{background:var(--red);left:50%;}
+
+  /* CORRELATION DOT */
+  .corr-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;}
+  .corr-high{background:var(--green);}
+  .corr-med{background:var(--gold);}
+  .corr-low{background:var(--red);}
+  .corr-neg{background:var(--purple);}
+
+  /* CATEGORY HEADER */
+  .cat-header{background:var(--navy3);padding:0.4rem 0.8rem;
+               font-size:0.72rem;color:var(--gold);font-family:'Arial',sans-serif;
+               text-transform:uppercase;letter-spacing:0.08em;font-weight:bold;}
+
+  /* SIGNAL BADGE */
+  .sig-badge{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;
+              font-size:0.68rem;font-weight:bold;white-space:nowrap;}
+  .sig-badge.long{background:#22c55e22;color:var(--green);border:1px solid #22c55e44;}
+  .sig-badge.short{background:#ef444422;color:var(--red);border:1px solid #ef444444;}
+  .sig-badge.neutral{background:#94a3b822;color:var(--muted);border:1px solid #94a3b844;}
+  .sig-badge.watch{background:#c9a84c22;color:var(--gold);border:1px solid #c9a84c44;}
+
+  /* GRID */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+  @media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr;}}
+  .card{background:var(--navy2);border:1px solid #ffffff11;border-radius:10px;padding:1.3rem;}
+  .card h2{font-size:0.8rem;color:var(--gold);font-family:'Arial',sans-serif;
+            text-transform:uppercase;letter-spacing:0.08em;
+            border-bottom:1px solid #ffffff11;padding-bottom:0.6rem;margin-bottom:1rem;}
+  .row{display:flex;justify-content:space-between;align-items:center;
+        padding:0.4rem 0;border-bottom:1px solid #ffffff08;
+        font-family:'Arial',sans-serif;font-size:0.82rem;}
+  .row:last-child{border-bottom:none;}
+  .row .l{color:var(--muted);}
+  .row .r{font-weight:bold;}
+
+  /* LOADING */
+  .loading{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.82rem;
+            text-align:center;padding:2rem;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  /* SPX CORRELATION CARD */
+  .corr-item{display:flex;justify-content:space-between;align-items:center;
+              padding:0.5rem 0;border-bottom:1px solid #ffffff08;font-family:'Arial',sans-serif;}
+  .corr-item:last-child{border-bottom:none;}
+  .corr-name{font-size:0.82rem;color:var(--text);flex:1;}
+  .corr-val{font-size:0.82rem;font-weight:bold;min-width:50px;text-align:right;}
+  .corr-bar-wrap{width:80px;background:#ffffff0a;border-radius:3px;height:6px;
+                  margin:0 0.5rem;position:relative;}
+  .corr-bar-fill{height:6px;border-radius:3px;position:absolute;top:0;left:0;}
+
+  /* TTS */
+  .tts-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);
+            border-top:1px solid #c9a84c33;padding:0.7rem 2rem;
+            display:flex;align-items:center;gap:1rem;z-index:200;}
+  .tts-btn{background:var(--gold);color:var(--navy);border:none;border-radius:6px;
+            padding:0.5rem 1.2rem;font-size:0.8rem;font-weight:bold;
+            font-family:'Arial',sans-serif;cursor:pointer;white-space:nowrap;}
+  .tts-btn.stop{background:var(--red);color:#fff;}
+  .tts-label{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.78rem;
+              flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tts-speed{background:var(--navy3);color:var(--text);border:1px solid #ffffff22;
+              border-radius:4px;padding:0.3rem 0.5rem;font-size:0.78rem;font-family:'Arial',sans-serif;}
+  footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:0.72rem;
+          font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:2rem;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
+    <a href="futures.html">Futures</a>
+    <a href="futures-rankings.html" class="active">Rankings</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html">Setup Guide</a>
+    <a href="master-prompt.html">Master Prompt</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Futures Rankings Dashboard</h1>
+  <p>All major futures ranked by performance · 24-hour view · SPX/NDX correlation</p>
+</div>
+
+<div class="page">
+
+  <div class="refresh-bar">
+    <span class="ts">Last updated: <span id="last-update">Loading...</span>
+    &nbsp;·&nbsp; Auto-refreshes every 3 minutes</span>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh Now</button>
+  </div>
+
+  <!-- MASTER RANKINGS TABLE -->
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:1.5rem;">
+    <div style="padding:1rem 1.3rem;border-bottom:1px solid #ffffff11;
+                display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="border:none;padding:0;margin:0;">📊 All Futures — Live Rankings</h2>
+      <div style="font-family:'Arial',sans-serif;font-size:0.75rem;color:var(--muted);">
+        Ranked by % change · Sorted best to worst
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th style="width:40px;">#</th>
+            <th>Contract</th>
+            <th class="right">Price</th>
+            <th class="right">Change</th>
+            <th class="right">% Change</th>
+            <th class="center">Performance</th>
+            <th class="right">Day High</th>
+            <th class="right">Day Low</th>
+            <th class="right">Range</th>
+            <th class="center">vs SPX Corr.</th>
+            <th class="center">Signal</th>
+          </tr>
+        </thead>
+        <tbody id="rankings-tbody">
+          <tr><td colspan="11" class="loading">Loading futures data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid3">
+
+    <!-- EQUITY INDEX FUTURES -->
+    <div class="card">
+      <h2>📈 Equity Index Futures</h2>
+      <div id="equity-detail">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+
+    <!-- COMMODITIES -->
+    <div class="card">
+      <h2>🛢️ Commodity Futures</h2>
+      <div id="commodity-detail">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+
+    <!-- FIXED INCOME + FX -->
+    <div class="card">
+      <h2>💵 Rates &amp; FX Futures</h2>
+      <div id="rates-detail">
+        <div class="loading">Loading...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid2">
+
+    <!-- SPX CORRELATION TABLE -->
+    <div class="card">
+      <h2>🔗 Correlation to SPX (Directional Guide)</h2>
+      <div style="font-family:'Arial',sans-serif;font-size:0.75rem;color:var(--muted);
+                   margin-bottom:1rem;line-height:1.5;">
+        High positive correlation = moves WITH SPX.<br>
+        Negative correlation = moves AGAINST SPX (hedge signal).
+      </div>
+      <div id="correlation-list"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- WHAT THIS MEANS FOR YOUR TRADES -->
+    <div class="card">
+      <h2>🎯 Trade Implications — Right Now</h2>
+      <div id="implications-box">
+        <div class="loading">Analyzing market conditions...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HEATMAP SUMMARY -->
+  <div class="card">
+    <h2>🌡️ Global Futures Heatmap</h2>
+    <div id="heatmap" style="display:flex;flex-wrap:wrap;gap:0.6rem;"></div>
+  </div>
+
+</div>
+
+<footer>Prof Dr Tan · IBKR Options Income · Futures Rankings · Data via Yahoo Finance</footer>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud to listen to this page</span>
+  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
+    <option value="0.6">0.6x</option>
+    <option value="0.72" selected>0.72x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1.0">1.0x</option>
+  </select>
+</div>
+
+<script>
+// ── ALL FUTURES UNIVERSE ──────────────────────────────────────────────────────
+const FUTURES = [
+  // Equity Index
+  {sym:'ES=F',  name:'ES (E-mini S&P 500)',   cat:'Equity Index', icon:'🇺🇸', corr:1.00},
+  {sym:'NQ=F',  name:'NQ (E-mini Nasdaq)',     cat:'Equity Index', icon:'🇺🇸', corr:0.95},
+  {sym:'YM=F',  name:'YM (Dow Jones)',         cat:'Equity Index', icon:'🇺🇸', corr:0.93},
+  {sym:'RTY=F', name:'RTY (Russell 2000)',     cat:'Equity Index', icon:'🇺🇸', corr:0.85},
+  {sym:'^N225', name:'NK (Nikkei 225)',        cat:'Equity Index', icon:'🇯🇵', corr:0.72},
+  {sym:'^HSI',  name:'HSI (Hang Seng)',        cat:'Equity Index', icon:'🇭🇰', corr:0.55},
+  {sym:'^GDAXI',name:'DAX (Germany)',          cat:'Equity Index', icon:'🇩🇪', corr:0.78},
+  {sym:'^FTSE', name:'FTSE 100 (UK)',          cat:'Equity Index', icon:'🇬🇧', corr:0.65},
+  {sym:'^FCHI', name:'CAC 40 (France)',        cat:'Equity Index', icon:'🇫🇷', corr:0.70},
+  {sym:'^AXJO', name:'ASX 200 (Australia)',    cat:'Equity Index', icon:'🇦🇺', corr:0.60},
+  // Commodities
+  {sym:'GC=F',  name:'Gold',                  cat:'Metals',       icon:'🥇', corr:-0.25},
+  {sym:'SI=F',  name:'Silver',                cat:'Metals',       icon:'🥈', corr:-0.10},
+  {sym:'HG=F',  name:'Copper',               cat:'Metals',       icon:'🔶', corr:0.55},
+  {sym:'CL=F',  name:'Crude Oil (WTI)',       cat:'Energy',       icon:'🛢️', corr:0.45},
+  {sym:'BZ=F',  name:'Brent Crude',           cat:'Energy',       icon:'🛢️', corr:0.43},
+  {sym:'NG=F',  name:'Natural Gas',           cat:'Energy',       icon:'⚡', corr:0.15},
+  {sym:'ZC=F',  name:'Corn',                  cat:'Agriculture',  icon:'🌽', corr:0.10},
+  {sym:'ZS=F',  name:'Soybeans',              cat:'Agriculture',  icon:'🫘', corr:0.12},
+  {sym:'ZW=F',  name:'Wheat',                 cat:'Agriculture',  icon:'🌾', corr:0.08},
+  // Rates & FX
+  {sym:'ZB=F',  name:'US T-Bond (30Y)',       cat:'Rates',        icon:'📋', corr:-0.60},
+  {sym:'ZN=F',  name:'US T-Note (10Y)',       cat:'Rates',        icon:'📋', corr:-0.55},
+  {sym:'ZF=F',  name:'US T-Note (5Y)',        cat:'Rates',        icon:'📋', corr:-0.50},
+  {sym:'6E=F',  name:'Euro FX (EUR/USD)',     cat:'FX',           icon:'🇪🇺', corr:-0.35},
+  {sym:'6J=F',  name:'Japanese Yen',          cat:'FX',           icon:'🇯🇵', corr:-0.42},
+  {sym:'6B=F',  name:'British Pound',         cat:'FX',           icon:'🇬🇧', corr:0.20},
+  {sym:'BTC-USD',name:'Bitcoin',              cat:'Crypto',       icon:'₿',  corr:0.65},
+  {sym:'ETH-USD',name:'Ethereum',             cat:'Crypto',       icon:'Ξ',  corr:0.62},
+];
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+async function fetchQuote(symbol) {
+  const proxies = [
+    `https://corsproxy.io/?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?interval=1d&range=1d')}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?interval=1d&range=1d')}`,
+  ];
+  for (const url of proxies) {
+    try {
+      const r = await fetch(url);
+      const d = await r.json();
+      const meta = d.chart.result[0].meta;
+      return {
+        price:     meta.regularMarketPrice,
+        prev:      meta.chartPreviousClose,
+        high:      meta.regularMarketDayHigh,
+        low:       meta.regularMarketDayLow,
+        change:    meta.regularMarketPrice - meta.chartPreviousClose,
+        changePct: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100),
+        volume:    meta.regularMarketVolume
+      };
+    } catch(e) { continue; }
+  }
+  return null;
+}
+
+function fmtP(n,d=2){if(n==null)return'—';return n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function fmtPct(n){if(n==null)return'—';return(n>=0?'+':'')+n.toFixed(2)+'%';}
+function fmtChg(n,d=2){if(n==null)return'—';return(n>=0?'+':'')+n.toFixed(d);}
+
+function getSignal(pct, corr) {
+  if (Math.abs(pct) < 0.1) return {text:'NEUTRAL', cls:'neutral'};
+  if (pct > 1.0 && corr > 0.5) return {text:'LONG ▲', cls:'long'};
+  if (pct > 0.3 && corr > 0.5) return {text:'WATCH ▲', cls:'watch'};
+  if (pct < -1.0 && corr > 0.5) return {text:'SHORT ▼', cls:'short'};
+  if (pct < -0.3 && corr > 0.5) return {text:'WATCH ▼', cls:'watch'};
+  if (pct > 0.5 && corr < -0.3) return {text:'HEDGE ▲', cls:'watch'};
+  if (pct < -0.5 && corr < -0.3) return {text:'RISK-ON', cls:'long'};
+  return {text:'NEUTRAL', cls:'neutral'};
+}
+
+function getCorrClass(corr) {
+  if (corr > 0.7) return {cls:'corr-high', label:'High+'};
+  if (corr > 0.4) return {cls:'corr-med', label:'Med+'};
+  if (corr > 0) return {cls:'corr-low', label:'Low+'};
+  return {cls:'corr-neg', label:'Neg'};
+}
+
+// ── BUILD RANKINGS ────────────────────────────────────────────────────────────
+let allData = [];
+
+async function loadAll() {
+  document.getElementById('last-update').textContent = 'Loading...';
+  allData = [];
+
+  // Fetch all in parallel batches of 5
+  const batches = [];
+  for (let i = 0; i < FUTURES.length; i += 5) {
+    batches.push(FUTURES.slice(i, i+5));
+  }
+
+  for (const batch of batches) {
+    const results = await Promise.all(batch.map(f => fetchQuote(f.sym)));
+    results.forEach((q, i) => {
+      allData.push({...batch[i], quote: q});
+    });
+  }
+
+  renderRankings();
+  renderCategoryDetails();
+  renderCorrelation();
+  renderImplications();
+  renderHeatmap();
+
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+}
+
+function renderRankings() {
+  // Sort by changePct descending
+  const sorted = [...allData]
+    .filter(d => d.quote)
+    .sort((a,b) => (b.quote.changePct||0) - (a.quote.changePct||0));
+
+  const tbody = document.getElementById('rankings-tbody');
+  tbody.innerHTML = sorted.map((d, i) => {
+    const q = d.quote;
+    const pct = q.changePct;
+    const up = pct >= 0;
+    const rank = i + 1;
+    const rankClass = rank <= 3 ? 'top' : rank >= sorted.length - 2 ? 'bottom' : '';
+    const barWidth = Math.min(Math.abs(pct) / 3 * 50, 50);
+    const sig = getSignal(pct, d.corr);
+    const corrC = getCorrClass(d.corr);
+    const range = q.high && q.low ? (q.high - q.low).toFixed(2) : '—';
+
+    return `<tr>
+      <td><span class="rank-num ${rankClass}">${rank}</span></td>
+      <td>
+        <div class="fut-name">${d.icon} ${d.name}</div>
+        <div class="fut-cat">${d.cat}</div>
+      </td>
+      <td class="right price-cell">${fmtP(q.price)}</td>
+      <td class="right chg-cell ${up?'up':'dn'}">${fmtChg(q.change)}</td>
+      <td class="right chg-cell ${up?'up':'dn'}">${fmtPct(pct)}</td>
+      <td class="center">
+        <div class="heat-bar-wrap">
+          <div class="heat-bar ${up?'pos':'neg'}" style="width:${barWidth}%"></div>
+        </div>
+      </td>
+      <td class="right" style="color:var(--green)">${fmtP(q.high)}</td>
+      <td class="right" style="color:var(--red)">${fmtP(q.low)}</td>
+      <td class="right" style="color:var(--muted);font-size:0.78rem">${range}</td>
+      <td class="center">
+        <span class="corr-dot ${corrC.cls}"></span>
+        <span style="font-family:'Arial',sans-serif;font-size:0.75rem;color:var(--muted)">
+          ${d.corr > 0 ? '+' : ''}${d.corr.toFixed(2)}
+        </span>
+      </td>
+      <td class="center"><span class="sig-badge ${sig.cls}">${sig.text}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCategoryDetails() {
+  const cats = {
+    equity: ['Equity Index'],
+    commodity: ['Metals','Energy','Agriculture'],
+    rates: ['Rates','FX','Crypto']
+  };
+
+  Object.entries(cats).forEach(([key, catNames]) => {
+    const items = allData.filter(d => catNames.includes(d.cat) && d.quote)
+      .sort((a,b) => (b.quote.changePct||0) - (a.quote.changePct||0));
+
+    const el = document.getElementById(key+'-detail');
+    el.innerHTML = items.map(d => {
+      const q = d.quote;
+      const up = q.changePct >= 0;
+      return `<div class="row">
+        <span class="l">${d.icon} ${d.name.split('(')[0].trim()}</span>
+        <div style="text-align:right">
+          <div style="font-weight:bold;font-size:0.85rem">${fmtP(q.price)}</div>
+          <div style="font-size:0.75rem;color:${up?'var(--green)':'var(--red)'};font-weight:bold">${fmtPct(q.changePct)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+function renderCorrelation() {
+  const sorted = [...allData]
+    .filter(d => d.quote)
+    .sort((a,b) => Math.abs(b.corr) - Math.abs(a.corr));
+
+  document.getElementById('correlation-list').innerHTML = sorted.slice(0,15).map(d => {
+    const corr = d.corr;
+    const color = corr > 0.7 ? 'var(--green)' : corr > 0.4 ? 'var(--teal)' :
+                  corr > 0 ? 'var(--muted)' : 'var(--purple)';
+    const barWidth = Math.abs(corr) * 100;
+    return `<div class="corr-item">
+      <span class="corr-name">${d.icon} ${d.name.split('(')[0].trim()}</span>
+      <div class="corr-bar-wrap">
+        <div class="corr-bar-fill" style="width:${barWidth}%;background:${color}"></div>
+      </div>
+      <span class="corr-val" style="color:${color}">${corr>0?'+':''}${corr.toFixed(2)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderImplications() {
+  const esData = allData.find(d => d.sym === 'ES=F');
+  const nqData = allData.find(d => d.sym === 'NQ=F');
+  const goldData = allData.find(d => d.sym === 'GC=F');
+  const bondData = allData.find(d => d.sym === 'ZB=F');
+  const btcData  = allData.find(d => d.sym === 'BTC-USD');
+
+  const esPct  = esData?.quote?.changePct || 0;
+  const nqPct  = nqData?.quote?.changePct || 0;
+  const goldPct = goldData?.quote?.changePct || 0;
+  const bondPct = bondData?.quote?.changePct || 0;
+  const btcPct  = btcData?.quote?.changePct || 0;
+
+  const implications = [];
+
+  // ES signal
+  if (esPct > 0.5) implications.push({icon:'🟢', text:`ES up ${esPct.toFixed(2)}% — bullish for SPX options. Consider full 10-spread position this week.`, color:'var(--green)'});
+  else if (esPct < -0.5) implications.push({icon:'🔴', text:`ES down ${Math.abs(esPct).toFixed(2)}% — bearish pressure. Reduce to 5 spreads or skip.`, color:'var(--red)'});
+  else implications.push({icon:'🟡', text:`ES relatively flat (${esPct.toFixed(2)}%) — neutral conditions. Standard 10-spread position appropriate.`, color:'var(--gold)'});
+
+  // NQ vs ES divergence
+  if (Math.abs(nqPct - esPct) > 0.5) {
+    if (nqPct > esPct) implications.push({icon:'📊', text:`Tech (NQ) outperforming by ${(nqPct-esPct).toFixed(2)}% — growth stocks leading. Positive for premium selling.`, color:'var(--teal)'});
+    else implications.push({icon:'📊', text:`Tech (NQ) underperforming by ${(esPct-nqPct).toFixed(2)}% — rotation out of tech. Monitor carefully.`, color:'var(--gold)'});
+  }
+
+  // Gold as hedge signal
+  if (goldPct > 0.5 && esPct < 0) implications.push({icon:'🥇', text:`Gold rising while ES falls — flight to safety detected. Risk-off environment. Reduce options exposure.`, color:'var(--red)'});
+  else if (goldPct < -0.3 && esPct > 0) implications.push({icon:'🥇', text:`Gold falling as ES rises — risk-on confirmed. Good conditions for bull put spreads.`, color:'var(--green)'});
+
+  // Bond signal
+  if (bondPct > 0.3) implications.push({icon:'📋', text:`Bonds rallying — money moving to safety. Be cautious with options this week.`, color:'var(--gold)'});
+
+  // Bitcoin leading indicator
+  if (btcPct > 2) implications.push({icon:'₿', text:`Bitcoin up ${btcPct.toFixed(1)}% — risk appetite strong. Historically positive for equities 1-2 days later.`, color:'var(--green)'});
+  else if (btcPct < -3) implications.push({icon:'₿', text:`Bitcoin down ${Math.abs(btcPct).toFixed(1)}% — risk-off signal. Watch for SPX follow-through.`, color:'var(--red)'});
+
+  // Options trade summary
+  const proceed = esPct > -1 && goldPct < 1;
+  implications.push({
+    icon: proceed ? '✅' : '⚠️',
+    text: proceed
+      ? `OVERALL: Conditions support opening bull put spread this Monday. Target strikes 5% OTM.`
+      : `OVERALL: Mixed signals — wait for Monday open confirmation before committing to full position.`,
+    color: proceed ? 'var(--teal)' : 'var(--gold)'
+  });
+
+  document.getElementById('implications-box').innerHTML = implications.map(imp => `
+    <div style="display:flex;gap:0.6rem;padding:0.6rem 0;border-bottom:1px solid #ffffff08;
+                font-family:'Arial',sans-serif;font-size:0.8rem;line-height:1.5;align-items:flex-start;">
+      <span style="font-size:1rem;flex-shrink:0;">${imp.icon}</span>
+      <span style="color:${imp.color}">${imp.text}</span>
+    </div>`).join('');
+}
+
+function renderHeatmap() {
+  const sorted = [...allData]
+    .filter(d => d.quote)
+    .sort((a,b) => (b.quote.changePct||0) - (a.quote.changePct||0));
+
+  const heatmap = document.getElementById('heatmap');
+  heatmap.innerHTML = sorted.map(d => {
+    const pct = d.quote.changePct;
+    const intensity = Math.min(Math.abs(pct) / 3, 1);
+    const bg = pct > 0
+      ? `rgba(34,197,94,${0.1 + intensity*0.4})`
+      : `rgba(239,68,68,${0.1 + intensity*0.4})`;
+    const border = pct > 0 ? '#22c55e' : '#ef4444';
+    const textColor = pct > 0 ? 'var(--green)' : 'var(--red)';
+    const size = Math.max(80, Math.min(140, 80 + Math.abs(pct) * 20));
+
+    return `<div style="background:${bg};border:1px solid ${border}33;border-radius:8px;
+              padding:0.7rem;text-align:center;min-width:${size}px;flex:0 0 auto;">
+      <div style="font-size:1.1rem;">${d.icon}</div>
+      <div style="font-size:0.7rem;color:var(--muted);font-family:'Arial',sans-serif;
+                   margin:0.1rem 0;">${d.name.split('(')[0].trim().split(' ').slice(0,2).join(' ')}</div>
+      <div style="font-size:0.9rem;font-weight:bold;color:${textColor};font-family:'Arial',sans-serif;">
+        ${fmtPct(pct)}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Initial load + auto-refresh
+loadAll();
+setInterval(loadAll, 180000); // 3 minutes
+
+// ── TTS ───────────────────────────────────────────────────────────────────────
+let ttsSentences=[],ttsIndex=0,ttsActive=false,ttsRate=0.72,ttsVoice=null;
+function ttsGetVoices(){const v=window.speechSynthesis.getVoices();
+  ttsVoice=v.find(x=>x.lang==='en-GB'&&x.name.toLowerCase().includes('female'))||
+  v.find(x=>x.lang==='en-GB')||v.find(x=>x.lang.startsWith('en'))||v[0]||null;}
+window.speechSynthesis.onvoiceschanged=ttsGetVoices;ttsGetVoices();
+function ttsExtractText(){
+  const skip=new Set(['NAV','FOOTER','BUTTON','SELECT','OPTION','SCRIPT','STYLE','INPUT']);
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,
+    {acceptNode(node){let el=node.parentElement;while(el){
+      if(skip.has(el.tagName))return NodeFilter.FILTER_REJECT;
+      if(el.classList.contains('tts-bar'))return NodeFilter.FILTER_REJECT;
+      el=el.parentElement;}
+    return node.textContent.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+  let text='';while(walker.nextNode())text+=' '+walker.currentNode.textContent.trim();
+  return text.replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]+/g)||[text];}
+function ttsSpeak(s){if(!ttsActive)return;
+  const u=new SpeechSynthesisUtterance(s.trim());
+  u.rate=ttsRate;u.pitch=1.0;u.volume=1.0;if(ttsVoice)u.voice=ttsVoice;
+  u.onstart=()=>{document.getElementById('tts-label').textContent=s.trim();};
+  u.onend=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);else ttsStop();};
+  u.onerror=()=>{ttsIndex++;if(ttsActive&&ttsIndex<ttsSentences.length)ttsSpeak(ttsSentences[ttsIndex]);};
+  window.speechSynthesis.speak(u);}
+function ttsToggle(){if(ttsActive){ttsStop();return;}
+  ttsActive=true;ttsIndex=0;ttsSentences=ttsExtractText();
+  document.getElementById('tts-btn').textContent='⏹ Stop';
+  document.getElementById('tts-btn').classList.add('stop');
+  window.speechSynthesis.cancel();ttsSpeak(ttsSentences[0]);}
+function ttsStop(){ttsActive=false;window.speechSynthesis.cancel();
+  document.getElementById('tts-btn').textContent='🔊 Read Aloud';
+  document.getElementById('tts-btn').classList.remove('stop');
+  document.getElementById('tts-label').textContent='Press Read Aloud to listen to this page';}
+function ttsSetSpeed(val){ttsRate=parseFloat(val);
+  if(ttsActive){const idx=ttsIndex;ttsStop();ttsActive=true;ttsIndex=idx;
+    window.speechSynthesis.cancel();ttsSpeak(ttsSentences[ttsIndex]);}}
+window.addEventListener('beforeunload',()=>window.speechSynthesis.cancel());
+</script>
+</body>
+</html>
