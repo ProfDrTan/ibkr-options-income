@@ -110,11 +110,11 @@
   <div class="toc">
     <h2>Contents</h2>
     <ol>
-      <li><a href="#part1">Why options income works — and why most people never try it</a><span class="part-status">drafting</span></li>
-      <li><a href="#part2">The three rules that protect you, always</a><span class="part-status">not started</span></li>
-      <li><a href="#part3">The AI system that does the thinking</a><span class="part-status">not started</span></li>
-      <li><a href="#part4">Your first trade, step by step</a><span class="part-status">not started</span></li>
-      <li><a href="#part5">Scaling from $500/month to $5,000/month</a><span class="part-status">not started</span></li>
+      <li><a href="#part1">Why options income works — and why most people never try it</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part2">The three rules that protect you, always</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part3">The AI system that does the thinking</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part4">Your first trade, step by step</a><span class="part-status">scaffolded — awaiting first live trade</span></li>
+      <li><a href="#part5">Scaling from $500/month to $5,000/month</a><span class="part-status">not started — needs track record</span></li>
     </ol>
   </div>
 
@@ -124,31 +124,53 @@
     <p class="read-en">You don't need to understand the market. You need to understand the system.</p>
     <div class="pull-quote">Most trading books are written by traders for traders. This one is different — written by an educator who built a system anyone can follow.</div>
     <p class="read-en">Every week, professionals with no trading background and no interest in staring at charts are generating consistent income from the options market — not by predicting where prices will go, but by getting paid for patience, discipline, and time itself.</p>
-    <div class="placeholder-note">Chapter content is being drafted alongside the live trading system. As real trades close — starting with the first live execution this week — actual results will replace hypothetical examples throughout this book, so every number a reader sees is one that really happened.</div>
+    <p class="read-en">Here is the part almost nobody explains clearly: an option has an expiry date, and every single day that passes, a portion of its value evaporates — whether the market moves or not. This is called time decay, and it is the single most reliable force in all of finance. Prices are unpredictable. Time is not. It passes at exactly one second per second, for everyone, always. A strategy built around collecting that decay is a strategy built on the one variable in the market that never surprises you.</p>
+    <p class="read-en">Selling a put spread is, in plain terms, agreeing to buy a stock index at a price you consider reasonable, in exchange for being paid today. If the market stays above that price, you keep the payment and the obligation quietly expires. If it falls, your loss is capped from the moment you enter the trade — not discovered afterward, but defined in advance, on paper, before a single dollar is at risk.</p>
+    <p class="read-en">So why doesn't everyone do this? Three reasons, and all three are solvable.</p>
+    <p class="read-en"><strong>First</strong>, most people were taught that "options" means "gambling" — leverage, YOLO calls, total loss overnight. That reputation comes almost entirely from buying options, which is a different activity with a different risk profile entirely. Selling defined-risk spreads is closer to underwriting insurance than placing a bet.</p>
+    <p class="read-en"><strong>Second</strong>, the analysis required to do this well — reading volatility, macro conditions, technical structure, and market sentiment simultaneously, every single week — is more than a working professional can realistically do alone, on top of an actual job. This is not a discipline problem. It is a bandwidth problem.</p>
+    <p class="read-en"><strong>Third</strong>, and most simply: nobody showed them a system they could trust enough to follow without becoming a full-time trader themselves.</p>
+    <p class="read-en">This book exists to remove that third excuse. The next four parts show you exactly how.</p>
   </section>
 
   <section data-part="2" id="part2">
     <div class="part-eyebrow">Part Two</div>
     <h1 class="part-title">The Three Rules That Protect You, Always</h1>
-    <div class="placeholder-note">Coming next: defined risk, high probability, time decay — the three rules baked directly into this system's config.py, so they're never optional and never forgotten under pressure.</div>
+    <p class="read-en">Every trade this system places obeys three rules without exception. They are not suggestions. They are written directly into the code that generates every single recommendation, which means they cannot be skipped in a moment of excitement, and they cannot be forgotten under pressure — because there is no moment where a human has to remember to apply them. The system already has.</p>
+    <p class="read-en"><strong>Rule One — Defined Risk.</strong> Before a trade is ever placed, the maximum possible loss is already known, in dollars, on that exact position. This is the single biggest difference between this approach and the "options = gambling" reputation. A bull put spread has a floor built into its structure — you sell one put and buy another, further out, purely to cap what can go wrong. You know your worst case before you know your best case.</p>
+    <p class="read-en"><strong>Rule Two — High Probability.</strong> Every position is opened far enough from the current market price that, historically, the trade is far more likely to expire worthless — which, in this strategy, is the winning outcome — than to be tested. This is why the system targets a 5-delta strike: in plain terms, a position with roughly a 95% statistical chance of being a non-event by the time it expires.</p>
+    <p class="read-en"><strong>Rule Three — Time Decay Does the Work.</strong> The position is never held out of hope, waiting for a big move in your favor. It is held because every day that passes without disaster is a day that quietly pays you. The plan already assumes boring weeks are the norm — because boring weeks are how this strategy actually makes money.</p>
+    <p class="read-en">Together, these three rules mean that on any single trade, you already know your maximum loss, why the odds favor you, and why simply waiting is the strategy — not a failure to act.</p>
   </section>
 
   <section data-part="3" id="part3">
     <div class="part-eyebrow">Part Three</div>
     <h1 class="part-title">The AI System That Does the Thinking</h1>
-    <div class="placeholder-note">Coming next: how the five-agent intelligence pipeline — Almanac, Macro, Technical, LLM synthesis, and Human Score — turns market noise into a single weekly recommendation.</div>
+    <p class="read-en">The honest bottleneck in options income isn't the strategy — bull put spreads are decades old and well understood. The bottleneck is the weekly analysis: reading five different kinds of market information, every week, without fail, without fatigue, without letting one bad week make the process sloppy. That is not a job for a human alone. It is a job for a system, with a human making the final call.</p>
+    <p class="read-en">This system runs five independent lines of analysis every week and blends them into a single score before a human ever sees a recommendation:</p>
+    <p class="read-en"><strong>Almanac (15% weight)</strong> — seasonal and calendar-based market tendencies, the kind of pattern that shows up reliably over decades but that no single person can hold in their head week after week.</p>
+    <p class="read-en"><strong>Macro (20% weight)</strong> — interest rates, inflation data, central bank posture, and the broader economic backdrop the market is trading against that week.</p>
+    <p class="read-en"><strong>Technical (25% weight)</strong> — price structure, volatility levels, and where the market sits relative to its own recent behavior.</p>
+    <p class="read-en"><strong>LLM Synthesis (20% weight)</strong> — multiple AI models independently reading news, sentiment, and unstructured information that doesn't fit neatly into a spreadsheet, then reconciling where they agree and where they don't.</p>
+    <p class="read-en"><strong>Human Score (20% weight)</strong> — the final layer, where judgment earned from decades in technology, finance, and standards work gets the last word. The system proposes. The human decides. Every single week, without exception.</p>
+    <p class="read-en">This exact five-agent framework was built and stress-tested first in a university classroom — fifty-six students across five teams, competing to predict weekly index movement using this same structure, months before it managed a single real dollar. By the time it touched a live account, it had already been through more scrutiny than most professional strategies ever get.</p>
   </section>
 
   <section data-part="4" id="part4">
     <div class="part-eyebrow">Part Four</div>
     <h1 class="part-title">Your First Trade, Step by Step</h1>
-    <div class="placeholder-note">Coming next: a real walkthrough of this system's first live trade, from Monday morning recommendation to Telegram approval to the fill confirmation.</div>
+    <p class="read-en">Every Monday, at 9:35am New York time, the system wakes up and runs its full analysis before you've likely finished breakfast — or, from Singapore, well after most people are asleep.</p>
+    <p class="read-en"><strong>Step 1 — The Recommendation.</strong> The five-agent pipeline runs, produces a composite score, and — if conditions clear the minimum bar for a trade — proposes a specific SPX bull put spread: the strikes, the width, the target profit, and the point at which the position would be closed for a loss rather than allowed to run.</p>
+    <p class="read-en"><strong>Step 2 — The Alert.</strong> A message lands on your phone the moment the recommendation is ready. No dashboard-checking required to know something needs your attention.</p>
+    <p class="read-en"><strong>Step 3 — The Review.</strong> You open the dashboard, see exactly why the system is recommending this trade — which of the five signals are driving it, and which are cautious — and you decide, with full visibility, not blind trust.</p>
+    <p class="read-en"><strong>Step 4 — The Approval.</strong> One click. The order goes to the broker exactly as reviewed. Nothing hidden, nothing automatic without your sign-off.</p>
+    <div class="placeholder-note">This section will be rewritten around the system's actual first live trade rather than a hypothetical one — right down to the real numbers on the screen, the real Telegram alert, and the real fill confirmation. That trade is expected this week, and this chapter will be the first to reflect it.</div>
   </section>
 
   <section data-part="5" id="part5">
     <div class="part-eyebrow">Part Five</div>
     <h1 class="part-title">Scaling From $500/Month to $5,000/Month</h1>
-    <div class="placeholder-note">Coming next: position sizing, compounding weekly premium, and when — and when not — to increase the number of spreads per week.</div>
+    <div class="placeholder-note">This part depends entirely on real, compounding results and won't be written honestly until there's a track record to build it on. Once several weeks of live trades have closed, this section will walk through position sizing and when — and when not — to increase the number of spreads per week, using this system's actual numbers rather than a projection.</div>
   </section>
 
 </div>
