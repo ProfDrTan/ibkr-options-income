@@ -120,6 +120,7 @@ WEBSITE TABS (all at repo root → GitHub Pages):
   track-record.html     Full P&L history, win rate, trade table
   intelligence.html     5-agent intel scores with descriptions
   learn.html            Educational modules (theta decay, bull put spread, rules)
+  book.html             "The 3-Hour Trader" manuscript — 12 parts, 9 drafted, read-aloud enabled
   setup-guide.html      Public step-by-step setup guide
   master-prompt.html    This page
   system-guide.html     File-by-file technical reference
@@ -156,7 +157,7 @@ APPROVAL WORKFLOW:
   6. executor.py connects IBKR TWS port 7496 → places order
   7. Telegram confirmation when filled
 
-COMPLETED SETUP (July 2, 2026):
+COMPLETED SETUP (updated July 5, 2026):
   ✅ IBKR account U10500387 — Options Level 3 approved
   ✅ TWS API enabled — port 7496, Read-Only unchecked
   ✅ Telegram bot wired — @ibkr_options_profdrtan_bot
@@ -164,12 +165,13 @@ COMPLETED SETUP (July 2, 2026):
   ✅ GitHub Pages live — profdrtan.github.io/ibkr-options-income
   ✅ All Python modules built and pushed
   ✅ GitHub Actions schedules configured
-  ✅ 10 website tabs with read-aloud on all pages
+  ✅ 11 website tabs with read-aloud on all pages
   ✅ Word-level TTS highlighting (tts.js) — gold highlight, click-to-jump
   ✅ Market tab: live tickers, AI briefing, Fear&Greed, sectors, earnings calendar
   ✅ Futures tab: ES/MES live, global sessions clock, MES position calculator
   ✅ Futures Rankings: 27 contracts ranked with heatmap and SPX correlation
-  ⏳ First live trade — Monday 09:35pm Malaysia time
+  ✅ book.html added — "The 3-Hour Trader" folded into main site nav, 9 of 12 parts drafted
+  ⏳ First live trade — Monday July 6, 09:35 ET / 10:35pm Singapore time
 
 PENDING ITEMS:
   1. Wire approve button to write trade_state.json via GitHub API
@@ -183,11 +185,29 @@ FUTURES TRADING (Phase 1 live, Phase 2 next week):
   IBKR account already approved for Futures trading
   Roadmap: Phase1=Intel(done) → Phase2=Paper → Phase3=1contract → Phase4=Scale → Phase5=Full system
 
-BOOK IN PROGRESS: "The 3-Hour Trader"
+BOOK: "The 3-Hour Trader" — LIVE at profdrtan.github.io/ibkr-options-income/book.html
   How working professionals use AI + options to generate weekly income
   CP3405 student pipeline is the origin story
   Live track record from this system is the proof
   Target audience: Singapore/Malaysia/Asia working professionals
+  Folded into the main IBKR site (not a separate repo) — reuses tts.js as-is
+
+  STRUCTURE (12 parts, 9 fully drafted as of July 5 2026):
+    Part 1  Why options income works — drafted
+    Part 2  The three rules that protect you, always — drafted
+    Part 3  The AI system that does the thinking (5-agent framework) — drafted
+    Part 4  A Technical Analysis Primer — drafted
+    Part 5  The Almanac Effect — drafted
+    Part 6  Macro — Reading the Economic Weather — drafted
+    Part 7  LLM Synthesis — When Machines Read the News — drafted
+    Part 8  What Actually Goes Wrong — And What Happens When It Does — drafted
+    Part 9  Common Questions and Fair Worries — drafted
+    Part 10 Your First Trade, Step by Step — scaffolded, awaiting first live trade
+    Part 11 Scaling From $500/Month to $5,000/Month — not started, needs track record
+    Part 12 Closing the Loop (conclusion) — drafted
+
+  Parts 10 and 11 are deliberately withheld from full drafting until real
+  trade data exists — no hypothetical P&L numbers, by design.
 
 ════════════════════════════════════════
 SYSTEM 2 — AI POWER SHIFT
@@ -195,19 +215,39 @@ SYSTEM 2 — AI POWER SHIFT
 
 LIVE WEBSITE:  ai-power-shift.pages.dev (Cloudflare Pages)
 GITHUB REPO:   github.com/ProfDrTan/ai-power-shift (public)
-FILES: index.html, book.html, for-my-father.html, tts.js
+FILES: index.html, book.html, for-my-father.html
+  (no shared tts.js in this repo — book.html has its own self-contained reader)
+GITHUB PAT: stored in the AI Continuity Cheatsheet (Google Doc, Section C)
 
 BOOK: "The AI PowerShift: Who Owns the Intelligence, Who Pays the Rent,
        and Who Gets Left Behind"
   Prof Dr Tan's third book. Core thesis: AI is a power-transfer story —
   from apps to infrastructure, from public markets to private capital.
-  Publication-ready PDF manuscript exists.
+  Publication-ready PDF manuscript exists: 260701_AIpowershift_FINAL_TOC.pdf, 181 pages.
   Bilingual English/Mandarin dedication pages.
   Full read-aloud site with sentence chaining.
 
-TTS ON BOOK SITE:
+⚠ SCOPE FINDING (July 5 2026): book.html currently contains ~6,500 words —
+  a condensed excerpt, NOT the full 181-page manuscript (~45-55k words est.).
+  The full PDF is not in this repo. Expanding book.html to the complete
+  manuscript is a separate, larger project — queued for a dedicated new
+  conversation where the PDF gets uploaded directly. English pass must be
+  reviewed and approved before Mandarin translation of the full book begins.
+
+TTS ON BOOK SITE (corrected history — prior note that word-level highlighting
+was "upgraded July 3" was inaccurate; only paragraph-level highlighting
+actually existed until the fix below):
   book.html has its own paragraph+word reader (play/pause/EN/ZH buttons)
-  Word-level gold highlighting upgraded July 3 2026
+  Word-level highlighting + click-to-jump actually implemented July 6 2026,
+    ported from the working ibkr-options-income/tts.js pattern
+  Fixed: Chrome speechSynthesis bug that silently dropped short utterances
+    (chapter headings) — 180ms delay inserted between chained blocks
+  Cross-language blocks (English visible text, Chinese audio translation)
+    get paragraph-level jump-to-start on click, not word-exact — word
+    counts don't align 1:1 across languages, so exact mapping isn't reliable
+  Mandarin translations (data-zh) currently exist for: dedication (d1-d8,
+    pre-existing) + Introduction (i1-i5, added July 6, reviewed & approved).
+    Rest of the excerpt is still English-only in Chinese playback mode.
   onboundary for desktop, timer fallback for Chrome Android
   for-my-father.html has dedicated read-aloud for Prof Dr Tan's father
     (Tan Mung Lee 陳孟利, age 94, Mandarin-speaking)
@@ -295,14 +335,15 @@ QUICK CONTEXT TAGS — add after pasting prompt
         <div class="ref-row"><span class="l">TWS Port</span><span class="r">7496 (live) | 7497 (paper)</span></div>
         <div class="ref-row"><span class="l">Telegram Bot</span><span class="r">@ibkr_options_profdrtan_bot</span></div>
         <div class="ref-row"><span class="l">Strategy</span><span class="r">SPX Bull Put Spreads | 10x/week</span></div>
-        <div class="ref-row"><span class="l">First trade</span><span class="r">Monday 09:35pm MYT</span></div>
+        <div class="ref-row"><span class="l">First trade</span><span class="r">Monday, July 6, 10:35pm SGT</span></div>
       </div>
       <div class="ref-card">
         <h3>AI Power Shift</h3>
         <div class="ref-row"><span class="l">Website</span><span class="r"><a href="https://ai-power-shift.pages.dev" target="_blank">ai-power-shift.pages.dev</a></span></div>
         <div class="ref-row"><span class="l">GitHub Repo</span><span class="r"><a href="https://github.com/ProfDrTan/ai-power-shift" target="_blank">ProfDrTan/ai-power-shift</a></span></div>
         <div class="ref-row"><span class="l">Book</span><span class="r">The AI PowerShift (3rd book)</span></div>
-        <div class="ref-row"><span class="l">TTS</span><span class="r">Word-level gold highlight</span></div>
+        <div class="ref-row"><span class="l">Site content</span><span class="r">~6.5k word excerpt (not full 181pg)</span></div>
+        <div class="ref-row"><span class="l">TTS</span><span class="r">Word-level + click-to-jump (fixed Jul 6)</span></div>
       </div>
       <div class="ref-card">
         <h3>CP3405 Course</h3>
@@ -312,8 +353,8 @@ QUICK CONTEXT TAGS — add after pasting prompt
       </div>
       <div class="ref-card">
         <h3>Books In Progress</h3>
-        <div class="ref-row"><span class="l">Book 1</span><span class="r">The AI PowerShift (ready)</span></div>
-        <div class="ref-row"><span class="l">Book 2</span><span class="r">The 3-Hour Trader (building)</span></div>
+        <div class="ref-row"><span class="l">Book 1</span><span class="r">The AI PowerShift (excerpt live, full manuscript pending)</span></div>
+        <div class="ref-row"><span class="l">Book 2</span><span class="r">The 3-Hour Trader (9 of 12 parts live)</span></div>
         <div class="ref-row"><span class="l">Book 3</span><span class="r">AI at Work (Ch1 drafted)</span></div>
         <div class="ref-row"><span class="l">Repo</span><span class="r"><a href="https://github.com/ProfDrTan/ai-playbook" target="_blank">ProfDrTan/ai-playbook</a></span></div>
       </div>
@@ -322,23 +363,25 @@ QUICK CONTEXT TAGS — add after pasting prompt
 
   <!-- STATUS CHECKLIST -->
   <div class="section">
-    <div class="section-title">&#9989; Current Status — July 3, 2026</div>
+    <div class="section-title">&#9989; Current Status — July 5, 2026</div>
     <div class="prompt-box" style="padding:1.2rem;">
       <div style="font-family:'Arial',sans-serif;font-size:0.82rem;line-height:2;">
         <div>&#9989; IBKR account U10500387 — Options Level 3 | TWS API enabled | port 7496</div>
         <div>&#9989; Telegram bot @ibkr_options_profdrtan_bot — secrets in GitHub</div>
-        <div>&#9989; GitHub Pages live — 10 tabs, read-aloud on all, word highlight</div>
+        <div>&#9989; GitHub Pages live — 11 tabs, read-aloud on all, word highlight</div>
         <div>&#9989; Market tab — live tickers, AI briefing, Fear&amp;Greed, sectors, earnings</div>
         <div>&#9989; Futures tab — ES/MES live, session clocks, MES calculator, AI briefing</div>
         <div>&#9989; Rankings tab — 27 futures ranked, heatmap, SPX correlation</div>
-        <div>&#9989; AI Power Shift — word-level TTS upgraded on book.html</div>
-        <div>&#9989; tts.js shared across all pages — one fix updates everything</div>
-        <div style="color:var(--gold);">&#9203; First Monday trade alert — Monday 09:35pm MYT (July 7)</div>
+        <div>&#9989; The 3-Hour Trader — book.html live, Parts 1-9 + 12 drafted (9 of 12 parts)</div>
+        <div>&#9989; AI Power Shift — word-level TTS + click-to-jump actually fixed July 6 (prior "upgraded July 3" note was inaccurate)</div>
+        <div>&#9989; tts.js shared across IBKR site pages — one fix updates everything</div>
+        <div style="color:var(--gold);">&#9203; First Monday trade alert — Monday, July 6, 10:35pm SGT</div>
         <div style="color:var(--gold);">&#9203; Wire approve button via GitHub API</div>
         <div style="color:var(--gold);">&#9203; Connect live SPX price feed</div>
         <div style="color:var(--gold);">&#9203; Paper trade validation (2 weeks)</div>
         <div style="color:var(--gold);">&#9203; MES paper trading Phase 2</div>
-        <div style="color:var(--gold);">&#9203; The 3-Hour Trader — book chapters</div>
+        <div style="color:var(--gold);">&#9203; The 3-Hour Trader — Parts 10-11 (need real trade + track record data)</div>
+        <div style="color:var(--gold);">&#9203; AI Power Shift — full 181-page manuscript expansion (needs PDF, new conversation)</div>
       </div>
     </div>
   </div>
