@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 3-Hour Trader | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a;
+    --navy2: #111827;
+    --navy3: #1e2a3a;
+    --gold:  #c9a84c;
+    --teal:  #2dd4bf;
+    --green: #22c55e;
+    --red:   #ef4444;
+    --text:  #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; padding-bottom:80px; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; position:sticky; top:0; z-index:100; }
+  nav .brand { color:var(--gold); font-size:1rem; font-weight:bold; letter-spacing:0.05em; white-space:nowrap; }
+  nav .links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.8rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; }
+  nav a:hover, nav a.active { color:var(--teal); }
+
+  .page { max-width:820px; margin:0 auto; padding:2rem 1.5rem; }
+
+  .hero { text-align:center; padding:2.5rem 1rem 2rem; }
+  .hero .eyebrow { color:var(--teal); font-family:'Arial',sans-serif; font-size:0.75rem;
+                   letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.6rem; }
+  .hero h1 { color:var(--gold); font-size:2.1rem; margin-bottom:0.5rem; }
+  .hero .tagline { color:var(--muted); font-size:1rem; font-style:italic; }
+  .hero .status-badge { display:inline-block; margin-top:1rem; background:#c9a84c22; color:var(--gold);
+                         border:1px solid #c9a84c44; border-radius:20px; padding:0.3rem 1rem;
+                         font-family:'Arial',sans-serif; font-size:0.72rem; letter-spacing:0.05em; }
+
+  .toc { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px;
+         padding:1.5rem; margin-bottom:2.5rem; }
+  .toc h2 { color:var(--teal); font-family:'Arial',sans-serif; font-size:0.78rem;
+            letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem; }
+  .toc ol { list-style:none; counter-reset:part; }
+  .toc li { counter-increment:part; margin-bottom:0.7rem; padding-left:2.2rem; position:relative; }
+  .toc li::before { content:"Part " counter(part); position:absolute; left:0; top:0;
+                     color:var(--gold); font-family:'Arial',sans-serif; font-size:0.7rem; font-weight:bold; }
+  .toc a { color:var(--text); text-decoration:none; font-size:0.95rem; }
+  .toc a:hover { color:var(--teal); }
+  .toc .part-status { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.7rem;
+                       margin-left:0.5rem; }
+  .toc .part-status.live { color:var(--teal); }
+
+  section[data-part] { margin-bottom:3.5rem; padding-bottom:1rem; border-bottom:1px solid #ffffff0d; }
+  .part-eyebrow { color:var(--teal); font-family:'Arial',sans-serif; font-size:0.72rem;
+                  letter-spacing:0.12em; text-transform:uppercase; margin-bottom:0.4rem; }
+  h1.part-title { color:var(--gold); font-size:1.5rem; margin-bottom:1.2rem; }
+  p.read-en { font-size:1.05rem; line-height:1.85; margin-bottom:1.1rem; color:var(--text); }
+  .pull-quote { font-style:italic; color:var(--gold); font-size:1.15rem; line-height:1.7;
+                border-left:3px solid var(--gold); padding-left:1.2rem; margin:1.6rem 0; }
+  .placeholder-note { background:#2dd4bf0d; border-left:3px solid var(--teal); border-radius:0 6px 6px 0;
+                       padding:0.9rem 1.2rem; font-family:'Arial',sans-serif; font-size:0.82rem;
+                       color:var(--muted); margin-top:1rem; }
+
+  .tts-word { cursor:pointer; border-radius:2px; }
+  .tts-word:hover { background:#c9a84c22; }
+  .tts-word.tts-active { background:var(--gold)!important; color:var(--navy)!important;
+                          border-radius:3px; padding:0 2px; box-shadow:0 0 6px var(--gold)88; }
+
+  .tts-bar { position:fixed; bottom:0; left:0; right:0; background:var(--navy2);
+             border-top:1px solid #c9a84c33; display:flex; align-items:center; gap:1rem;
+             padding:0.8rem 1.5rem; z-index:100; flex-wrap:wrap; }
+  .tts-btn { background:var(--gold); color:var(--navy); border:none; border-radius:6px;
+             padding:0.5rem 1.2rem; font-family:'Arial',sans-serif; font-size:0.82rem;
+             font-weight:bold; cursor:pointer; }
+  .tts-btn.stop { background:var(--red); color:#fff; }
+  .tts-label { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.78rem; flex:1; }
+  .tts-speed { background:var(--navy3); color:var(--text); border:1px solid #ffffff22;
+               border-radius:6px; padding:0.4rem 0.6rem; font-family:'Arial',sans-serif; font-size:0.78rem; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
+    <a href="futures.html">Futures</a>
+    <a href="futures-rankings.html">Rankings</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="book.html" class="active">The 3-Hour Trader</a>
+    <a href="setup-guide.html">Setup Guide</a>
+    <a href="master-prompt.html">Master Prompt</a>
+    <a href="system-guide.html">System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">The Book</div>
+  <h1>The 3-Hour Trader</h1>
+  <p class="tagline">How working professionals use AI and options to generate weekly income — while they sleep.</p>
+  <div class="status-badge">MANUSCRIPT IN PROGRESS · LIVE TRACK RECORD FEEDS THIS BOOK</div>
+</div>
+
+<div class="page">
+
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#part1">Why options income works — and why most people never try it</a><span class="part-status">drafting</span></li>
+      <li><a href="#part2">The three rules that protect you, always</a><span class="part-status">not started</span></li>
+      <li><a href="#part3">The AI system that does the thinking</a><span class="part-status">not started</span></li>
+      <li><a href="#part4">Your first trade, step by step</a><span class="part-status">not started</span></li>
+      <li><a href="#part5">Scaling from $500/month to $5,000/month</a><span class="part-status">not started</span></li>
+    </ol>
+  </div>
+
+  <section data-part="1" id="part1">
+    <div class="part-eyebrow">Part One</div>
+    <h1 class="part-title">Why Options Income Works — And Why Most People Never Try It</h1>
+    <p class="read-en">You don't need to understand the market. You need to understand the system.</p>
+    <div class="pull-quote">Most trading books are written by traders for traders. This one is different — written by an educator who built a system anyone can follow.</div>
+    <p class="read-en">Every week, professionals with no trading background and no interest in staring at charts are generating consistent income from the options market — not by predicting where prices will go, but by getting paid for patience, discipline, and time itself.</p>
+    <div class="placeholder-note">Chapter content is being drafted alongside the live trading system. As real trades close — starting with the first live execution this week — actual results will replace hypothetical examples throughout this book, so every number a reader sees is one that really happened.</div>
+  </section>
+
+  <section data-part="2" id="part2">
+    <div class="part-eyebrow">Part Two</div>
+    <h1 class="part-title">The Three Rules That Protect You, Always</h1>
+    <div class="placeholder-note">Coming next: defined risk, high probability, time decay — the three rules baked directly into this system's config.py, so they're never optional and never forgotten under pressure.</div>
+  </section>
+
+  <section data-part="3" id="part3">
+    <div class="part-eyebrow">Part Three</div>
+    <h1 class="part-title">The AI System That Does the Thinking</h1>
+    <div class="placeholder-note">Coming next: how the five-agent intelligence pipeline — Almanac, Macro, Technical, LLM synthesis, and Human Score — turns market noise into a single weekly recommendation.</div>
+  </section>
+
+  <section data-part="4" id="part4">
+    <div class="part-eyebrow">Part Four</div>
+    <h1 class="part-title">Your First Trade, Step by Step</h1>
+    <div class="placeholder-note">Coming next: a real walkthrough of this system's first live trade, from Monday morning recommendation to Telegram approval to the fill confirmation.</div>
+  </section>
+
+  <section data-part="5" id="part5">
+    <div class="part-eyebrow">Part Five</div>
+    <h1 class="part-title">Scaling From $500/Month to $5,000/Month</h1>
+    <div class="placeholder-note">Coming next: position sizing, compounding weekly premium, and when — and when not — to increase the number of spreads per week.</div>
+  </section>
+
+</div>
+
+<div class="tts-bar">
+  <button class="tts-btn" id="tts-btn" onclick="ttsToggle()">🔊 Read Aloud</button>
+  <span class="tts-label" id="tts-label">Press Read Aloud · Click any word to jump to that point</span>
+  <select class="tts-speed" id="tts-speed" onchange="ttsSetSpeed(this.value)">
+    <option value="0.6">0.6x</option>
+    <option value="0.72" selected>0.72x</option>
+    <option value="0.85">0.85x</option>
+    <option value="1.0">1.0x</option>
+    <option value="1.2">1.2x</option>
+  </select>
+</div>
+<script src="tts.js"></script>
+</body>
+</html>
