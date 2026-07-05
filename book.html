@@ -115,8 +115,13 @@
       <li><a href="#part3">The AI system that does the thinking</a><span class="part-status live">drafted</span></li>
       <li><a href="#part4">A technical analysis primer — what the system is actually looking at</a><span class="part-status live">drafted</span></li>
       <li><a href="#part5">The almanac effect — what decades of calendar patterns actually tell you</a><span class="part-status live">drafted</span></li>
-      <li><a href="#part6">Your first trade, step by step</a><span class="part-status">scaffolded — awaiting first live trade</span></li>
-      <li><a href="#part7">Scaling from $500/month to $5,000/month</a><span class="part-status">not started — needs track record</span></li>
+      <li><a href="#part6">Macro — reading the economic weather</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part7">LLM synthesis — when machines read the news</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part8">What actually goes wrong — and what happens when it does</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part9">Common questions and fair worries</a><span class="part-status live">drafted</span></li>
+      <li><a href="#part10">Your first trade, step by step</a><span class="part-status">scaffolded — awaiting first live trade</span></li>
+      <li><a href="#part11">Scaling from $500/month to $5,000/month</a><span class="part-status">not started — needs track record</span></li>
+      <li><a href="#part12">Closing the loop</a><span class="part-status live">drafted</span></li>
     </ol>
   </div>
 
@@ -184,6 +189,48 @@
 
   <section data-part="6" id="part6">
     <div class="part-eyebrow">Part Six</div>
+    <h1 class="part-title">Macro — Reading the Economic Weather</h1>
+    <p class="read-en">If Technical analysis reads the market's current mood and Almanac reads the calendar, Macro reads the weather system the whole market is flying through — interest rates, inflation, employment, and the posture of central banks. It carries 20% weight, tied for second-highest alongside LLM Synthesis, because it captures something the other agents structurally cannot: conditions that haven't shown up in price yet, but are about to.</p>
+    <p class="read-en"><strong>Interest rates and Fed posture.</strong> The US Federal Reserve's stance — raising rates, holding, or cutting — sets the gravitational pull on nearly every other asset. A market pricing in rate cuts behaves very differently from one bracing for hikes, even at an identical index level. The system pays particular attention to FOMC meeting weeks, when a single afternoon announcement can move markets more than the previous month combined.</p>
+    <p class="read-en"><strong>Inflation data (CPI and PPI releases).</strong> These scheduled monthly reports are known, dated events — and known events still produce outsized moves when the number surprises expectations. A hotter-than-expected inflation print can trigger a sharp risk-off reaction within minutes of release, regardless of how calm the technical picture looked the day before.</p>
+    <p class="read-en"><strong>Employment reports.</strong> The monthly jobs report functions as a proxy for economic health broadly — strong enough to fuel confidence, weak enough to raise recession concern, and either extreme can move markets independent of anything visible on a price chart.</p>
+    <p class="read-en"><strong>Why this matters for a weekly options strategy specifically:</strong> a defined-risk spread is only as safe as the assumption that this particular week won't see an extreme, low-probability move. Macro conditions are what shift the odds of that extreme move happening in the first place. A technically calm chart sitting directly in front of a major Fed decision is not actually calm — it's quiet in the way a room goes quiet right before something happens.</p>
+    <p class="read-en">Macro doesn't try to predict the market's direction any more than Technical does. It answers a narrower, more useful question: is there a known event on the calendar this week capable of overriding everything else the other signals are seeing? When the answer is yes, that alone can be reason enough to sit out entirely, no matter how attractive the premium looks.</p>
+  </section>
+
+  <section data-part="7" id="part7">
+    <div class="part-eyebrow">Part Seven</div>
+    <h1 class="part-title">LLM Synthesis — When Machines Read the News</h1>
+    <p class="read-en">Four of the five agents work with structured numbers — prices, dates, economic releases, volatility readings. The fifth works with something far messier: language. Headlines, analyst notes, earnings call transcripts, and the kind of market chatter that never reduces cleanly to a spreadsheet cell. This is LLM Synthesis, and it carries 20% weight — the same as Macro, and for a related reason: it catches things the numbers-only agents structurally cannot see yet.</p>
+    <p class="read-en">Multiple large language models — not just one — independently read the same body of text every week and form their own read on market sentiment. Using more than one model is deliberate, not redundant. Any single AI model can misread a headline, latch onto an outlier opinion, or simply get something wrong — the same way any single human analyst can. When several independent models are given the same information and asked the same question, agreement between them is a far stronger signal than any one of them alone, and disagreement is itself useful information: it flags a week where the situation is genuinely ambiguous, not just where one model happened to be confident.</p>
+    <p class="read-en">Consider a concrete case: a central bank official makes an unscripted, ambiguous comment during a Sunday evening interview — too late for that week's scheduled economic data, too soft to move a technical chart on its own, but exactly the kind of thing that shifts Monday morning sentiment before the opening bell. Structured, numbers-only agents have nothing to say about this yet. LLM Synthesis can read the actual transcript, weigh the tone against how similar comments have moved markets before, and flag the shift before the price itself has caught up.</p>
+    <p class="read-en">This capability comes with a real limitation, which is exactly why it doesn't carry more weight: language models can also overreact to a single loud headline, misjudge tone, or occasionally produce a confident-sounding read that simply isn't grounded in anything real — a known failure mode sometimes called hallucination. That's the case for keeping this signal at 20%, blended with four other independent perspectives, and always subject to the Human Score's final veto. A machine reading the news is a genuinely new capability. It is not, on its own, a reason to remove human judgment from the loop.</p>
+  </section>
+
+  <section data-part="8" id="part8">
+    <div class="part-eyebrow">Part Eight</div>
+    <h1 class="part-title">What Actually Goes Wrong — And What Happens When It Does</h1>
+    <p class="read-en">Every book in this category eventually has to answer the question it would rather avoid: what happens when the trade doesn't work? This book answers it now, in its own chapter, rather than burying it in a footnote — because a strategy is only as trustworthy as its worst week, not its best one.</p>
+    <p class="read-en">No approach to markets wins every single time, and any book that implies otherwise is not being honest with you. What matters is not whether a loss happens — eventually, one will — but whether the loss was bounded, expected, and survivable in advance. That is the entire purpose of Rule One from Part Two: defined risk, decided before the trade exists, not discovered afterward.</p>
+    <p class="read-en"><strong>The 200% stop loss, in plain terms.</strong> Say a spread is sold for a $500 credit. If the cost to close that position later rises to $1,000 — double what was collected — the position is closed automatically, by rule, without debate or hesitation. The loss on that single trade is capped at a known, pre-defined multiple of the credit received. It is not allowed to grow simply because closing it feels like admitting defeat.</p>
+    <p class="read-en"><strong>The Thursday forced close.</strong> Regardless of profit or loss, any position still open by Thursday's close is closed before the weekend. Weekly options can move sharply on thin, low-liquidity Friday trading and gap unpredictably over a weekend with no way to react in real time. The system simply refuses to hold that particular risk, on principle, every single week.</p>
+    <p class="read-en"><strong>What a losing week actually looks like, operationally:</strong> the same alert arrives on your phone as any other week. The dashboard shows the position approaching its stop level rather than its profit target. The system closes it — automatically, or with your one-click confirmation, depending on how the workflow is configured — at the pre-agreed loss, not a cent beyond what was already known when the trade was placed. Nothing about that week required a difficult judgment call in the moment, because the difficult decision was already made in advance, while calm, before there was any money on the line.</p>
+    <p class="read-en">This is precisely why Rule Two — high probability, roughly a 95% historical chance of a non-event on any single trade — matters so much in combination with Rule One. A strategy that wins most weeks and caps its rare losses at a known multiple can absorb an occasional bad week and still come out ahead over a full year. A strategy that wins most weeks but allows one loss to spiral unchecked cannot. The goal was never zero losses. The goal is losses that stay exactly the size you decided, in advance, that you could afford.</p>
+  </section>
+
+  <section data-part="9" id="part9">
+    <div class="part-eyebrow">Part Nine</div>
+    <h1 class="part-title">Common Questions and Fair Worries</h1>
+    <p class="read-en">Before trying any of this, most people have the same handful of worries — reasonable ones, usually inherited from a bad experience with a different kind of options trading entirely. They deserve straight answers.</p>
+    <p class="read-en"><strong>"Will I get assigned shares I don't want?"</strong> No — and this is one of the most reassuring, least-discussed facts about trading SPX index options specifically. SPX options are European-style and cash-settled, meaning they can only be exercised at expiration, never early, and settlement is in cash rather than shares. The classic nightmare of single-stock options — waking up unexpectedly owning, or short, one hundred shares you never intended to hold — structurally cannot happen here.</p>
+    <p class="read-en"><strong>"How much capital does this actually tie up?"</strong> Far less than people assume. Margin on a defined-risk spread is calculated on the width of the spread minus the credit already received — not on the full notional value of the index. This is one of the specific advantages of trading a spread rather than a single naked option: the capital efficiency is built into the structure itself.</p>
+    <p class="read-en"><strong>"What if I'm asleep, traveling, or simply forget to click approve?"</strong> Nothing happens, on purpose. The system is built to default to inaction, not action. No approval means no trade that week. There is no version of this workflow where a position gets opened silently on your behalf without a deliberate, reviewed decision.</p>
+    <p class="read-en"><strong>"What about taxes?"</strong> This varies meaningfully by country and by personal circumstances, and this book is not the place to get specific tax guidance — treat any number in this book as pre-tax, and speak to a qualified accountant familiar with derivatives income in your own jurisdiction before treating this as a net income figure.</p>
+    <p class="read-en"><strong>"Isn't this still just a form of gambling?"</strong> Gambling, properly defined, is accepting negative expected value in exchange for the thrill of a payout. This strategy is closer to underwriting: getting paid today for accepting a defined, bounded risk that, on average, resolves in your favor far more often than against you — the same basic logic an insurance company runs on, applied to a different kind of risk.</p>
+  </section>
+
+  <section data-part="10" id="part10">
+    <div class="part-eyebrow">Part Ten</div>
     <h1 class="part-title">Your First Trade, Step by Step</h1>
     <p class="read-en">Every Monday, at 9:35am New York time, the system wakes up and runs its full analysis before you've likely finished breakfast — or, from Singapore, well after most people are asleep.</p>
     <p class="read-en"><strong>Step 1 — The Recommendation.</strong> The five-agent pipeline runs, produces a composite score, and — if conditions clear the minimum bar for a trade — proposes a specific SPX bull put spread: the strikes, the width, the target profit, and the point at which the position would be closed for a loss rather than allowed to run.</p>
@@ -193,10 +240,18 @@
     <div class="placeholder-note">This section will be rewritten around the system's actual first live trade rather than a hypothetical one — right down to the real numbers on the screen, the real Telegram alert, and the real fill confirmation. That trade is expected this week, and this chapter will be the first to reflect it.</div>
   </section>
 
-  <section data-part="7" id="part7">
-    <div class="part-eyebrow">Part Seven</div>
+  <section data-part="11" id="part11">
+    <div class="part-eyebrow">Part Eleven</div>
     <h1 class="part-title">Scaling From $500/Month to $5,000/Month</h1>
     <div class="placeholder-note">This part depends entirely on real, compounding results and won't be written honestly until there's a track record to build it on. Once several weeks of live trades have closed, this section will walk through position sizing and when — and when not — to increase the number of spreads per week, using this system's actual numbers rather than a projection.</div>
+  </section>
+
+  <section data-part="12" id="part12">
+    <div class="part-eyebrow">Part Twelve</div>
+    <h1 class="part-title">Closing the Loop</h1>
+    <p class="read-en">This book opened with a single claim: you don't need to understand the market, you need to understand the system. Everything between that first page and this one has been an attempt to earn that claim rather than simply assert it — walking through each of the five signals honestly, including their limits, and being equally honest about what happens on the weeks it doesn't go your way.</p>
+    <p class="read-en">There is a quieter thread running underneath all of it, worth naming directly: this system did not begin as a personal trading tool. It began in a classroom, built and stress-tested first by fifty-six students who had never placed a real trade, competing across five teams to see whose analysis could hold up against a real market. By the time it touched a live account, it had already survived more scrutiny, from more independent perspectives, than most professional strategies ever receive. The students who built the intelligence layer are, in a very real sense, this book's first co-authors.</p>
+    <p class="read-en">Parts Ten and Eleven of this book are still being written — deliberately, in public, alongside the live track record itself. Every trade that closes from here forward is a page. The dashboard is open to anyone who wants to watch it happen in real time, not just read about it after the fact. That transparency is the actual point: not a promise that this always works, but a record honest enough that you can judge for yourself whether it does.</p>
   </section>
 
 </div>
