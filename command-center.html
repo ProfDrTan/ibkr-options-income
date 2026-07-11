@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center | Prof Dr Tan</title>
+<style>
+  :root {
+    --navy:#0a0e1a;--navy2:#111827;--navy3:#1e2a3a;
+    --gold:#c9a84c;--teal:#2dd4bf;--green:#22c55e;
+    --red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;
+    --yellow:#fbbf24;--orange:#fb923c;--purple:#a78bfa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--navy);color:var(--text);font-family:'Georgia',serif;
+       min-height:100vh;padding-bottom:40px;}
+  nav{background:var(--navy2);border-bottom:1px solid #c9a84c33;display:flex;
+      align-items:center;justify-content:space-between;padding:0 2rem;height:60px;
+      position:sticky;top:0;z-index:100;}
+  nav .brand{color:var(--gold);font-size:1rem;font-weight:bold;letter-spacing:0.05em;}
+  nav .links{display:flex;gap:1.2rem;flex-wrap:wrap;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.8rem;
+         font-family:'Arial',sans-serif;transition:color 0.2s;}
+  nav a:hover,nav a.active{color:var(--teal);}
+  .page{max-width:1300px;margin:0 auto;padding:1.5rem 2rem;}
+  .hero{text-align:center;padding:1.5rem 1rem 1rem;}
+  .hero h1{color:var(--gold);font-size:1.8rem;margin-bottom:0.3rem;}
+  .hero p{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.85rem;}
+
+  /* ALERT BANNER */
+  .alert-banner{border-radius:10px;padding:1rem 1.5rem;margin-bottom:1.5rem;
+                 font-family:'Arial',sans-serif;font-size:0.85rem;line-height:1.7;}
+  .alert-banner.fire{background:#ef444415;border:1px solid #ef444444;color:#fca5a5;}
+  .alert-banner.warn{background:#fbbf2415;border:1px solid #fbbf2444;color:#fde68a;}
+  .alert-banner h3{font-size:0.85rem;margin-bottom:0.5rem;font-weight:bold;}
+
+  /* REFRESH BAR */
+  .refresh-bar{display:flex;align-items:center;justify-content:space-between;
+                margin-bottom:1.2rem;font-family:'Arial',sans-serif;font-size:0.78rem;}
+  .refresh-bar .ts{color:var(--muted);}
+  .refresh-btn{background:var(--navy3);color:var(--teal);border:1px solid var(--teal)44;
+                border-radius:6px;padding:0.35rem 0.9rem;font-size:0.75rem;
+                font-family:'Arial',sans-serif;cursor:pointer;}
+  .refresh-btn:hover{background:var(--teal);color:var(--navy);}
+
+  /* PROJECT GRID */
+  .project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+                 gap:1.2rem;margin-bottom:1.5rem;}
+
+  /* PROJECT CARD */
+  .pcard{background:var(--navy2);border-radius:12px;padding:1.3rem;
+          border-left:4px solid var(--muted);transition:transform 0.15s;
+          position:relative;}
+  .pcard:hover{transform:translateY(-2px);}
+  .pcard.fire  {border-left-color:var(--red);}
+  .pcard.warn  {border-left-color:var(--yellow);}
+  .pcard.good  {border-left-color:var(--green);}
+  .pcard.info  {border-left-color:var(--teal);}
+  .pcard.parked{border-left-color:var(--muted);opacity:0.7;}
+
+  .pcard-header{display:flex;align-items:flex-start;justify-content:space-between;
+                 margin-bottom:0.8rem;}
+  .pcard-title{font-size:0.95rem;font-weight:bold;color:var(--text);}
+  .pcard-cat{font-size:0.68rem;color:var(--muted);font-family:'Arial',sans-serif;
+              text-transform:uppercase;letter-spacing:0.06em;margin-top:0.15rem;}
+
+  .status-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+  .status-dot.fire  {background:var(--red);box-shadow:0 0 8px var(--red)88;}
+  .status-dot.warn  {background:var(--yellow);box-shadow:0 0 8px var(--yellow)88;}
+  .status-dot.good  {background:var(--green);box-shadow:0 0 8px var(--green)88;}
+  .status-dot.info  {background:var(--teal);box-shadow:0 0 8px var(--teal)88;}
+  .status-dot.parked{background:var(--muted);}
+
+  .pcard-meta{display:flex;gap:1rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+  .meta-item{font-family:'Arial',sans-serif;font-size:0.75rem;color:var(--muted);}
+  .meta-item span{color:var(--text);}
+
+  .pcard-status{font-family:'Arial',sans-serif;font-size:0.8rem;
+                 color:var(--text);margin-bottom:0.8rem;line-height:1.5;}
+
+  .pcard-actions{margin-bottom:0.8rem;}
+  .action-item{display:flex;align-items:flex-start;gap:0.5rem;
+                font-family:'Arial',sans-serif;font-size:0.78rem;
+                padding:0.25rem 0;color:var(--text);}
+  .action-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+  .action-dot.fire  {background:var(--red);}
+  .action-dot.warn  {background:var(--yellow);}
+  .action-dot.info  {background:var(--teal);}
+  .action-dot.good  {background:var(--green);}
+
+  .pcard-footer{display:flex;gap:0.6rem;flex-wrap:wrap;}
+  .pcard-btn{font-family:'Arial',sans-serif;font-size:0.72rem;padding:0.3rem 0.8rem;
+              border-radius:5px;text-decoration:none;font-weight:bold;
+              letter-spacing:0.04em;transition:opacity 0.2s;}
+  .pcard-btn:hover{opacity:0.8;}
+  .pcard-btn.primary{background:var(--teal);color:var(--navy);}
+  .pcard-btn.secondary{background:var(--navy3);color:var(--muted);
+                         border:1px solid #ffffff22;}
+  .pcard-btn.danger{background:var(--red);color:#fff;}
+  .pcard-btn.gold{background:var(--gold);color:var(--navy);}
+
+  /* MONEY ALERT */
+  .money-card{background:linear-gradient(135deg,#0f1a0f,#111827);
+               border:1px solid var(--green)44;border-radius:12px;
+               padding:1.5rem;margin-bottom:1.5rem;}
+  .money-card h2{font-size:0.85rem;color:var(--green);font-family:'Arial',sans-serif;
+                  text-transform:uppercase;letter-spacing:0.08em;
+                  border-bottom:1px solid var(--green)22;padding-bottom:0.6rem;
+                  margin-bottom:1.2rem;}
+  .money-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+  .money-item{background:#0a1a0a;border:1px solid var(--green)22;border-radius:8px;padding:1rem;}
+  .money-label{font-size:0.7rem;color:var(--muted);font-family:'Arial',sans-serif;
+                text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.3rem;}
+  .money-val{font-size:1.4rem;font-weight:bold;color:var(--green);font-family:'Arial',sans-serif;}
+  .money-sub{font-size:0.72rem;color:var(--muted);font-family:'Arial',sans-serif;
+              margin-top:0.2rem;line-height:1.4;}
+  .money-action{font-size:0.75rem;color:var(--yellow);font-family:'Arial',sans-serif;
+                 margin-top:0.4rem;font-weight:bold;}
+
+  /* SECTION TITLE */
+  .section-title{color:var(--teal);font-size:0.8rem;font-family:'Arial',sans-serif;
+                  text-transform:uppercase;letter-spacing:0.08em;
+                  margin:1.5rem 0 1rem;border-bottom:1px solid #ffffff11;
+                  padding-bottom:0.5rem;}
+
+  .loading{color:var(--muted);font-family:'Arial',sans-serif;font-size:0.82rem;
+            text-align:center;padding:1.5rem;animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:0.72rem;
+          font-family:'Arial',sans-serif;border-top:1px solid #ffffff08;margin-top:2rem;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">&#9889; IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
+    <a href="futures.html">Futures</a>
+    <a href="futures-rankings.html">Rankings</a>
+    <a href="command-center.html" class="active">Command Center</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="master-prompt.html">Master Prompt</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>&#127775; Project Command Center</h1>
+  <p>Prof Dr Tan&#39;s complete project portfolio &#183; Live status &#183; Auto-refreshes from GitHub</p>
+</div>
+
+<div class="page">
+
+  <div class="refresh-bar">
+    <span class="ts">Last checked: <span id="last-update">Loading...</span></span>
+    <button class="refresh-btn" onclick="loadAll()">&#8635; Refresh All</button>
+  </div>
+
+  <!-- FIRE ALERTS -->
+  <div id="alert-zone"></div>
+
+  <!-- MONEY ON THE TABLE -->
+  <div class="money-card">
+    <h2>&#128176; Money Sitting Idle &#8212; Act Now</h2>
+    <div class="money-grid">
+      <div class="money-item">
+        <div class="money-label">IBKR Cash (USD)</div>
+        <div class="money-val" id="ibkr-cash">~$187,800</div>
+        <div class="money-sub">Idle in account U10500387<br>Earning nothing right now</div>
+        <div class="money-action">&#9888; Deploy in bull put spreads Monday</div>
+      </div>
+      <div class="money-item">
+        <div class="money-label">ThinkorSwim Cash</div>
+        <div class="money-val">$94,386</div>
+        <div class="money-sub">Account *657 &#8212; zero positions<br>Paper trade validation account</div>
+        <div class="money-action">&#9989; Use for paper trade mirror</div>
+      </div>
+      <div class="money-item">
+        <div class="money-label">Weekly Income Target</div>
+        <div class="money-val">$1,750</div>
+        <div class="money-sub">10 SPX bull put spreads<br>~$175 premium each</div>
+        <div class="money-action">&#9203; First trade: Monday 9:35pm MYT</div>
+      </div>
+      <div class="money-item">
+        <div class="money-label">Monthly Target</div>
+        <div class="money-val">$7,000</div>
+        <div class="money-sub">4 weeks x $1,750<br>= ~SGD 9,450/month passive</div>
+        <div class="money-action">&#128197; 12 months = ~$84,000/yr</div>
+      </div>
+      <div class="money-item">
+        <div class="money-label">MES Futures Margin</div>
+        <div class="money-val">$1,500</div>
+        <div class="money-sub">Per contract required<br>Phase 2 starts next week</div>
+        <div class="money-action">&#9203; Paper trade first 2 weeks</div>
+      </div>
+      <div class="money-item">
+        <div class="money-label">Passive Income Goal</div>
+        <div class="money-val">SGD 100K</div>
+        <div class="money-sub">Phase 1 target by 2032<br>Options + futures combined</div>
+        <div class="money-action">&#128200; On track if Monday goes live</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVE PROJECTS -->
+  <div class="section-title">&#128293; Active Projects &#8212; Needs Your Attention</div>
+  <div class="project-grid" id="active-grid">
+    <div class="loading">Checking GitHub repos...</div>
+  </div>
+
+  <!-- RUNNING PROJECTS -->
+  <div class="section-title">&#9989; Running Projects &#8212; No Action Needed</div>
+  <div class="project-grid" id="running-grid">
+    <div class="loading">Loading...</div>
+  </div>
+
+  <!-- PARKED PROJECTS -->
+  <div class="section-title">&#9744; Parked &#8212; Resume Later</div>
+  <div class="project-grid" id="parked-grid">
+    <div class="loading">Loading...</div>
+  </div>
+
+</div>
+
+<footer>Prof Dr Tan &#183; Project Command Center &#183; Auto-checks GitHub every load &#183; 
+Last full refresh: <span id="footer-ts">—</span></footer>
+
+<script>
+const GH_API = 'https://api.github.com';
+const OWNER  = 'ProfDrTan';
+
+async function ghFetch(path) {
+  try {
+    const r = await fetch(GH_API + path, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return 'unknown';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins  = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days  = Math.floor(diff / 86400000);
+  if (mins < 60)  return mins + 'm ago';
+  if (hours < 24) return hours + 'h ago';
+  if (days < 7)   return days + 'd ago';
+  return new Date(dateStr).toLocaleDateString();
+}
+
+function staleness(dateStr) {
+  if (!dateStr) return 'fire';
+  const days = (Date.now() - new Date(dateStr).getTime()) / 86400000;
+  if (days > 14) return 'fire';
+  if (days > 7)  return 'warn';
+  if (days > 2)  return 'info';
+  return 'good';
+}
+
+function makeCard(project) {
+  const s = project.status;
+  const actions = (project.actions || []).map(a => `
+    <div class="action-item">
+      <div class="action-dot ${a.type}"></div>
+      <span>${a.text}</span>
+    </div>`).join('');
+
+  const btns = (project.links || []).map(l =>
+    `<a href="${l.url}" target="_blank" class="pcard-btn ${l.style||'secondary'}">${l.label}</a>`
+  ).join('');
+
+  return `<div class="pcard ${s}">
+    <div class="pcard-header">
+      <div>
+        <div class="pcard-title">${project.icon} ${project.name}</div>
+        <div class="pcard-cat">${project.category}</div>
+      </div>
+      <div class="status-dot ${s}"></div>
+    </div>
+    <div class="pcard-meta">
+      <div class="meta-item">Last commit: <span id="commit-${project.repo}">${project.lastCommit||'—'}</span></div>
+      ${project.site ? `<div class="meta-item">Site: <span>${project.siteStatus||'checking...'}</span></div>` : ''}
+    </div>
+    <div class="pcard-status">${project.statusText}</div>
+    <div class="pcard-actions">${actions}</div>
+    <div class="pcard-footer">${btns}</div>
+  </div>`;
+}
+
+// ── PROJECT DEFINITIONS ────────────────────────────────────────────────────────
+const PROJECTS = [
+  // ── FIRE / NEEDS ATTENTION ───────────────────────────────────────────────
+  {
+    name: 'IBKR Options Income',
+    icon: '&#9889;',
+    category: 'Trading System',
+    status: 'fire',
+    repo: 'ibkr-options-income',
+    site: 'https://profdrtan.github.io/ibkr-options-income',
+    statusText: 'System built and deployed. Cash sitting idle. First trade fires Monday 9:35pm MYT. Approve button not yet wired to GitHub API. SPX price feed is placeholder.',
+    actions: [
+      {type:'fire', text:'USD ~$187,800 idle in IBKR — deploy Monday'},
+      {type:'fire', text:'Wire approve button to GitHub API'},
+      {type:'warn', text:'Replace SPX price placeholder in strategy.py'},
+      {type:'warn', text:'Run first paper trade test end-to-end'},
+      {type:'info', text:'MES futures Phase 2 — paper trade next week'},
+    ],
+    links: [
+      {label:'Open Site', url:'https://profdrtan.github.io/ibkr-options-income', style:'primary'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/ibkr-options-income', style:'secondary'},
+      {label:'Dashboard', url:'https://profdrtan.github.io/ibkr-options-income/index.html', style:'gold'},
+    ]
+  },
+  {
+    name: 'Wealth Dashboard',
+    icon: '&#128176;',
+    category: 'Personal Finance',
+    status: 'warn',
+    repo: 'wealth-dashboard',
+    site: 'https://professor-dr-tan-wealth-dashboard.pages.dev',
+    statusText: 'Dashboard exists but data is stale. Income leverage strategy page built. IBKR options income section needs live P&L feed. Bond screening tool needs refresh.',
+    actions: [
+      {type:'warn', text:'Update with live IBKR positions and P&L'},
+      {type:'warn', text:'Refresh bond screening with current rates'},
+      {type:'info', text:'Connect options income track record when live'},
+      {type:'info', text:'Phase 1 target SGD 100K passive by 2032 — on track?'},
+    ],
+    links: [
+      {label:'Open Site', url:'https://professor-dr-tan-wealth-dashboard.pages.dev', style:'primary'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/wealth-dashboard', style:'secondary'},
+    ]
+  },
+  {
+    name: 'CP3405 DT3 Course',
+    icon: '&#127979;',
+    category: 'Teaching — TR2 2026',
+    status: 'warn',
+    repo: 'dt3-tr2-26-course-website',
+    site: 'https://profdrtan.github.io/dt3-tr2-26-course-website',
+    statusText: 'Study week. Sprint 6 upcoming. Pipeline Audit Day was July 6. 5 teams building market intelligence pipelines. Team 1 stalled 16+ days entering Sprint 6.',
+    actions: [
+      {type:'fire', text:'Team 1 — stalled 16+ days, entering Sprint 6'},
+      {type:'warn', text:'Team 4 — automation theatre, green badges no real data'},
+      {type:'info', text:'Team 2 — most active, three-workflow cascade'},
+      {type:'good', text:'Team 3 — cleanest fetch script, working cron'},
+      {type:'good', text:'Team 5 — best scheduler design, dual-cron'},
+    ],
+    links: [
+      {label:'Course Site', url:'https://profdrtan.github.io/dt3-tr2-26-course-website', style:'primary'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/dt3-tr2-26-course-website', style:'secondary'},
+    ]
+  },
+  // ── RUNNING FINE ─────────────────────────────────────────────────────────
+  {
+    name: 'AI Power Shift',
+    icon: '&#128218;',
+    category: 'Book / Publishing',
+    status: 'info',
+    repo: 'ai-power-shift',
+    site: 'https://ai-power-shift.pages.dev',
+    statusText: 'Book site live on Cloudflare. 181-page manuscript, bilingual EN/ZH. Word-level TTS upgraded July 3. 8 Signal Watch intelligence updates integrated.',
+    actions: [
+      {type:'warn', text:'Word-level gold highlighting not working on book.html — fix in next session'},
+      {type:'info', text:'Consider adding chapter summary cards'},
+      {type:'good', text:'Site live and accessible'},
+    ],
+    links: [
+      {label:'Open Site', url:'https://ai-power-shift.pages.dev', style:'primary'},
+      {label:'Book', url:'https://ai-power-shift.pages.dev/book.html', style:'gold'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/ai-power-shift', style:'secondary'},
+    ]
+  },
+  {
+    name: 'AI Playbook',
+    icon: '&#128214;',
+    category: 'Book / Teaching',
+    status: 'info',
+    repo: 'ai-playbook',
+    site: 'https://profdrtan.github.io/ai-playbook',
+    statusText: '7-chapter AI tactics book for professionals and students. Content drip automation running weekly via GitHub Actions. Sprint by Sprint research paper on hold until TR2 ends ~August 2026.',
+    actions: [
+      {type:'warn', text:'Sprint by Sprint paper — hold until August 2026 for full W3-W10 data'},
+      {type:'info', text:'Weekly LinkedIn content drip running automatically'},
+      {type:'good', text:'Build log and command center status page live'},
+    ],
+    links: [
+      {label:'Open Site', url:'https://profdrtan.github.io/ai-playbook', style:'primary'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/ai-playbook', style:'secondary'},
+    ]
+  },
+  {
+    name: 'CP5640 Participation Tracker',
+    icon: '&#128202;',
+    category: 'Teaching Tool',
+    status: 'good',
+    repo: 'cp5640-participation-tracker',
+    site: 'https://profdrtan.github.io/cp5650-participation-tracker',
+    statusText: '17 students, Weeks 1-10 tracked. Multi-device sync fixed via GitHub API. Bar chart leaderboard and CSV export working. Tested and promoted to live.',
+    actions: [
+      {type:'good', text:'Multi-device sync working via GitHub API'},
+      {type:'good', text:'17 students tracked across 10 weeks'},
+      {type:'info', text:'Export grades to CSV when trimester ends'},
+    ],
+    links: [
+      {label:'Open Tracker', url:'https://profdrtan.github.io/cp5650-participation-tracker', style:'primary'},
+      {label:'GitHub', url:'https://github.com/ProfDrTan/cp5640-participation-tracker', style:'secondary'},
+    ]
+  },
+  {
+    name: 'Market Prediction Engine',
+    icon: '&#128200;',
+    category: 'Research / CP3405',
+    status: 'info',
+    repo: 'market-prediction-engine',
+    site: null,
+    statusText: 'Extracted from CP3405 Team 1 project and enhanced. EMA trust-weighting, plain KEY:value parser, line-scanning tolerant of reasoning models. Front-end (Weekly Almanac) built, pending GitHub Pages activation.',
+    actions: [
+      {type:'warn', text:'Activate GitHub Pages manually in repo settings'},
+      {type:'info', text:'Team 2 selected as data source over Team 1'},
+      {type:'info', text:'Connect to CP3405 live student submissions'},
+    ],
+    links: [
+      {label:'GitHub', url:'https://github.com/ProfDrTan/market-prediction-engine', style:'secondary'},
+    ]
+  },
+  // ── PARKED ────────────────────────────────────────────────────────────────
+  {
+    name: 'IBKR Options Income (Old Site)',
+    icon: '&#128082;',
+    category: 'Trading — Parked',
+    status: 'parked',
+    repo: 'ibkr-options-income',
+    site: null,
+    statusText: 'Old Cloudflare Pages site was broken — ERR_CONNECTION_REFUSED. Replaced by GitHub Pages. Archive only.',
+    actions: [
+      {type:'info', text:'Replaced by profdrtan.github.io/ibkr-options-income'},
+    ],
+    links: []
+  },
+  {
+    name: 'Research Methods',
+    icon: '&#128270;',
+    category: 'Teaching Tool — Parked',
+    status: 'parked',
+    repo: 'research-methods',
+    site: 'https://profdrtan.github.io/research-methods',
+    statusText: '94-question quiz system, live leaderboard, instructor dashboard. Live class failure June 27 fixed via GitHub API. Parked until next trimester.',
+    actions: [
+      {type:'info', text:'Resume when research methods course runs again'},
+    ],
+    links: [
+      {label:'Open Site', url:'https://profdrtan.github.io/research-methods', style:'secondary'},
+    ]
+  },
+];
+
+// ── LOAD COMMIT TIMES FROM GITHUB ─────────────────────────────────────────────
+async function loadCommitTimes() {
+  const repos = [...new Set(PROJECTS.map(p => p.repo))];
+  const times = {};
+  for (const repo of repos) {
+    const data = await ghFetch(`/repos/${OWNER}/${repo}/commits?per_page=1`);
+    if (data && data[0]) {
+      times[repo] = data[0].commit.committer.date;
+    }
+  }
+  return times;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+async function loadAll() {
+  document.getElementById('last-update').textContent = 'Checking GitHub...';
+
+  const commitTimes = await loadCommitTimes();
+
+  // Update commit times in projects
+  PROJECTS.forEach(p => {
+    if (commitTimes[p.repo]) {
+      p.lastCommit = timeAgo(commitTimes[p.repo]);
+      // Auto-escalate status based on staleness if currently good
+      const s = staleness(commitTimes[p.repo]);
+      if (p.status === 'good' && s === 'fire') p.status = 'warn';
+    }
+  });
+
+  // Build alert zone
+  const fireProjects = PROJECTS.filter(p => p.status === 'fire');
+  const warnProjects = PROJECTS.filter(p => p.status === 'warn');
+  let alerts = '';
+  if (fireProjects.length) {
+    alerts += `<div class="alert-banner fire">
+      <h3>&#128293; NEEDS IMMEDIATE ATTENTION (${fireProjects.length})</h3>
+      ${fireProjects.map(p => `&#8226; ${p.icon} <strong>${p.name}</strong> — ${p.statusText.split('.')[0]}`).join('<br>')}
+    </div>`;
+  }
+  if (warnProjects.length) {
+    alerts += `<div class="alert-banner warn">
+      <h3>&#9888; WATCH LIST (${warnProjects.length})</h3>
+      ${warnProjects.map(p => `&#8226; ${p.icon} <strong>${p.name}</strong> — ${p.statusText.split('.')[0]}`).join('<br>')}
+    </div>`;
+  }
+  document.getElementById('alert-zone').innerHTML = alerts;
+
+  // Render grids
+  const active  = PROJECTS.filter(p => p.status === 'fire' || p.status === 'warn');
+  const running = PROJECTS.filter(p => p.status === 'good' || p.status === 'info');
+  const parked  = PROJECTS.filter(p => p.status === 'parked');
+
+  document.getElementById('active-grid').innerHTML  = active.map(makeCard).join('') || '<p style="color:var(--muted);font-family:Arial,sans-serif;font-size:0.85rem;">All clear!</p>';
+  document.getElementById('running-grid').innerHTML = running.map(makeCard).join('');
+  document.getElementById('parked-grid').innerHTML  = parked.map(makeCard).join('');
+
+  const ts = new Date().toLocaleString('en-SG',{timeZone:'Asia/Singapore'});
+  document.getElementById('last-update').textContent = ts + ' SGT';
+  document.getElementById('footer-ts').textContent   = ts + ' SGT';
+}
+
+loadAll();
+setInterval(loadAll, 300000); // refresh every 5 min
+</script>
+</body>
+</html>
