@@ -1,34 +1,37 @@
-name: Monday Open - Generate Recommendation
+name: Monday Open — AI Board Orchestration
 
 on:
   schedule:
-    - cron: '35 14 * * 1'  # 09:35 ET (14:35 UTC) every Monday
-  workflow_dispatch:         # Manual trigger for testing
+    - cron: '35 14 * * 1'
+  workflow_dispatch:
 
 jobs:
-  generate-recommendation:
+  orchestrate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Generate recommendation
+        run: pip install requests --break-system-packages
+      - name: Run AI Board Orchestrator
+        env:
+          OPENAI_API_KEY:     ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_AI_API_KEY:  ${{ secrets.GOOGLE_AI_API_KEY }}
+          DEEPSEEK_API_KEY:   ${{ secrets.DEEPSEEK_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python orchestrator.py
+      - name: Run strategy recommendation
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python main.py monday
-
-      - name: Commit updated trade state
+      - name: Commit updated state
         run: |
-          git config user.name "IBKR Options Bot"
+          git config user.name "AI Board Orchestrator"
           git config user.email "bot@profdrtan.com"
-          git add docs/data/trade_state.json
-          git diff --staged --quiet || git commit -m "Weekly recommendation $(date +%Y-%m-%d)"
+          git add data/trade_state.json
+          git diff --staged --quiet || git commit -m "AI Board intel $(date +%Y-%m-%d)"
           git push
