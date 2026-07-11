@@ -56,6 +56,10 @@
   .badge.bullish  { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
   .badge.bearish  { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
   .badge.neutral  { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.conf { font-size:0.65rem; padding:0.05rem 0.4rem; margin-left:0.4rem; border-radius:10px; vertical-align:middle; }
+  .badge.conf.high   { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.conf.medium { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.conf.low    { background:#94a3b822; color:var(--muted); border:1px solid #94a3b844; }
   .row { display:flex; justify-content:space-between; align-items:center;
           padding:0.45rem 0; border-bottom:1px solid #ffffff08;
           font-family:'Arial',sans-serif; font-size:0.83rem; }
@@ -159,9 +163,9 @@
       <h2>Market Intelligence</h2>
       <div id="intel-content">
         <div class="intel-bar"><div class="intel-label"><span>Almanac (Seasonal)</span><span id="s-almanac">—</span></div><div class="bar-track"><div class="bar-fill" id="b-almanac" style="width:0%"></div></div></div>
-        <div class="intel-bar"><div class="intel-label"><span>Macro Environment</span><span id="s-macro">—</span></div><div class="bar-track"><div class="bar-fill" id="b-macro" style="width:0%"></div></div></div>
-        <div class="intel-bar"><div class="intel-label"><span>Technical Analysis</span><span id="s-technical">—</span></div><div class="bar-track"><div class="bar-fill" id="b-technical" style="width:0%"></div></div></div>
-        <div class="intel-bar"><div class="intel-label"><span>LLM Synthesis (CP3405)</span><span id="s-llm">—</span></div><div class="bar-track"><div class="bar-fill" id="b-llm" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>ChatGPT <span class="badge conf" id="c-chatgpt"></span></span><span id="s-chatgpt">—</span></div><div class="bar-track"><div class="bar-fill" id="b-chatgpt" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>Gemini <span class="badge conf" id="c-gemini"></span></span><span id="s-gemini">—</span></div><div class="bar-track"><div class="bar-fill" id="b-gemini" style="width:0%"></div></div></div>
+        <div class="intel-bar"><div class="intel-label"><span>DeepSeek <span class="badge conf" id="c-deepseek"></span></span><span id="s-deepseek">—</span></div><div class="bar-track"><div class="bar-fill" id="b-deepseek" style="width:0%"></div></div></div>
         <div class="intel-bar"><div class="intel-label"><span>Human Score (Override)</span><span id="s-human">—</span></div><div class="bar-track"><div class="bar-fill" id="b-human" style="width:0%"></div></div></div>
         <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #ffffff11;display:flex;justify-content:space-between;font-family:'Arial',sans-serif;">
           <span style="color:var(--muted);font-size:0.85rem;">Composite Score</span>
@@ -181,8 +185,15 @@
   </div>
 </div>
 <script>
-const PAT = '';
 const REPO = 'ProfDrTan/ibkr-options-income';
+function getToken() {
+  let t = localStorage.getItem('ibkr_gh_pat');
+  if (!t) {
+    t = prompt('One-time setup: paste your GitHub token to enable Approve.\nThis is stored only in this browser (localStorage) — never sent anywhere except GitHub\'s API, and never saved to the repo.');
+    if (t) localStorage.setItem('ibkr_gh_pat', t.trim());
+  }
+  return t ? t.trim() : '';
+}
 let state = {};
 
 async function loadState() {
@@ -210,11 +221,20 @@ function render() {
   const intel = s.recommendation?.intel;
   if(intel) {
     document.getElementById('kpi-intel').textContent = intel.composite+'/100';
-    const sc = intel.scores||{};
-    ['almanac','macro','technical','llm','human'].forEach(k=>{
-      const v=sc[k]||0;
-      document.getElementById('s-'+k).textContent=v+'/100';
-      document.getElementById('b-'+k).style.width=v+'%';
+    const sc = intel.individual_scores || {};
+    const summaries = intel.agent_summaries || {};
+    ['almanac','chatgpt','gemini','deepseek','human'].forEach(k=>{
+      const v = sc[k] || 0;
+      const elS = document.getElementById('s-'+k);
+      const elB = document.getElementById('b-'+k);
+      if(elS) elS.textContent = v+'/100';
+      if(elB) elB.style.width = v+'%';
+      const conf = summaries[k]?.confidence;
+      const confEl = document.getElementById('c-'+k);
+      if(confEl && conf) {
+        confEl.textContent = conf;
+        confEl.className = 'badge conf ' + conf.toLowerCase();
+      }
     });
     document.getElementById('composite').textContent=intel.composite+'/100';
     const bias=intel.bias||'NEUTRAL';
@@ -264,28 +284,40 @@ function render() {
 
 async function approveTrade() {
   const btn=document.getElementById('approve-btn');
+  const PAT = getToken();
+  if (!PAT) {
+    alert('No token provided — approval cancelled. Nothing was changed.');
+    return;
+  }
   btn.disabled=true;
   btn.textContent='SUBMITTING...';
+  const prevState = JSON.parse(JSON.stringify(state));
   state.recommendation.approved=true;
   state.recommendation.status='APPROVED';
-  
-  // Write approval back to GitHub
+
   try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
-    // Get current SHA
     const getR = await fetch(`https://api.github.com/repos/${REPO}/contents/data/trade_state.json`,
       {headers:{'Authorization':'Bearer '+PAT,'Accept':'application/vnd.github+json'}});
+    if (!getR.ok) throw new Error('Could not read current file (HTTP '+getR.status+'). Check your token has Contents: Read and write on this repo.');
     const getD = await getR.json();
-    // PUT updated state
-    await fetch(`https://api.github.com/repos/${REPO}/contents/data/trade_state.json`,{
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(state, null, 2))));
+    const putR = await fetch(`https://api.github.com/repos/${REPO}/contents/data/trade_state.json`,{
       method:'PUT',
       headers:{'Authorization':'Bearer '+PAT,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
       body:JSON.stringify({message:'Approval: trade approved by Prof Dr Tan',content,sha:getD.sha})
     });
+    if (!putR.ok) {
+      const errBody = await putR.json().catch(()=>({}));
+      throw new Error('Write failed (HTTP '+putR.status+'): '+(errBody.message||'unknown error'));
+    }
     btn.textContent='✅ APPROVED — EXECUTING';
-    alert('Trade approved! IBKR execution will begin shortly.\nYou will receive a Telegram confirmation.');
+    alert('Trade approved and saved. IBKR execution will begin shortly.\nYou will receive a Telegram confirmation.');
   } catch(e) {
-    btn.textContent='✅ APPROVED';
+    // Roll back — do not claim success when the write actually failed
+    state = prevState;
+    btn.disabled = false;
+    btn.textContent = 'APPROVE & EXECUTE TRADE';
+    alert('Approval did NOT save: ' + e.message + '\n\nNothing was changed. Try again, or check your token (localStorage key "ibkr_gh_pat" — clear it in DevTools to re-enter).');
   }
   render();
 }
