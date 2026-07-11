@@ -62,14 +62,26 @@ def call_deepseek(brief):
 def call_gemini(brief):
     key = os.environ.get("GOOGLE_AI_API_KEY","")
     if not key: return default_result("gemini","No API key")
-    data, err = api_call(
-        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}",
-        {"contents":[{"parts":[{"text":brief}]}],"generationConfig":{"maxOutputTokens":200,"temperature":0.3}},
-        {"Content-Type":"application/json"},
-        "gemini"
-    )
+    # Handle both AIzaSy and AQ. key formats
+    # AQ. keys use OAuth2 bearer auth; AIzaSy keys use query param
+    if key.startswith("AQ."):
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+        headers = {"Content-Type":"application/json","Authorization":f"Bearer {key}"}
+        payload = {"contents":[{"parts":[{"text":brief}]}],
+                   "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
+    else:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+        headers = {"Content-Type":"application/json"}
+        payload = {"contents":[{"parts":[{"text":brief}]}],
+                   "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
+    data, err = api_call(url, payload, headers, "gemini")
     if not data: return default_result("gemini", err)
-    return parse_output("gemini", data["candidates"][0]["content"]["parts"][0]["text"])
+    try:
+        text = data["candidates"][0]["content"]["parts"][0]["text"]
+        return parse_output("gemini", text)
+    except Exception as e:
+        print(f"  gemini response parse: {e}")
+        return default_result("gemini", str(e))
 
 def default_result(agent, reason="unavailable"):
     return {"agent":agent,"score":55,"bias":"NEUTRAL","confidence":"LOW",
