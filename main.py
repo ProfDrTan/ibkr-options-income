@@ -12,7 +12,7 @@ import os
 def load_state():
     """Load current trade state from JSON file."""
     try:
-        with open("docs/data/trade_state.json", "r") as f:
+        with open("data/trade_state.json", "r") as f:
             return json.load(f)
     except Exception:
         return {}
@@ -20,8 +20,8 @@ def load_state():
 
 def save_state(state):
     """Save trade state to JSON file."""
-    os.makedirs("docs/data", exist_ok=True)
-    with open("docs/data/trade_state.json", "w") as f:
+    os.makedirs("data", exist_ok=True)
+    with open("data/trade_state.json", "w") as f:
         json.dump(state, f, indent=2)
 
 
@@ -34,14 +34,17 @@ def run_monday_open():
     from market_intel import get_composite_score
     from strategy import build_recommendation
     from alerts import alert_recommendation_ready
+    from market_data import get_spx_price
 
     # Get market intelligence
     intel = get_composite_score()
     print(f"Intel composite: {intel['composite']} | Bias: {intel['bias']}")
 
-    # Build recommendation (SPX price placeholder — live data via IBKR API)
-    spx_price = 7469  # TODO: fetch live from IBKR
+    # Live SPX price (Yahoo -> Stooq -> last-known-stale, in that order)
+    spx_price, price_source = get_spx_price()
+    print(f"SPX price: {spx_price} (source: {price_source})")
     rec = build_recommendation(spx_price=spx_price)
+    rec["spx_price_source"] = price_source
 
     # Save state
     state = load_state()
