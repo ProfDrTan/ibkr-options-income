@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-11T14:47:58.912699",
+  "last_updated": "2026-07-11T15:04:30.176399",
   "recommendation": {
     "date": null,
     "status": "AWAITING_FIRST_RUN",
@@ -26,22 +26,22 @@
           "key_factor": "gemini HTTP Error 401: Unauthorized",
           "week_outlook": "gemini unavailable"
         },
-        "chatgpt": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "chatgpt HTTP Error 429: Too Many Requests",
-          "week_outlook": "chatgpt unavailable"
-        },
         "deepseek": {
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
           "key_factor": "deepseek HTTP Error 402: Payment Required",
           "week_outlook": "deepseek unavailable"
+        },
+        "chatgpt": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "chatgpt HTTP Error 429: Too Many Requests",
+          "week_outlook": "chatgpt unavailable"
         }
       },
-      "timestamp": "2026-07-11T14:47:58.912683"
+      "timestamp": "2026-07-11T15:04:30.176384"
     },
     "intel_source": "ai_board_orchestrator"
   },
