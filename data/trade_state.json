@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-11T15:34:17.188751",
+  "last_updated": "2026-07-11T15:35:10.842512",
   "recommendation": {
     "date": null,
     "status": "AWAITING_FIRST_RUN",
@@ -7,7 +7,7 @@
     "executed": false,
     "human_score": 55,
     "intel": {
-      "composite": 66.3,
+      "composite": 64.3,
       "bias": "BULLISH",
       "recommended_size": 10,
       "size_reason": "Full 10 spreads",
@@ -19,29 +19,29 @@
         "human": 55
       },
       "agent_summaries": {
-        "gemini": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "gemini HTTP 404: {\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use a newer model for the latest features and improvements.\",\n    \"status\": \"NOT_FOUND\"\n  }\n}\n",
-          "week_outlook": "gemini unavailable"
-        },
         "chatgpt": {
           "score": 70,
           "bias": "BULLISH",
           "confidence": "HIGH",
-          "key_factor": "Composite score above 55, favorable seasonal score",
-          "week_outlook": "Positive market sentiment supports bull put spread strategy this week."
+          "key_factor": "Almanac seasonal score and VIX stability",
+          "week_outlook": "Favorable conditions for bull put spread; monitor VIX closely."
         },
         "deepseek": {
           "score": 72,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite likely above 45, seasonal score 63.",
-          "week_outlook": "Favorable conditions for bull put spreads with moderate upside bias."
+          "key_factor": "VIX below 25, composite above 45, seasonal score 63.",
+          "week_outlook": "Favorable conditions for 5-delta bull put spreads with moderate upside bias."
+        },
+        "gemini": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "MEDIUM",
+          "key_factor": "Parse failed",
+          "week_outlook": "Unavailable"
         }
       },
-      "timestamp": "2026-07-11T15:34:17.188734"
+      "timestamp": "2026-07-11T15:35:10.842495"
     },
     "intel_source": "ai_board_orchestrator"
   },
