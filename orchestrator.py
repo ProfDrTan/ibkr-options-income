@@ -76,7 +76,8 @@ def call_gemini(brief):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={key}"
     headers = {"Content-Type":"application/json"}
     payload = {"contents":[{"parts":[{"text":brief}]}],
-               "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
+               "generationConfig":{"maxOutputTokens":300,"temperature":0.3,
+                                   "thinkingConfig":{"thinkingBudget":0}}}
     data, err = api_call(url, payload, headers, "gemini")
     if not data: return default_result("gemini", err)
     try:
@@ -139,7 +140,7 @@ def synthesise(results, almanac, human_score=55):
                                   "almanac":almanac,"human":human_score},
             "agent_summaries":{r["agent"]:{"score":r["score"],"bias":r["bias"],
                 "confidence":r["confidence"],"key_factor":r["key_factor"],
-                "week_outlook":r["week_outlook"],"raw_debug":r.get("raw","")[:300]} for r in results},
+                "week_outlook":r["week_outlook"]} for r in results},
             "timestamp":datetime.datetime.utcnow().isoformat()}
 
 def send_telegram(intel):
