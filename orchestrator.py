@@ -64,7 +64,7 @@ def call_gemini(brief):
     if not key: return default_result("gemini","No API key")
     # Google AI Studio API keys (AIzaSy... or AQ... format) both authenticate
     # via the ?key= query param, not an Authorization header.
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={key}"
     headers = {"Content-Type":"application/json"}
     payload = {"contents":[{"parts":[{"text":brief}]}],
                "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
