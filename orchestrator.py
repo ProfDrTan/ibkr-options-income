@@ -31,6 +31,15 @@ def api_call(url, payload, headers, agent):
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.loads(r.read()), None
+    except urllib.error.HTTPError as e:
+        body = ""
+        try:
+            body = e.read().decode()[:300]
+        except Exception:
+            pass
+        msg = f"HTTP {e.code}: {body}" if body else str(e)
+        print(f"  {agent} API error: {msg}")
+        return None, msg
     except Exception as e:
         print(f"  {agent} API error: {e}")
         return None, str(e)
