@@ -62,18 +62,12 @@ def call_deepseek(brief):
 def call_gemini(brief):
     key = os.environ.get("GOOGLE_AI_API_KEY","")
     if not key: return default_result("gemini","No API key")
-    # Handle both AIzaSy and AQ. key formats
-    # AQ. keys use OAuth2 bearer auth; AIzaSy keys use query param
-    if key.startswith("AQ."):
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-        headers = {"Content-Type":"application/json","Authorization":f"Bearer {key}"}
-        payload = {"contents":[{"parts":[{"text":brief}]}],
-                   "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
-    else:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
-        headers = {"Content-Type":"application/json"}
-        payload = {"contents":[{"parts":[{"text":brief}]}],
-                   "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
+    # Google AI Studio API keys (AIzaSy... or AQ... format) both authenticate
+    # via the ?key= query param, not an Authorization header.
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+    headers = {"Content-Type":"application/json"}
+    payload = {"contents":[{"parts":[{"text":brief}]}],
+               "generationConfig":{"maxOutputTokens":200,"temperature":0.3}}
     data, err = api_call(url, payload, headers, "gemini")
     if not data: return default_result("gemini", err)
     try:
