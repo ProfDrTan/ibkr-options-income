@@ -1,0 +1,90 @@
+name: Daily Dashboard Update
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 09:00 SGT (01:00 UTC) every day
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install yfinance requests --break-system-packages
+
+      - name: Update trade state with daily intel
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'EOF'
+import json, datetime, urllib.request, os
+
+# Get current state
+with open('data/trade_state.json', 'r') as f:
+    state = json.load(f)
+
+# Update last_updated timestamp
+state['last_updated'] = datetime.datetime.utcnow().isoformat()
+
+# Update almanac score based on current month/day
+import datetime as dt
+today = dt.date.today()
+month = today.month
+dow   = today.weekday()
+monthly_bias = {1:62,2:55,3:60,4:68,5:52,6:55,7:63,8:48,9:42,10:53,11:68,12:70}
+dow_adj = {0:-3,1:0,2:2,3:1,4:-1}
+almanac = min(100, max(0, monthly_bias.get(month, 55) + dow_adj.get(dow, 0)))
+
+# Try to get VIX
+vix_score = 55
+try:
+    import yfinance as yf
+    vix = yf.Ticker('^VIX').fast_info['lastPrice']
+    if vix < 15:   vix_score = 70
+    elif vix < 20: vix_score = 60
+    elif vix < 25: vix_score = 45
+    else:          vix_score = 30
+    state['current_vix'] = round(vix, 2)
+except:
+    pass
+
+# Update intel scores
+if 'recommendation' not in state:
+    state['recommendation'] = {}
+state['recommendation']['intel'] = {
+    'scores': {
+        'almanac':   almanac,
+        'macro':     57,
+        'technical': 58,
+        'llm':       60,
+        'human':     state.get('recommendation', {}).get('human_score', 55)
+    },
+    'composite': round(almanac*0.15 + 57*0.20 + 58*0.25 + 60*0.20 + 55*0.20, 1),
+    'bias': 'BULLISH' if almanac > 55 else 'NEUTRAL',
+    'timestamp': datetime.datetime.utcnow().isoformat()
+}
+
+# Save
+with open('data/trade_state.json', 'w') as f:
+    json.dump(state, f, indent=2)
+
+print(f"Dashboard updated: {datetime.datetime.utcnow().isoformat()}")
+print(f"Almanac: {almanac} | VIX score: {vix_score}")
+EOF
+
+      - name: Commit updated state
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "bot@profdrtan.com"
+          git add data/trade_state.json
+          git diff --staged --quiet || git commit -m "Daily update: dashboard state $(date +%Y-%m-%d)"
+          git push
