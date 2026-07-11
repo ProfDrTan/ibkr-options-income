@@ -139,7 +139,7 @@ def synthesise(results, almanac, human_score=55):
                                   "almanac":almanac,"human":human_score},
             "agent_summaries":{r["agent"]:{"score":r["score"],"bias":r["bias"],
                 "confidence":r["confidence"],"key_factor":r["key_factor"],
-                "week_outlook":r["week_outlook"]} for r in results},
+                "week_outlook":r["week_outlook"],"raw_debug":r.get("raw","")[:300]} for r in results},
             "timestamp":datetime.datetime.utcnow().isoformat()}
 
 def send_telegram(intel):
