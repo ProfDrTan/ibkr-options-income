@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-11T15:48:33.312876",
+  "last_updated": "2026-07-11T15:49:39.681111",
   "recommendation": {
     "date": null,
     "status": "AWAITING_FIRST_RUN",
@@ -7,44 +7,41 @@
     "executed": false,
     "human_score": 55,
     "intel": {
-      "composite": 64.0,
+      "composite": 64.5,
       "bias": "BULLISH",
       "recommended_size": 10,
       "size_reason": "Full 10 spreads",
       "individual_scores": {
-        "chatgpt": 63,
-        "gemini": 55,
+        "chatgpt": 68,
+        "gemini": 58,
         "deepseek": 72,
         "almanac": 63,
         "human": 55
       },
       "agent_summaries": {
-        "gemini": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
-          "week_outlook": "gemini unavailable",
-          "raw_debug": ""
-        },
         "deepseek": {
           "score": 72,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "Seasonal score 63 supports bullish bias, VIX below 25.",
-          "week_outlook": "Moderate bullish drift expected; bull put spreads viable with 5 delta.",
-          "raw_debug": "SCORE: 72\nBIAS: BULLISH\nCONFIDENCE: MEDIUM\nKEY_FACTOR: Seasonal score 63 supports bullish bias, VIX below 25.\nRISK: Late-week earnings jolts or Fed surprise could spike volatility.\nWEEK_OUTLOOK: Moderate bullish drift expected; bull put spreads viable with 5 delta."
+          "key_factor": "VIX below 25, composite above 45, seasonal score 63.",
+          "week_outlook": "Favorable conditions for bull put spreads with moderate upside bias."
         },
         "chatgpt": {
-          "score": 63,
+          "score": 68,
+          "bias": "BULLISH",
+          "confidence": "HIGH",
+          "key_factor": "VIX below 25, strong seasonal score",
+          "week_outlook": "Favorable conditions for bull put spread; monitor for unexpected volatility changes."
+        },
+        "gemini": {
+          "score": 58,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "Almanac seasonal score supports bullish outlook",
-          "week_outlook": "Favorable conditions for bull put spread; proceed with caution due to volatility risks.",
-          "raw_debug": "SCORE: 63  \nBIAS: BULLISH  \nCONFIDENCE: MEDIUM  \nKEY_FACTOR: Almanac seasonal score supports bullish outlook  \nRISK: Monitor VIX for potential spikes above 25  \nWEEK_OUTLOOK: Favorable conditions for bull put spread; proceed with caution due to volatility risks."
+          "key_factor": "Seasonal strength and solid composite score support executing the weekly bull put spread strategy.",
+          "week_outlook": "Expecting steady to upward price action as favorable seasonality aligns with a supportive composite score above the execution threshold."
         }
       },
-      "timestamp": "2026-07-11T15:48:33.312851"
+      "timestamp": "2026-07-11T15:49:39.681095"
     },
     "intel_source": "ai_board_orchestrator"
   },
