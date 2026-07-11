@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-11T15:32:31.458896",
+  "last_updated": "2026-07-11T15:33:26.430434",
   "recommendation": {
     "date": null,
     "status": "AWAITING_FIRST_RUN",
@@ -7,12 +7,12 @@
     "executed": false,
     "human_score": 55,
     "intel": {
-      "composite": 62.9,
+      "composite": 65.2,
       "bias": "BULLISH",
       "recommended_size": 10,
       "size_reason": "Full 10 spreads",
       "individual_scores": {
-        "chatgpt": 63,
+        "chatgpt": 70,
         "gemini": 55,
         "deepseek": 68,
         "almanac": 63,
@@ -26,22 +26,22 @@
           "key_factor": "gemini HTTP Error 404: Not Found",
           "week_outlook": "gemini unavailable"
         },
+        "chatgpt": {
+          "score": 70,
+          "bias": "BULLISH",
+          "confidence": "MEDIUM",
+          "key_factor": "VIX below 25, strong seasonal score",
+          "week_outlook": "Favorable conditions for bull put spread; monitor economic indicators closely."
+        },
         "deepseek": {
           "score": 68,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "Almanac score 63, composite likely above 45, VIX below 25.",
-          "week_outlook": "Mild bullish drift expected; bull put spreads viable at 5 delta."
-        },
-        "chatgpt": {
-          "score": 63,
-          "bias": "BULLISH",
-          "confidence": "MEDIUM",
-          "key_factor": "Seasonal score supports bullish sentiment.",
-          "week_outlook": "Favorable conditions for bull put spread; proceed with caution on volatility changes."
+          "key_factor": "Almanac score 63 supports bullish bias; VIX and composite unknown.",
+          "week_outlook": "Moderate bullish tilt with seasonal support; monitor VIX and composite levels."
         }
       },
-      "timestamp": "2026-07-11T15:32:31.458880"
+      "timestamp": "2026-07-11T15:33:26.430420"
     },
     "intel_source": "ai_board_orchestrator"
   },
