@@ -1,0 +1,8 @@
+# IBKR TWS API client.
+# The official "ibapi" package is distributed by IBKR as source (download
+# from https://interactivebrokers.github.io/ and run its setup.py) — it is
+# NOT reliably pip-installable on its own. ibapi-latest is an actively
+# maintained unofficial repackage of the same official source, updated
+# weekly, and installs cleanly via pip. Either works; this uses the latter
+# for a one-command setup.
+ibapi-latest
