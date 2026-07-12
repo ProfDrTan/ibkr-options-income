@@ -5,7 +5,7 @@ Professor Dr. Tan | ProfDrTan/ibkr-options-income
 
 # ── IBKR CONNECTION ───────────────────────────────────────────────────────────
 IBKR_HOST        = "127.0.0.1"
-IBKR_PORT        = 7496          # 7496=live | 7497=paper
+IBKR_PORT        = 7497          # 7496=live | 7497=paper — set to paper for current phase
 IBKR_CLIENT_ID   = 1
 IBKR_ACCOUNT     = "U10500387"
 
@@ -42,5 +42,5 @@ TELEGRAM_BOT_TOKEN    = ""        # Set via GitHub Secret: TELEGRAM_BOT_TOKEN
 TELEGRAM_CHAT_ID      = ""        # Set via GitHub Secret: TELEGRAM_CHAT_ID
 
 # ── WEBSITE ───────────────────────────────────────────────────────────────────
-WEBSITE_DATA_FILE     = "docs/data/trade_state.json"
+WEBSITE_DATA_FILE     = "data/trade_state.json"
 APPROVAL_REQUIRED     = True      # Professor Dr. Tan must approve before execution
