@@ -7,7 +7,7 @@ Professor Dr. Tan | ProfDrTan/ibkr-options-income
 IBKR_HOST        = "127.0.0.1"
 IBKR_PORT        = 7497          # 7496=live | 7497=paper — set to paper for current phase
 IBKR_CLIENT_ID   = 1
-IBKR_ACCOUNT     = "U10500387"
+IBKR_ACCOUNT     = "DUQ138203"    # Paper trading account (applied 12 Jul 2026) — NOT the live account U10500387
 
 # ── STRATEGY PARAMETERS ───────────────────────────────────────────────────────
 UNDERLYING       = "SPX"          # S&P 500 Index
