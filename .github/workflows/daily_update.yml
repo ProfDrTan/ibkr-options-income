@@ -26,7 +26,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 - <<'EOF'
-import json, datetime, urllib.request, os
+import json, datetime, os
 
 # Get current state
 with open('data/trade_state.json', 'r') as f:
@@ -35,50 +35,24 @@ with open('data/trade_state.json', 'r') as f:
 # Update last_updated timestamp
 state['last_updated'] = datetime.datetime.utcnow().isoformat()
 
-# Update almanac score based on current month/day
-import datetime as dt
-today = dt.date.today()
-month = today.month
-dow   = today.weekday()
-monthly_bias = {1:62,2:55,3:60,4:68,5:52,6:55,7:63,8:48,9:42,10:53,11:68,12:70}
-dow_adj = {0:-3,1:0,2:2,3:1,4:-1}
-almanac = min(100, max(0, monthly_bias.get(month, 55) + dow_adj.get(dow, 0)))
-
-# Try to get VIX
-vix_score = 55
+# Refresh current VIX reading only — does NOT touch recommendation.intel,
+# which is owned by orchestrator.py's real Monday run (individual_scores,
+# agent_summaries, composite, bias). This workflow used to overwrite that
+# with hardcoded placeholder scores (macro/technical/llm) every morning,
+# silently erasing the real AI Board data — fixed 12 Jul 2026.
 try:
     import yfinance as yf
     vix = yf.Ticker('^VIX').fast_info['lastPrice']
-    if vix < 15:   vix_score = 70
-    elif vix < 20: vix_score = 60
-    elif vix < 25: vix_score = 45
-    else:          vix_score = 30
     state['current_vix'] = round(vix, 2)
-except:
-    pass
-
-# Update intel scores
-if 'recommendation' not in state:
-    state['recommendation'] = {}
-state['recommendation']['intel'] = {
-    'scores': {
-        'almanac':   almanac,
-        'macro':     57,
-        'technical': 58,
-        'llm':       60,
-        'human':     state.get('recommendation', {}).get('human_score', 55)
-    },
-    'composite': round(almanac*0.15 + 57*0.20 + 58*0.25 + 60*0.20 + 55*0.20, 1),
-    'bias': 'BULLISH' if almanac > 55 else 'NEUTRAL',
-    'timestamp': datetime.datetime.utcnow().isoformat()
-}
+except Exception as e:
+    print(f"VIX fetch failed (non-fatal): {e}")
 
 # Save
 with open('data/trade_state.json', 'w') as f:
     json.dump(state, f, indent=2)
 
-print(f"Dashboard updated: {datetime.datetime.utcnow().isoformat()}")
-print(f"Almanac: {almanac} | VIX score: {vix_score}")
+print(f"Dashboard timestamp/VIX refreshed: {datetime.datetime.utcnow().isoformat()}")
+print(f"VIX: {state.get('current_vix', 'unavailable')}")
 EOF
 
       - name: Commit updated state
