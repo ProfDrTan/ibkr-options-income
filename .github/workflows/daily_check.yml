@@ -5,6 +5,9 @@ on:
     - cron: '45 20 * * 1-5'  # 15:45 ET (20:45 UTC) Mon-Fri
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   daily-check:
     runs-on: ubuntu-latest
@@ -29,6 +32,6 @@ jobs:
         run: |
           git config user.name "IBKR Options Bot"
           git config user.email "bot@profdrtan.com"
-          git add docs/data/trade_state.json
+          git add data/trade_state.json
           git diff --staged --quiet || git commit -m "Position check $(date +%Y-%m-%d %H:%M)"
           git push
