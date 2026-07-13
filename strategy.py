@@ -10,7 +10,7 @@ from config import (
     TARGET_DELTA, MIN_PREMIUM, MAX_PREMIUM,
     DAYS_TO_EXPIRY, MIN_BULLISH_SCORE, BEARISH_VETO_SCORE, VIX_MAX
 )
-from market_intel import get_composite_score, get_vix
+from market_intel import get_vix
 
 
 def get_next_friday():
@@ -62,12 +62,14 @@ def calculate_strikes(spx_price, intel_score):
     return short_put, long_put
 
 
-def build_recommendation(spx_price, estimated_premium=None):
+def build_recommendation(spx_price, intel, estimated_premium=None):
     """
     Build the full trade recommendation object.
+    `intel` must be the real composite intel dict (from orchestrator.py's
+    AI Board output, already written to state) — this function no longer
+    computes its own fake placeholder intel via market_intel.get_composite_score().
     In production: estimated_premium comes from live options chain.
     """
-    intel = get_composite_score()
     proceed, reason = should_trade(intel)
     expiry = get_next_friday()
     short_put, long_put = calculate_strikes(spx_price, intel["composite"])
@@ -108,6 +110,7 @@ def build_recommendation(spx_price, estimated_premium=None):
 
 
 if __name__ == "__main__":
-    # Test with approximate current SPX price
-    rec = build_recommendation(spx_price=7469)
+    # Test with approximate current SPX price + sample intel
+    sample_intel = {"composite": 60, "bias": "BULLISH"}
+    rec = build_recommendation(spx_price=7469, intel=sample_intel)
     print(json.dumps(rec, indent=2))
