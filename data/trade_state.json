@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-07-11T16:00:58.990845",
+  "last_updated": "2026-07-13T14:44:38.271940",
   "recommendation": {
-    "date": "2026-07-11",
+    "date": "2026-07-13",
     "expiry": "2026-07-17",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7575.39,
-    "short_put": 7195,
-    "long_put": 7185,
+    "spx_price": 7540.25,
+    "short_put": 7165,
+    "long_put": 7155,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,18 +15,18 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 58.4 | Bias BULLISH | VIX None",
+    "reason": "PROCEED: Composite 57.9 | Bias BULLISH | VIX None",
     "intel": {
       "scores": {
-        "almanac": 63,
+        "almanac": 60,
         "macro": 57,
         "technical": 58,
         "llm": 60,
         "human": 55
       },
-      "composite": 58.4,
+      "composite": 57.9,
       "bias": "BULLISH",
-      "timestamp": "2026-07-11T16:00:58.976312"
+      "timestamp": "2026-07-13T14:44:38.257978"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
