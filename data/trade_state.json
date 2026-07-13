@@ -1,30 +1,30 @@
 {
-  "last_updated": "2026-07-13T14:47:33.176574",
+  "last_updated": "2026-07-13T16:56:59.236652",
   "recommendation": {
     "date": "2026-07-13",
     "expiry": "2026-07-17",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7541.64,
-    "short_put": 7165,
-    "long_put": 7155,
+    "spx_price": 7522.75,
+    "short_put": 7145,
+    "long_put": 7135,
     "spread_width": 10,
     "num_spreads": 10,
-    "est_premium": 18,
-    "max_profit": 180,
-    "max_risk": 9820,
-    "profit_target": 90,
+    "est_premium": 18.0,
+    "max_profit": 180.0,
+    "max_risk": 9820.0,
+    "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 59.4 | Bias NEUTRAL | VIX None",
+    "reason": "PROCEED: Composite 62.1 | Bias BULLISH | VIX None",
     "intel": {
-      "composite": 59.4,
-      "bias": "NEUTRAL",
-      "recommended_size": 7,
-      "size_reason": "Reduced 7 spreads",
+      "composite": 62.1,
+      "bias": "BULLISH",
+      "recommended_size": 10,
+      "size_reason": "Full 10 spreads",
       "individual_scores": {
         "chatgpt": 65,
         "gemini": 55,
-        "deepseek": 55,
+        "deepseek": 65,
         "almanac": 60,
         "human": 55
       },
@@ -37,24 +37,24 @@
           "week_outlook": "gemini unavailable"
         },
         "deepseek": {
-          "score": 55,
+          "score": 65,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite above 45, seasonal score 60.",
-          "week_outlook": "Moderate bullish drift expected; sell 5 delta put spreads."
+          "key_factor": "VIX below 25, composite near 55, seasonal score 60.",
+          "week_outlook": "Modest upside bias with low volatility supports bull put spreads."
         },
         "chatgpt": {
           "score": 65,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite above 55",
-          "week_outlook": "Favorable conditions for bull put spread; monitor economic indicators closely."
+          "key_factor": "VIX below 25, strong seasonal score",
+          "week_outlook": "Favorable conditions for bull put spread with moderate risk factors"
         }
       },
-      "timestamp": "2026-07-13T14:47:32.476373"
+      "timestamp": "2026-07-13T16:56:58.586948"
     },
-    "status": "APPROVED",
-    "approved": true,
+    "status": "PENDING_APPROVAL",
+    "approved": false,
     "executed": false,
     "human_score": 55,
     "spx_price_source": "yahoo"
