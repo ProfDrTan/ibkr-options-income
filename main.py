@@ -31,23 +31,30 @@ def run_monday_open():
     """
     print(f"[{datetime.datetime.utcnow().isoformat()}] MONDAY OPEN — Generating recommendation")
 
-    from market_intel import get_composite_score
     from strategy import build_recommendation
     from alerts import alert_recommendation_ready
     from market_data import get_spx_price
 
-    # Get market intelligence
-    intel = get_composite_score()
+    # Get the REAL market intelligence — orchestrator.py already ran as the
+    # previous step in this workflow and wrote its ChatGPT/Gemini/DeepSeek
+    # composite into state. Read it from there, do NOT recompute via the
+    # old market_intel.py placeholder module.
+    state = load_state()
+    intel = state.get("recommendation", {}).get("intel", {})
+    if not intel or "composite" not in intel:
+        raise RuntimeError(
+            "No real intel found in state — orchestrator.py must run "
+            "before main.py monday. Refusing to fall back to fake placeholder data."
+        )
     print(f"Intel composite: {intel['composite']} | Bias: {intel['bias']}")
 
     # Live SPX price (Yahoo -> Stooq -> last-known-stale, in that order)
     spx_price, price_source = get_spx_price()
     print(f"SPX price: {spx_price} (source: {price_source})")
-    rec = build_recommendation(spx_price=spx_price)
+    rec = build_recommendation(spx_price=spx_price, intel=intel)
     rec["spx_price_source"] = price_source
 
     # Save state
-    state = load_state()
     state["recommendation"] = rec
     state["last_updated"]   = datetime.datetime.utcnow().isoformat()
     save_state(state)
