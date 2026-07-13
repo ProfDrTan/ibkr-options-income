@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-07-13T14:44:38.271940",
+  "last_updated": "2026-07-13T14:47:33.176574",
   "recommendation": {
     "date": "2026-07-13",
     "expiry": "2026-07-17",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7540.25,
+    "spx_price": 7541.64,
     "short_put": 7165,
     "long_put": 7155,
     "spread_width": 10,
@@ -15,18 +15,43 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 57.9 | Bias BULLISH | VIX None",
+    "reason": "PROCEED: Composite 59.4 | Bias NEUTRAL | VIX None",
     "intel": {
-      "scores": {
+      "composite": 59.4,
+      "bias": "NEUTRAL",
+      "recommended_size": 7,
+      "size_reason": "Reduced 7 spreads",
+      "individual_scores": {
+        "chatgpt": 65,
+        "gemini": 55,
+        "deepseek": 55,
         "almanac": 60,
-        "macro": 57,
-        "technical": 58,
-        "llm": 60,
         "human": 55
       },
-      "composite": 57.9,
-      "bias": "BULLISH",
-      "timestamp": "2026-07-13T14:44:38.257978"
+      "agent_summaries": {
+        "gemini": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+          "week_outlook": "gemini unavailable"
+        },
+        "deepseek": {
+          "score": 55,
+          "bias": "BULLISH",
+          "confidence": "MEDIUM",
+          "key_factor": "VIX below 25, composite above 45, seasonal score 60.",
+          "week_outlook": "Moderate bullish drift expected; sell 5 delta put spreads."
+        },
+        "chatgpt": {
+          "score": 65,
+          "bias": "BULLISH",
+          "confidence": "MEDIUM",
+          "key_factor": "VIX below 25, composite above 55",
+          "week_outlook": "Favorable conditions for bull put spread; monitor economic indicators closely."
+        }
+      },
+      "timestamp": "2026-07-13T14:47:32.476373"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
