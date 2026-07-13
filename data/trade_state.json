@@ -10,10 +10,10 @@
     "long_put": 7155,
     "spread_width": 10,
     "num_spreads": 10,
-    "est_premium": 18.0,
-    "max_profit": 180.0,
-    "max_risk": 9820.0,
-    "profit_target": 90.0,
+    "est_premium": 18,
+    "max_profit": 180,
+    "max_risk": 9820,
+    "profit_target": 90,
     "proceed": true,
     "reason": "PROCEED: Composite 59.4 | Bias NEUTRAL | VIX None",
     "intel": {
@@ -53,8 +53,8 @@
       },
       "timestamp": "2026-07-13T14:47:32.476373"
     },
-    "status": "PENDING_APPROVAL",
-    "approved": false,
+    "status": "APPROVED",
+    "approved": true,
     "executed": false,
     "human_score": 55,
     "spx_price_source": "yahoo"
