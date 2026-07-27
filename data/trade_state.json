@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-07-20T16:09:26.773776",
+  "last_updated": "2026-07-27T16:38:59.471004",
   "recommendation": {
-    "date": "2026-07-20",
-    "expiry": "2026-07-24",
+    "date": "2026-07-27",
+    "expiry": "2026-07-31",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7493.65,
+    "spx_price": 7414.35,
     "short_put": 7120,
     "long_put": 7110,
     "spread_width": 10,
@@ -15,43 +15,43 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 62.1 | Bias BULLISH | VIX None",
+    "reason": "PROCEED: Composite 65.3 | Bias BULLISH | VIX None",
     "intel": {
-      "composite": 62.1,
+      "composite": 65.3,
       "bias": "BULLISH",
       "recommended_size": 10,
       "size_reason": "Full 10 spreads",
       "individual_scores": {
         "chatgpt": 65,
-        "gemini": 55,
+        "gemini": 75,
         "deepseek": 65,
         "almanac": 60,
         "human": 55
       },
       "agent_summaries": {
-        "gemini": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
-          "week_outlook": "gemini unavailable"
-        },
         "deepseek": {
           "score": 65,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite near 55, seasonal score 60.",
-          "week_outlook": "Moderate bullish bias with controlled volatility; bull put spreads viable at 5 delta."
+          "key_factor": "Almanac score 60 supports moderate bullish bias.",
+          "week_outlook": "Mild upside expected; bull put spreads viable with caution on volatility."
+        },
+        "gemini": {
+          "score": 75,
+          "bias": "BULLISH",
+          "confidence": "HIGH",
+          "key_factor": "Seasonal strength and low volatility support high-probability 5-delta credit spread execution.",
+          "week_outlook": "SPX expected to drift higher or consolidate constructively, keeping deep out-of-the-money put options safe."
         },
         "chatgpt": {
           "score": 65,
           "bias": "BULLISH",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below threshold, favorable seasonal score",
-          "week_outlook": "Positive sentiment with manageable risks, suitable for bull put spread trade."
+          "key_factor": "VIX below 25, positive seasonal score",
+          "week_outlook": "Favorable conditions for bull put spread, monitor for sudden volatility changes"
         }
       },
-      "timestamp": "2026-07-20T16:09:25.770119"
+      "timestamp": "2026-07-27T16:38:58.613701"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
