@@ -52,6 +52,37 @@ def download_history(ticker: str, period: str = "max", interval: str = "1d"):
     return hist
 
 
+OTM_LEVELS = [0.01, 0.02, 0.03, 0.05]  # 1%, 2%, 3%, 5% below spot — spans the
+                                        # range actually used live (the 2026-07-29
+                                        # SPX trade needed ~1.1% OTM to hit premium
+                                        # target; the documented strategy rule is ~5%)
+
+
+def compute_containment(daily_df, idx, forward_days, otm_levels):
+    """For a short put struck otm_pct below spot at idx, did price ever trade
+    below that strike (using daily LOW, not just the closing price — a spread
+    can be breached and recover, and using Low is the conservative/correct
+    check for whether the short strike was ever actually threatened) over the
+    following forward_days trading days?
+
+    Returns: (containment_by_otm: {otm_pct: bool}, max_drawdown_pct: float)
+    max_drawdown_pct is the worst intraday drop within the window regardless
+    of strike — useful for severity, independent of which OTM level you pick.
+    """
+    current = daily_df["Close"].iloc[idx]
+    forward_lows = daily_df["Low"].iloc[idx + 1: idx + 1 + forward_days].tolist()
+    if not forward_lows:
+        return None, None
+    worst_low = min(forward_lows)
+    max_drawdown_pct = (current - worst_low) / current * 100
+
+    containment = {}
+    for otm in otm_levels:
+        strike = current * (1 - otm)
+        containment[otm] = bool(worst_low >= strike)
+    return containment, round(max_drawdown_pct, 3)
+
+
 def run_backtest(spx_ticker: str = "^GSPC", start_date: str = "2018-01-01",
                   forward_days: int = 5, min_history_years: int = 10):
     """
@@ -60,7 +91,10 @@ def run_backtest(spx_ticker: str = "^GSPC", start_date: str = "2018-01-01",
       2. Compute Technical score using ONLY daily closes up to and including T
       3. Compute Macro score using ONLY macro-ticker closes up to and including T
       4. Run the real CompositeScorer on the three mapped scores
-      5. Record the actual forward return from T to T+forward_days trading days
+      5. Record whether a short put at each OTM level would have been
+         breached (via daily LOW) over the following forward_days trading
+         days — the metric that actually matches a bull put spread's payoff,
+         not a raw average-return metric. See ADR-008/ADR-009.
     No step above uses any data dated after T. That is the entire point.
     """
     daily = download_history(spx_ticker, period="max", interval="1d")
@@ -144,67 +178,75 @@ def run_backtest(spx_ticker: str = "^GSPC", start_date: str = "2018-01-01",
         t = map_technical(technical_out)
         result = scorer.score({"almanac": a, "macro": m, "technical": t})
 
-        forward_return = (daily_dates_close(daily, idx + forward_days) - current) / current * 100
+        containment, max_drawdown = compute_containment(daily, idx, forward_days, OTM_LEVELS)
+        if containment is None:
+            skipped += 1
+            continue
 
         rows.append({
             "date": as_of.isoformat(),
             "composite_score": result.weighted_score,
             "bias": result.bias.value,
-            "forward_return_pct": round(forward_return, 3),
+            "containment": {str(k): v for k, v in containment.items()},
+            "max_drawdown_pct": max_drawdown,
         })
 
     return rows, skipped
 
 
-def daily_dates_close(daily_df, idx):
-    return daily_df["Close"].iloc[idx]
-
-
 def summarize(rows):
+    """For each bias bucket AND each OTM level, report the containment rate —
+    the fraction of days where a short put at that strike would NOT have been
+    breached over the holding period. This is the metric that matches the
+    actual strategy's payoff (premium collection, not directional capture).
+    Every bucket is compared against the unconditional baseline: if LONG-day
+    containment isn't meaningfully better than just always selling puts
+    regardless of the composite score, the score isn't adding value for THIS
+    strategy, even if it looked fine on a raw-return metric.
+    """
     buckets = {b.value: [] for b in Bias}
     for r in rows:
-        buckets[r["bias"]].append(r["forward_return_pct"])
+        buckets[r["bias"]].append(r)
 
-    # NaN can appear at the edges of the historical series (a data-provider
-    # gap near the most recent date) — exclude rather than let it silently
-    # poison an average via NaN propagation.
-    def clean(returns):
-        return [x for x in returns if x == x]  # x != x is the NaN check
+    def containment_rate(bucket_rows, otm_key):
+        vals = [r["containment"][otm_key] for r in bucket_rows if otm_key in r["containment"]]
+        return sum(vals) / len(vals) if vals else None
 
-    all_returns_clean = clean([r["forward_return_pct"] for r in rows])
-    baseline_avg = sum(all_returns_clean) / len(all_returns_clean) if all_returns_clean else None
-    baseline_pct_positive = (sum(1 for x in all_returns_clean if x > 0) / len(all_returns_clean)
-                               if all_returns_clean else None)
+    def avg_drawdown(bucket_rows):
+        vals = [r["max_drawdown_pct"] for r in bucket_rows if r["max_drawdown_pct"] == r["max_drawdown_pct"]]
+        return round(sum(vals) / len(vals), 3) if vals else None
+
+    otm_keys = [str(x) for x in OTM_LEVELS]
+    baseline_containment = {k: containment_rate(rows, k) for k in otm_keys}
+    baseline_drawdown = avg_drawdown(rows)
 
     summary = {}
-    for bias, returns in buckets.items():
-        returns_clean = clean(returns)
-        excluded_nan = len(returns) - len(returns_clean)
-        if not returns_clean:
-            summary[bias] = {"n": 0, "excluded_nan": excluded_nan}
+    for bias, bucket_rows in buckets.items():
+        if not bucket_rows:
+            summary[bias] = {"n": 0}
             continue
-        avg = sum(returns_clean) / len(returns_clean)
-        hit_rate = None
-        if bias == "long":
-            hit_rate = sum(1 for x in returns_clean if x > 0) / len(returns_clean)
-        elif bias == "short":
-            hit_rate = sum(1 for x in returns_clean if x < 0) / len(returns_clean)
-        summary[bias] = {
-            "n": len(returns_clean),
-            "excluded_nan": excluded_nan,
-            "avg_forward_return_pct": round(avg, 3),
-            "hit_rate": round(hit_rate, 3) if hit_rate is not None else None,
-            "edge_vs_baseline_pct": round(avg - baseline_avg, 3) if baseline_avg is not None else None,
-        }
+        entry = {"n": len(bucket_rows), "avg_max_drawdown_pct": avg_drawdown(bucket_rows)}
+        for k in otm_keys:
+            rate = containment_rate(bucket_rows, k)
+            entry[f"containment_rate_otm_{k}"] = round(rate, 4) if rate is not None else None
+            entry[f"edge_vs_baseline_otm_{k}"] = (
+                round(rate - baseline_containment[k], 4)
+                if rate is not None and baseline_containment[k] is not None else None
+            )
+        summary[bias] = entry
 
     summary["_baseline_unconditional"] = {
-        "n": len(all_returns_clean),
-        "avg_forward_return_pct": round(baseline_avg, 3) if baseline_avg is not None else None,
-        "pct_days_positive": round(baseline_pct_positive, 3) if baseline_pct_positive is not None else None,
-        "note": "Average 5-day forward return across ALL scored days regardless "
-                 "of bias — this is what 'just being in the market' looks like "
-                 "over the same window. Compare every bucket above against this, "
-                 "not against zero.",
+        "n": len(rows),
+        "avg_max_drawdown_pct": baseline_drawdown,
+        **{f"containment_rate_otm_{k}": round(v, 4) if v is not None else None
+           for k, v in baseline_containment.items()},
+        "note": "Containment rate if you sold this spread on EVERY day regardless "
+                 "of the composite score. Every bucket's containment_rate above "
+                 "should be compared against this, and 'edge_vs_baseline' already "
+                 "does that subtraction for you — a positive edge means the "
+                 "composite score is actually adding value for THIS strategy; "
+                 "near-zero or negative means it isn't, no matter how it looked "
+                 "on a raw-return metric.",
     }
     return summary
 
@@ -219,9 +261,14 @@ if __name__ == "__main__":
             "status": "success",
             "methodology": "Point-in-time: Almanac uses only months strictly before "
                             "the test date; Technical/Macro use only prices up to and "
-                            "including the test date. Forward return measured 5 trading "
-                            "days ahead. Fundamental Agent and LLM synthesis NOT included "
-                            "(no point-in-time-safe historical source wired up yet).",
+                            "including the test date. Outcome metric is STRIKE "
+                            "CONTAINMENT, not raw return — for each of "
+                            f"{OTM_LEVELS}, was daily LOW ever below "
+                            "spot*(1-otm) over the next 5 trading days. This matches "
+                            "a bull put spread's actual payoff (premium collection, "
+                            "not directional capture). Fundamental Agent and LLM "
+                            "synthesis NOT included (no point-in-time-safe historical "
+                            "source wired up yet). See ADR-009.",
             "rows_scored": len(rows),
             "rows_skipped_insufficient_data": skipped,
             "summary_by_bias": summary,
