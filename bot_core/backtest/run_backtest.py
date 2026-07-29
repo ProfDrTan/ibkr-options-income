@@ -27,7 +27,12 @@ mapping, not a lookalike.
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "market-prediction-engine"))
+# run_backtest.py lives at <workspace>/ibkr-options-income/bot_core/backtest/
+# parents[0]=backtest, [1]=bot_core, [2]=ibkr-options-income, [3]=<workspace>
+# market-prediction-engine is checked out as a SIBLING of ibkr-options-income,
+# i.e. under parents[3], not parents[2] — this was wrong before and caused a
+# silent ImportError at module load time, before any try/except could catch it.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "market-prediction-engine"))
 
 import json
 from datetime import datetime, timezone, date
