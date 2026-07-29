@@ -61,10 +61,16 @@ class FundamentalAgent(Agent):
 
         earnings_score, earnings_rationale = self._earnings_tone(context)
 
-        # Simple average for now — this weighting is a first pass and should
-        # be tuned against backtested outcomes, not assumed correct.
-        combined_score = (macro_score + earnings_score) / 2
-        confidence = 1.0 if earnings_score is not None else 0.6
+        # earnings_score is None outside earnings season by design — averaging
+        # None into a float crashed the very first live run of this agent.
+        # Caught by an actual live test, not a unit test with fixture data
+        # that happened to always supply both scores.
+        if earnings_score is not None:
+            combined_score = (macro_score + earnings_score) / 2
+            confidence = 1.0
+        else:
+            combined_score = macro_score
+            confidence = 0.6
 
         return AgentOutput(
             agent_name=self.name,
