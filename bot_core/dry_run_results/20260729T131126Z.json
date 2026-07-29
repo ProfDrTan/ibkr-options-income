@@ -1,0 +1,29 @@
+{
+  "timestamp_utc": "2026-07-29T13:11:26.327844+00:00",
+  "ticker": "^GSPC",
+  "almanac": {
+    "score": 45.0,
+    "confidence": 1.0,
+    "rationale": "20 years of history for month 7; avg 2.37%, win rate 75%"
+  },
+  "macro": {
+    "score": -24.893333333333338,
+    "confidence": 0.7,
+    "rationale": "DXY +0.46%, 10Y yield +0.70%, Oil -2.73%, Gold -1.53%, VIX 18.67"
+  },
+  "technical": {
+    "score": 0.0,
+    "confidence": 0.75,
+    "rationale": "RSI 41.47 (neutral)"
+  },
+  "fundamental": {
+    "score": 10.0,
+    "confidence": 0.6,
+    "rationale": "Macro: Yield curve positive (0.35), normal regime | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "stale": false
+  },
+  "composite_score": 7.899921568627449,
+  "bias": "stand_aside",
+  "veto_triggered": false,
+  "veto_reason": ""
+}
