@@ -216,3 +216,51 @@ backtest validates 3 of the 5 production inputs, not all 5 — that gap should
 be named every time this backtest's results are quoted, not smoothed over.
 
 *(New entries append below this line as the build progresses.)*
+
+## ADR-008: First backtest result — the LONG signal did not beat the naive baseline
+
+**The numbers (2018-01-01 to 2026-07-29, 2,147 trading days, 5-day forward return, SPX):**
+
+| Bucket | n | Avg 5d fwd return | vs. baseline |
+|---|---|---|---|
+| Unconditional baseline (just being in the market) | 2,146 | +0.266% | — |
+| LONG bias | 989 | +0.229% | **−0.037pp (worse)** |
+| SHORT bias | 55 | −1.319% | −1.585pp (real gap, tiny sample) |
+| STAND_ASIDE | 1,102 | +0.377% | **+0.111pp (better than LONG)** |
+
+**The uncomfortable finding, stated plainly:** on this test, the LONG bias
+signal did not outperform simply being unconditionally long the market over
+the same period — it was slightly *worse*. STAND_ASIDE days, where the
+system explicitly said "no clear edge," actually had a higher average
+forward return than days it called LONG. That is the opposite of what a
+working signal should show. SHORT calls did show a real gap versus baseline,
+but on only 55 days out of 2,147 — too small a sample to treat as proven.
+
+**What this does NOT mean:** it does not mean the architecture is wrong. It
+means the specific score-mapping thresholds and composite weights — every
+one of which was a first-pass judgment call, documented as such since
+ADR-005 — do not currently carry real directional edge on a simple
+"average forward return" metric, using only 3 of 5 production inputs
+(Fundamental and LLM synthesis excluded, per ADR-007).
+
+**A second finding, arguably more important than the first:** average
+forward return is very likely the wrong metric for what this system is
+actually used for. The live strategy is a bull put spread — an income trade
+that profits from the underlying NOT dropping through a strike, not from
+capturing upside magnitude. The right backtest metric is something like
+"conditional on a LONG call, what fraction of days did SPX stay above a
+strike N% below spot over the holding period" — a downside-containment
+question, not a mean-return question. Optimizing thresholds against the
+wrong metric would produce a system that looks good on paper and is
+mismatched to what it's actually trading.
+
+**Also caught in this run:** a single NaN forward-return value at the most
+recent edge of the series (2026-07-20), from a data-provider gap — excluded
+from all averages now, not silently poisoning them via NaN propagation.
+
+**What this changes about next steps:** the top priority is no longer
+"wire in more agents" — it's re-running this backtest with a
+strike-containment metric that actually matches the trading strategy, before
+trusting any composite score enough to size a real trade on it. Sizing
+anything real on the current thresholds would be sizing on a signal that
+hasn't yet been shown to beat doing nothing.
