@@ -264,3 +264,60 @@ strike-containment metric that actually matches the trading strategy, before
 trusting any composite score enough to size a real trade on it. Sizing
 anything real on the current thresholds would be sizing on a signal that
 hasn't yet been shown to beat doing nothing.
+
+## ADR-009: Re-run with the correct metric — a real, consistent edge appears
+
+**The fix:** re-ran the backtest measuring strike containment (did the daily
+LOW ever breach a strike N% below spot over the next 5 trading days) instead
+of raw forward return — the metric that actually matches a bull put spread's
+payoff. Same point-in-time methodology as ADR-007/008, same 2,149 trading
+days, 2018-01-01 to present.
+
+**The result — LONG bias shows a real edge, consistently across every strike
+distance tested:**
+
+| OTM | Baseline containment | LONG-day containment | Edge |
+|---|---|---|---|
+| 1% | 48.8% | 56.2% | **+7.4pp** |
+| 2% | 70.3% | 78.1% | **+7.8pp** |
+| 3% | 83.8% | 91.6% | **+7.9pp** |
+| 5% | 94.6% | 98.2% | **+3.6pp** |
+
+**SHORT bias shows the mirror image — a strong signal to NOT sell puts:**
+
+| OTM | Baseline | SHORT-day containment | Edge |
+|---|---|---|---|
+| 1% | 48.8% | 14.6% | −34.3pp |
+| 2% | 70.3% | 34.6% | −35.8pp |
+| 3% | 83.8% | 52.7% | −31.0pp |
+| 5% | 94.6% | 76.4% | −18.2pp |
+
+**STAND_ASIDE days are slightly worse than baseline at every level (−2 to
+−5.5pp)** — consistent with "the system is genuinely uncertain" correlating
+with modestly choppier conditions, not a contradiction of the LONG/SHORT
+findings.
+
+**Why this reverses ADR-008's conclusion rather than just adding a footnote:**
+average forward return and strike containment are measuring different things,
+and this strategy only cares about the second one. A day can have a mediocre
+average 5-day return (bad on ADR-008's metric) while still rarely dropping
+through a strike 3-5% below spot (good on this one) — small choppy pullbacks
+hurt the return metric but barely threaten a wide-enough spread. ADR-008 was
+not a wrong calculation; it was the wrong question for this strategy.
+
+**Real caveats, not swept under the rug:**
+- SHORT bucket is n=55 — the effect size is large, but the sample is small.
+  Treat as a strong hypothesis, not a proven law.
+- No statistical significance testing done here (no confidence intervals,
+  no p-values) — this is descriptive evidence, and a reasonably strong one
+  given the LONG effect is consistent across all four OTM levels independently,
+  but it hasn't been formally tested.
+- Still only 3 of 5 production inputs (no Fundamental Agent, no LLM synthesis).
+- This measures containment PROBABILITY, not dollar P&L — it doesn't yet
+  account for actual premium collected or the loss severity when a strike
+  IS breached. A full P&L backtest is the next fidelity step, not this one.
+
+**Recommendation given this evidence:** using composite bias as a gate —
+trade the spread on LONG days, skip or avoid on SHORT days — now has real
+supporting evidence, enough to justify testing prospectively in paper
+trading. Not enough yet to size real capital against.
