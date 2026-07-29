@@ -1,0 +1,23 @@
+name: bot_core unit tests
+
+on:
+  push:
+    paths:
+      - 'bot_core/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install pytest requests
+      - name: Run unit tests (no network, no live data)
+        run: |
+          cd bot_core
+          python -m pytest tests/test_score_mapping.py tests/test_composite.py tests/test_ibkr_adapter.py -v
