@@ -47,12 +47,20 @@ jobs:
         run: |
           cd ibkr-options-income
           mkdir -p bot_core/backtest_results
-          mv bot_core/backtest/backtest_result.json "bot_core/backtest_results/$(date -u +%Y%m%dT%H%M%SZ).json"
+          mv bot_core/backtest/backtest_result.json "bot_core/backtest_results/$(date -u +%Y%m%dT%H%M%SZ).json" || echo "no result file to move (backtest script likely crashed before writing it)"
           git config user.name "bot-core-backtest"
           git config user.email "actions@github.com"
-          git add bot_core/backtest_results/
-          git commit -m "Backtest run $(date -u +%Y%m%dT%H%M%SZ)" || echo "Nothing to commit"
-          git push
+          git add bot_core/backtest_results/ || true
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Backtest run $(date -u +%Y%m%dT%H%M%SZ)"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "push attempt $attempt failed, retrying after rebase..."
+              sleep 3
+            done
+          fi
 
       - name: Fail the job if the backtest itself errored
         if: steps.backtest.outcome == 'failure'
