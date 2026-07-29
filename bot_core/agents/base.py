@@ -6,7 +6,7 @@ back rather than diverging into a second standard.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 
@@ -17,7 +17,7 @@ class AgentOutput:
     confidence: float  # 0.0 to 1.0 — how much weight this run deserves
     rationale: str  # short human-readable explanation, shown in the Human Score UI
     raw_data: dict = field(default_factory=dict)
-    generated_at: datetime = field(default_factory=datetime.utcnow)
+    generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     stale: bool = False  # True if this ran on cached/fallback data
 
 
