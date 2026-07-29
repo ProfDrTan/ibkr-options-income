@@ -1,0 +1,52 @@
+name: bot_core backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Backtest start date (YYYY-MM-DD)'
+        required: false
+        default: '2018-01-01'
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ibkr-options-income (this repo)
+        uses: actions/checkout@v4
+        with:
+          path: ibkr-options-income
+
+      - name: Checkout market-prediction-engine (real agents)
+        uses: actions/checkout@v4
+        with:
+          repository: ProfDrTan/market-prediction-engine
+          token: ${{ secrets.CROSS_REPO_PAT }}
+          path: market-prediction-engine
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install yfinance requests pandas
+
+      - name: Run point-in-time backtest
+        run: |
+          cd ibkr-options-income/bot_core/backtest
+          python3 run_backtest.py
+
+      - name: Move result into repo and commit
+        run: |
+          cd ibkr-options-income
+          mkdir -p bot_core/backtest_results
+          mv bot_core/backtest/backtest_result.json "bot_core/backtest_results/$(date -u +%Y%m%dT%H%M%SZ).json"
+          git config user.name "bot-core-backtest"
+          git config user.email "actions@github.com"
+          git add bot_core/backtest_results/
+          git commit -m "Backtest run $(date -u +%Y%m%dT%H%M%SZ)" || echo "Nothing to commit"
+          git push
