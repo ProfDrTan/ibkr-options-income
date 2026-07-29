@@ -165,22 +165,47 @@ def summarize(rows):
     for r in rows:
         buckets[r["bias"]].append(r["forward_return_pct"])
 
+    # NaN can appear at the edges of the historical series (a data-provider
+    # gap near the most recent date) — exclude rather than let it silently
+    # poison an average via NaN propagation.
+    def clean(returns):
+        return [x for x in returns if x == x]  # x != x is the NaN check
+
+    all_returns_clean = clean([r["forward_return_pct"] for r in rows])
+    baseline_avg = sum(all_returns_clean) / len(all_returns_clean) if all_returns_clean else None
+    baseline_pct_positive = (sum(1 for x in all_returns_clean if x > 0) / len(all_returns_clean)
+                               if all_returns_clean else None)
+
     summary = {}
     for bias, returns in buckets.items():
-        if not returns:
-            summary[bias] = {"n": 0}
+        returns_clean = clean(returns)
+        excluded_nan = len(returns) - len(returns_clean)
+        if not returns_clean:
+            summary[bias] = {"n": 0, "excluded_nan": excluded_nan}
             continue
-        avg = sum(returns) / len(returns)
+        avg = sum(returns_clean) / len(returns_clean)
         hit_rate = None
         if bias == "long":
-            hit_rate = sum(1 for x in returns if x > 0) / len(returns)
+            hit_rate = sum(1 for x in returns_clean if x > 0) / len(returns_clean)
         elif bias == "short":
-            hit_rate = sum(1 for x in returns if x < 0) / len(returns)
+            hit_rate = sum(1 for x in returns_clean if x < 0) / len(returns_clean)
         summary[bias] = {
-            "n": len(returns),
+            "n": len(returns_clean),
+            "excluded_nan": excluded_nan,
             "avg_forward_return_pct": round(avg, 3),
             "hit_rate": round(hit_rate, 3) if hit_rate is not None else None,
+            "edge_vs_baseline_pct": round(avg - baseline_avg, 3) if baseline_avg is not None else None,
         }
+
+    summary["_baseline_unconditional"] = {
+        "n": len(all_returns_clean),
+        "avg_forward_return_pct": round(baseline_avg, 3) if baseline_avg is not None else None,
+        "pct_days_positive": round(baseline_pct_positive, 3) if baseline_pct_positive is not None else None,
+        "note": "Average 5-day forward return across ALL scored days regardless "
+                 "of bias — this is what 'just being in the market' looks like "
+                 "over the same window. Compare every bucket above against this, "
+                 "not against zero.",
+    }
     return summary
 
 
