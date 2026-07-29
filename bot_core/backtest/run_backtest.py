@@ -180,19 +180,34 @@ def summarize(rows):
 
 
 if __name__ == "__main__":
-    rows, skipped = run_backtest()
-    summary = summarize(rows)
-    output = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "methodology": "Point-in-time: Almanac uses only months strictly before "
-                        "the test date; Technical/Macro use only prices up to and "
-                        "including the test date. Forward return measured 5 trading "
-                        "days ahead. Fundamental Agent and LLM synthesis NOT included "
-                        "(no point-in-time-safe historical source wired up yet).",
-        "rows_scored": len(rows),
-        "rows_skipped_insufficient_data": skipped,
-        "summary_by_bias": summary,
-    }
-    print(json.dumps(output, indent=2))
-    with open("backtest_result.json", "w") as f:
-        json.dump({**output, "daily_rows": rows}, f, indent=2)
+    import traceback
+    try:
+        rows, skipped = run_backtest()
+        summary = summarize(rows)
+        output = {
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "status": "success",
+            "methodology": "Point-in-time: Almanac uses only months strictly before "
+                            "the test date; Technical/Macro use only prices up to and "
+                            "including the test date. Forward return measured 5 trading "
+                            "days ahead. Fundamental Agent and LLM synthesis NOT included "
+                            "(no point-in-time-safe historical source wired up yet).",
+            "rows_scored": len(rows),
+            "rows_skipped_insufficient_data": skipped,
+            "summary_by_bias": summary,
+        }
+        print(json.dumps(output, indent=2))
+        with open("backtest_result.json", "w") as f:
+            json.dump({**output, "daily_rows": rows}, f, indent=2)
+    except Exception as e:
+        error_output = {
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "status": "error",
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+            "traceback": traceback.format_exc(),
+        }
+        print(json.dumps(error_output, indent=2))
+        with open("backtest_result.json", "w") as f:
+            json.dump(error_output, f, indent=2)
+        raise  # still fail the workflow step loudly, just after leaving a diagnosable trail
