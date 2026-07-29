@@ -179,4 +179,40 @@ actually trying to execute a trade and watching it go wrong. That's the
 argument for keeping paper-trading dry runs in the loop even after the
 architecture "looks" complete on paper (pun noted).
 
+## ADR-007: Backtest built as point-in-time reconstruction, not direct agent replay
+
+**Discovery:** `macro_agent.run()` and `technical_agent.run()` have no
+historical-date parameter at all — both pull data relative to "right now"
+via yfinance. `almanac_agent.run()` does accept an `as_of` parameter, but its
+`yf.Ticker().history(period="20y")` call always ends at *today* regardless of
+`as_of` — meaning a backtest for, say, January 2020 would have its "20 years
+of seasonal history" silently include 2021-2026 data. Calling the real agents
+directly on historical dates would produce a backtest that leaks future
+information into the past — the results would look meaningful and be false.
+
+**Decision:** `backtest/run_backtest.py` does not call `almanac_agent.run()`,
+`macro_agent.run()`, or `technical_agent.run()` at all. Instead it imports
+the PURE functions those modules already expose — `compute_monthly_stats()`,
+`classify_regime()`, `compute_rsi()` — which take data as arguments and don't
+reach out to "now" themselves. The backtest downloads full price history
+once, then for each test date manually slices every input to only what was
+knowable as of that date, and feeds those slices into the same pure
+functions and the same `score_mapping.py` / `CompositeScorer` used in
+production.
+
+**Why this doesn't violate ADR-005's "never fork the agent code" rule:**
+the decision logic (compute_monthly_stats, classify_regime, compute_rsi,
+score_mapping, CompositeScorer) is imported and reused verbatim, not
+retyped. Only the *data-fetching* shell around it is different — production
+fetches "now," the backtest fetches "as of this historical date" — and that
+shell was never agent logic to begin with.
+
+**What this backtest does NOT cover, stated plainly:** the Fundamental Agent
+(FRED) and LLM synthesis layer are excluded — neither has a point-in-time-safe
+historical source wired up yet (FRED does have historical vintages available,
+in principle, for a future iteration; the LLM synthesis layer has no
+historical equivalent at all, since it depends on live model calls). This
+backtest validates 3 of the 5 production inputs, not all 5 — that gap should
+be named every time this backtest's results are quoted, not smoothed over.
+
 *(New entries append below this line as the build progresses.)*
