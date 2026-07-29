@@ -36,11 +36,14 @@ jobs:
           pip install yfinance requests pandas
 
       - name: Run point-in-time backtest
+        id: backtest
+        continue-on-error: true
         run: |
           cd ibkr-options-income/bot_core/backtest
           python3 run_backtest.py
 
       - name: Move result into repo and commit
+        if: always()
         run: |
           cd ibkr-options-income
           mkdir -p bot_core/backtest_results
@@ -50,3 +53,7 @@ jobs:
           git add bot_core/backtest_results/
           git commit -m "Backtest run $(date -u +%Y%m%dT%H%M%SZ)" || echo "Nothing to commit"
           git push
+
+      - name: Fail the job if the backtest itself errored
+        if: steps.backtest.outcome == 'failure'
+        run: exit 1
