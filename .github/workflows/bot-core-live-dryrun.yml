@@ -36,7 +36,7 @@ jobs:
           pip install yfinance requests pytest
           pip install -r market-prediction-engine/requirements.txt
 
-      - name: Run real agents against live data, write result to repo file
+      - name: Run real agents (incl. Fundamental) against live data, write result to repo file
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -51,10 +51,9 @@ jobs:
           from agents.technical.technical_agent import run as run_technical
           from agents.adapters.score_mapping import map_almanac, map_macro, map_technical
           from agents.composite import CompositeScorer
+          from agents.fundamental.agent import FundamentalAgent
 
           ticker = "${{ github.event.inputs.ticker }}" or "^GSPC"
-          result_lines = []
-          error = None
 
           try:
               almanac_out = run_almanac(ticker)
@@ -65,8 +64,13 @@ jobs:
               m = map_macro(macro_out)
               t = map_technical(tech_out)
 
+              fundamental_agent = FundamentalAgent()
+              f = fundamental_agent.run({"earnings_season_active": False})
+
               scorer = CompositeScorer()
-              result = scorer.score({"almanac": a, "macro": m, "technical": t})
+              result = scorer.score({
+                  "almanac": a, "macro": m, "technical": t, "fundamental": f,
+              })
 
               output = {
                   "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -74,6 +78,7 @@ jobs:
                   "almanac": {"score": a.score, "confidence": a.confidence, "rationale": a.rationale},
                   "macro": {"score": m.score, "confidence": m.confidence, "rationale": m.rationale},
                   "technical": {"score": t.score, "confidence": t.confidence, "rationale": t.rationale},
+                  "fundamental": {"score": f.score, "confidence": f.confidence, "rationale": f.rationale, "stale": f.stale},
                   "composite_score": result.weighted_score,
                   "bias": result.bias.value,
                   "veto_triggered": result.veto_triggered,
@@ -88,8 +93,8 @@ jobs:
               }
 
           fname = f"ibkr-options-income/bot_core/dry_run_results/{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.json"
-          with open(fname, "w") as f:
-              json.dump(output, f, indent=2)
+          with open(fname, "w") as f_out:
+              json.dump(output, f_out, indent=2)
           print(json.dumps(output, indent=2))
           EOF
 
