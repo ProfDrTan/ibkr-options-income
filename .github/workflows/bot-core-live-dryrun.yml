@@ -1,0 +1,79 @@
+name: bot_core live pipeline dry-run
+
+# Manual trigger only — this hits real yfinance and FRED data and is meant
+# for deliberately checking the full pipeline end-to-end, not for running
+# on every push. This is the layer that could NOT be tested from Claude's
+# sandbox (its network egress doesn't reach Yahoo Finance), so this is the
+# first real proof the agents + mapping + composite scorer work against
+# live data rather than constructed test fixtures.
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: 'Ticker to run Almanac/Technical agents against (e.g. ^GSPC, ^NDX)'
+        required: false
+        default: '^GSPC'
+
+jobs:
+  live-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ibkr-options-income (this repo)
+        uses: actions/checkout@v4
+        with:
+          path: ibkr-options-income
+
+      # market-prediction-engine holds the real Almanac/Macro/Technical/LLM
+      # agents that bot_core/agents/adapters/score_mapping.py depends on.
+      # Requires a PAT with access to BOTH repos stored as a secret named
+      # CROSS_REPO_PAT in this repo's Settings > Secrets — the default
+      # GITHUB_TOKEN cannot check out a second private repo.
+      - name: Checkout market-prediction-engine (real agents)
+        uses: actions/checkout@v4
+        with:
+          repository: ProfDrTan/market-prediction-engine
+          token: ${{ secrets.CROSS_REPO_PAT }}
+          path: market-prediction-engine
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install yfinance requests pytest
+          pip install -r market-prediction-engine/requirements.txt
+
+      - name: Run real agents against live data
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          export PYTHONPATH="$GITHUB_WORKSPACE/market-prediction-engine:$GITHUB_WORKSPACE/ibkr-options-income/bot_core:$PYTHONPATH"
+          python3 - <<'EOF'
+          from agents.almanac.almanac_agent import run as run_almanac
+          from agents.macro.macro_agent import run as run_macro
+          from agents.technical.technical_agent import run as run_technical
+          from agents.adapters.score_mapping import map_almanac, map_macro, map_technical
+          from agents.composite import CompositeScorer
+
+          ticker = "${{ github.event.inputs.ticker }}" or "^GSPC"
+
+          almanac_out = run_almanac(ticker)
+          macro_out = run_macro()
+          tech_out = run_technical(ticker)
+
+          a = map_almanac(almanac_out)
+          m = map_macro(macro_out)
+          t = map_technical(tech_out)
+
+          print(f"Almanac:   score={a.score:.1f}  confidence={a.confidence:.2f}  ({a.rationale})")
+          print(f"Macro:     score={m.score:.1f}  confidence={m.confidence:.2f}  ({m.rationale})")
+          print(f"Technical: score={t.score:.1f}  confidence={t.confidence:.2f}  ({t.rationale})")
+
+          scorer = CompositeScorer()
+          result = scorer.score({"almanac": a, "macro": m, "technical": t})
+          print(f"\nCOMPOSITE: {result.weighted_score:.1f} -> bias={result.bias.value} veto={result.veto_triggered}")
+          if result.veto_triggered:
+              print(f"Veto reason: {result.veto_reason}")
+          EOF
