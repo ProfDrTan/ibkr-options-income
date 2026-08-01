@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Trader Agent | IBKR Options Income</title>
+<style>
+  :root {
+    --navy:  #0a0e1a;
+    --navy2: #111827;
+    --navy3: #1e2a3a;
+    --gold:  #c9a84c;
+    --teal:  #2dd4bf;
+    --green: #22c55e;
+    --red:   #ef4444;
+    --text:  #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--navy); color:var(--text); font-family:'Georgia',serif; min-height:100vh; padding-bottom:60px; }
+  nav { background:var(--navy2); border-bottom:1px solid #c9a84c33;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:0 2rem; height:60px; position:sticky; top:0; z-index:100; overflow-x:auto; }
+  nav .brand { color:var(--gold); font-size:1rem; font-weight:bold; letter-spacing:0.05em; white-space:nowrap; }
+  nav .links { display:flex; gap:1.2rem; flex-wrap:wrap; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.8rem;
+           font-family:'Arial',sans-serif; transition:color 0.2s; white-space:nowrap; }
+  nav a:hover, nav a.active { color:var(--teal); }
+  .page { max-width:1100px; margin:0 auto; padding:2rem; }
+  .hero { text-align:center; padding:2.5rem 1rem 1.5rem; }
+  .hero h1 { color:var(--gold); font-size:1.8rem; margin-bottom:0.4rem; }
+  .hero p { color:var(--muted); font-family:'Arial',sans-serif; font-size:0.88rem; }
+  .card { background:var(--navy2); border:1px solid #ffffff11; border-radius:10px; padding:1.5rem; margin-bottom:1.5rem; }
+  .card h2 { font-size:0.85rem; color:var(--gold); font-family:'Arial',sans-serif;
+              text-transform:uppercase; letter-spacing:0.08em;
+              border-bottom:1px solid #ffffff11; padding-bottom:0.7rem; margin-bottom:1.2rem; }
+  .note { background:#c9a84c0d; border-left:3px solid var(--gold);
+           padding:0.9rem 1.1rem; border-radius:0 6px 6px 0; margin-bottom:1.2rem;
+           font-family:'Arial',sans-serif; font-size:0.83rem; color:var(--text); line-height:1.6; }
+  .note.corr { background:#ef44440d; border-left-color:var(--red); }
+  .badge { display:inline-block; padding:0.2rem 0.7rem; border-radius:20px;
+            font-size:0.72rem; font-family:'Arial',sans-serif; font-weight:bold;
+            text-transform:uppercase; letter-spacing:0.06em; }
+  .badge.proposed { background:#c9a84c22; color:var(--gold);  border:1px solid #c9a84c44; }
+  .badge.entered  { background:#2dd4bf22; color:var(--teal);  border:1px solid #2dd4bf44; }
+  .badge.win      { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .badge.loss     { background:#ef444422; color:var(--red);   border:1px solid #ef444444; }
+  .badge.rank1    { background:#22c55e22; color:var(--green); border:1px solid #22c55e44; }
+  .setup-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.6rem; }
+  .setup-row h3 { color:var(--text); font-size:1.05rem; }
+  .kv { font-family:'Arial',sans-serif; font-size:0.83rem; margin:0.35rem 0; color:var(--muted); }
+  .kv b { color:var(--text); }
+  .conviction { font-family:'Arial',sans-serif; font-size:0.8rem; color:var(--teal); margin-top:0.6rem; font-style:italic; }
+  table { width:100%; border-collapse:collapse; font-family:'Arial',sans-serif; font-size:0.8rem; }
+  th { text-align:left; color:var(--gold); text-transform:uppercase; letter-spacing:0.05em;
+       font-size:0.7rem; padding:0.5rem; border-bottom:1px solid #ffffff22; }
+  td { padding:0.6rem 0.5rem; border-bottom:1px solid #ffffff08; color:var(--text); }
+  .section-title { color:var(--teal); font-size:0.8rem; font-family:'Arial',sans-serif;
+                    text-transform:uppercase; letter-spacing:0.08em;
+                    margin:2rem 0 1rem; border-bottom:1px solid #ffffff11; padding-bottom:0.5rem; }
+  footer { text-align:center; padding:2rem; color:var(--muted);
+            font-size:0.72rem; font-family:'Arial',sans-serif;
+            border-top:1px solid #ffffff08; margin-top:3rem; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="brand">⚡ IBKR OPTIONS INCOME</div>
+  <div class="links">
+    <a href="index.html">Dashboard</a>
+    <a href="market.html">Market</a>
+    <a href="futures.html">Futures</a>
+    <a href="futures-rankings.html">Rankings</a>
+    <a href="command-center.html">Command Center</a>
+    <a href="track-record.html">Track Record</a>
+    <a href="shadow-trader.html" class="active">Shadow Trader</a>
+    <a href="intelligence.html">Intelligence</a>
+    <a href="learn.html">Learn</a>
+    <a href="setup-guide.html">Setup Guide</a>
+    <a href="book.html">The 3-Hour Trader</a>
+    <a href="master-prompt.html">Master Prompt</a>
+    <a href="system-guide.html">System Guide</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1>Shadow Trader Agent</h1>
+  <p>Post-earnings gap structure trades — a new input agent alongside Almanac / Macro / Technical, tracked for measured profitability</p>
+</div>
+
+<div class="page">
+
+  <div class="note">
+    <b>Methodology:</b> don't predict earnings beforehand — trade the price structure the market creates <i>after</i> the earnings reaction, while remaining elevated option premium is still available. Every setup below is logged as PROPOSED with explicit entry conditions and invalidation levels, so it can be scored as a hit or miss once the week plays out — the same discipline as the Track Record page.
+  </div>
+  <div class="note corr">
+    <b>Correction applied:</b> META was not an upside earnings gap. It gapped down ~8% Thursday then recovered 3.3% Friday. It's treated below as a gap-recovery setup, not a gap-support setup — the source material's literal structure was adjusted accordingly.
+  </div>
+
+  <div class="section-title">Week of Aug 3–7, 2026 — Market Backdrop</div>
+  <div class="card">
+    <div class="kv">10-Year Treasury Yield: <b>~4.74%</b> &nbsp;|&nbsp; 30-Year: <b>~5.27%</b> — a real threat to richly-valued tech if it keeps climbing</div>
+    <div class="kv">Mon: ISM Manufacturing &nbsp;·&nbsp; Tue: JOLTS &nbsp;·&nbsp; Wed: ADP + ISM Services &nbsp;·&nbsp; Thu: Jobless Claims &nbsp;·&nbsp; <b>Fri: July Jobs Report (8:30am ET)</b></div>
+    <div class="kv">Rule: close short-premium positions by Thursday, or use the Aug 14 expiry instead of Aug 7 to avoid jobs-report gamma risk.</div>
+  </div>
+
+  <div class="section-title">Ranked Setups</div>
+
+  <div class="card">
+    <div class="setup-row"><h3>1. AMZN — Bull Put Spread <span class="badge rank1">Highest Conviction</span></h3></div>
+    <div class="kv">Aug 14 expiry: Sell <b>$255P</b> / Buy <b>$245P</b> (short strike below Friday's post-earnings low of ~$259)</div>
+    <div class="kv">Entry: pullback to $262–265 holding above $259, OR break above $273.20 after consolidation</div>
+    <div class="kv">Target: 50–65% of credit &nbsp;|&nbsp; Invalidation: close below $259</div>
+    <div class="conviction">Best overall combination of earnings strength, gap support, and momentum.</div>
+  </div>
+
+  <div class="card">
+    <div class="setup-row"><h3>2. MSFT — Bull Put Spread</h3></div>
+    <div class="kv">Aug 14 expiry: Sell <b>$435P</b> / Buy <b>$425P</b> (lower edge of post-earnings structure)</div>
+    <div class="kv">Entry: pullback holding $445–450, OR break above $467 with successful retest</div>
+    <div class="kv">Target: 50–60% of credit &nbsp;|&nbsp; Invalidation: decisive close below $432</div>
+    <div class="conviction">Strong setup but already extended — prefer the pullback entry over chasing.</div>
+  </div>
+
+  <div class="card">
+    <div class="setup-row"><h3>3. META — Call Butterfly (defined-risk)</h3></div>
+    <div class="kv">Buy <b>$555C</b> / Sell 2× <b>$570C</b> / Buy <b>$585C</b> — targets partial gap fill toward $570–580</div>
+    <div class="kv">Entry: only after META holds above ~$550 AND breaks Friday's high near $558</div>
+    <div class="kv">Invalidation: fails below $539 &nbsp;|&nbsp; Avoid the naked/partial 1×3 ratio variant — defined risk only</div>
+    <div class="conviction">Gap-recovery trade, not a premium-selling-under-upside-gap trade. Confirmation-dependent.</div>
+  </div>
+
+  <div class="card">
+    <div class="setup-row"><h3>4. AAPL — Conditional Put or Call Spread <span class="badge proposed">Lowest Conviction</span></h3></div>
+    <div class="kv">Bullish (after $300 confirmed): Sell <b>$295P</b> / Buy <b>$285P</b></div>
+    <div class="kv">Bearish (if rejected at $310–315): Sell <b>$320C</b> / Buy <b>$330C</b></div>
+    <div class="kv">Do not sell an uncovered $300P purely on round-number-support assumption</div>
+    <div class="conviction">Treat $300 as a level to observe, not guaranteed support.</div>
+  </div>
+
+  <div class="section-title">Portfolio Construction</div>
+  <div class="card">
+    <div class="kv">Max risk per position: <b>0.5–1.0%</b> of trading capital &nbsp;|&nbsp; Combined across all four: <b>≤2–3%</b></div>
+    <div class="kv">Allocation: one primary (AMZN), one secondary (MSFT), one smaller tactical (META <i>or</i> AAPL, not both — all four are correlated megacap tech exposure)</div>
+  </div>
+
+  <div class="section-title">Prediction Log (for profitability scoring)</div>
+  <div class="card">
+    <table id="shadow-log-table">
+      <thead><tr><th>Underlying</th><th>Structure</th><th>Bias</th><th>Status</th><th>Outcome</th></tr></thead>
+      <tbody id="shadow-log-body">
+        <tr><td colspan="5" style="color:var(--muted);">Loading log…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    Full structured detail (entry conditions, invalidation levels, per-trade IDs) lives in <code>data/shadow_trader_log.json</code>. Once trades are entered/closed this trimester, update that file's <code>status</code> / <code>outcome</code> / <code>realized_pnl</code> fields and this table reflects it automatically — same measurement discipline as the main Track Record page.
+  </div>
+
+</div>
+
+<footer>Shadow Trader Agent — one input among Almanac / Macro / Technical / LLM Synthesis. Not investment advice.</footer>
+
+<script>
+fetch('data/shadow_trader_log.json').then(r => r.json()).then(d => {
+  const body = document.getElementById('shadow-log-body');
+  body.innerHTML = '';
+  d.predictions.forEach(p => {
+    const statusClass = p.status === 'PROPOSED' ? 'proposed' : (p.entered ? 'entered' : 'proposed');
+    const outcome = p.outcome ? p.outcome : '—';
+    const outcomeClass = p.outcome === 'WIN' ? 'win' : (p.outcome === 'LOSS' ? 'loss' : '');
+    body.innerHTML += `<tr>
+      <td><b>${p.underlying}</b></td>
+      <td>${p.structure}</td>
+      <td>${p.bias}</td>
+      <td><span class="badge ${statusClass}">${p.status}</span></td>
+      <td>${outcomeClass ? `<span class="badge ${outcomeClass}">${outcome}</span>` : outcome}</td>
+    </tr>`;
+  });
+}).catch(() => {
+  document.getElementById('shadow-log-body').innerHTML = '<tr><td colspan="5" style="color:var(--red);">Could not load log data.</td></tr>';
+});
+</script>
+</body>
+</html>
