@@ -29,10 +29,14 @@
       "profit_target_pct_of_credit": "50-65",
       "bias": "Bullish above 259",
       "conviction": "Highest -- earnings strength + gap support + momentum aligned",
-      "status": "PROPOSED",
+      "status": "STAGED",
       "entered": false,
       "outcome": null,
-      "realized_pnl": null
+      "realized_pnl": null,
+      "ibkr_instruction_id": "102",
+      "ibkr_approve_url": "https://ndcdyn.interactivebrokers.com/sso/resolver?action=ACCT-MGMT-MAIN#/orders/instructions",
+      "staged_quantity": 1,
+      "staged_limit_price_note": "1.00 credit, estimated from Fri last-trade prices (market closed, no live bid/ask) -- re-check premium before submitting Monday"
     },
     {
       "id": "shadow-msft-20260803",
