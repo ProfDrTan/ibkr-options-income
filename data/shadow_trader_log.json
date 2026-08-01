@@ -51,10 +51,14 @@
       "profit_target_pct_of_credit": "50-60",
       "bias": "Bullish above 432-440",
       "conviction": "Strong but extended -- prefer pullback entry",
-      "status": "PROPOSED",
+      "status": "STAGED",
       "entered": false,
       "outcome": null,
-      "realized_pnl": null
+      "realized_pnl": null,
+      "ibkr_instruction_id": "103",
+      "ibkr_approve_url": "https://ndcdyn.interactivebrokers.com/sso/resolver?action=ACCT-MGMT-MAIN#/orders/instructions",
+      "staged_quantity": 1,
+      "staged_limit_price_note": "No last-trade/bid-ask data available for these strikes over the weekend -- limit price left blank, set it live Monday against the actual quote."
     },
     {
       "id": "shadow-meta-20260803",
