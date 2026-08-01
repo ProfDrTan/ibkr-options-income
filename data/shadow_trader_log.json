@@ -1,0 +1,104 @@
+{
+  "agent": "Shadow Trader Agent",
+  "source": "Media Shadow Trader transcript digest, week of 2026-08-03",
+  "methodology": "Trade the post-earnings price structure (gap boundaries, IV crush), not the earnings prediction itself.",
+  "last_updated": "2026-08-01T00:00:00",
+  "week_of": "2026-08-03",
+  "market_backdrop": {
+    "yield_10y_pct": 4.74,
+    "yield_30y_pct": 5.27,
+    "catalysts": [
+      "Mon: ISM Manufacturing",
+      "Tue: JOLTS",
+      "Wed: ADP Employment + ISM Services",
+      "Thu: Jobless Claims",
+      "Fri: July Employment Situation (8:30am ET) -- close short premium by Thu or use Aug 14 expiry"
+    ]
+  },
+  "predictions": [
+    {
+      "id": "shadow-amzn-20260803",
+      "rank": 1,
+      "underlying": "AMZN",
+      "structure": "Bull Put Spread",
+      "expiry": "2026-08-14",
+      "short_strike": 255,
+      "long_strike": 245,
+      "entry_conditions": "Pullback to 262-265 holding above 259, OR consolidation then break above 273.20",
+      "invalidation": "Close below 259",
+      "profit_target_pct_of_credit": "50-65",
+      "bias": "Bullish above 259",
+      "conviction": "Highest -- earnings strength + gap support + momentum aligned",
+      "status": "PROPOSED",
+      "entered": false,
+      "outcome": null,
+      "realized_pnl": null
+    },
+    {
+      "id": "shadow-msft-20260803",
+      "rank": 2,
+      "underlying": "MSFT",
+      "structure": "Bull Put Spread",
+      "expiry": "2026-08-14",
+      "short_strike": 435,
+      "long_strike": 425,
+      "entry_conditions": "Controlled pullback holding 445-450, OR break above 467 with successful retest",
+      "invalidation": "Decisive close below 432",
+      "profit_target_pct_of_credit": "50-60",
+      "bias": "Bullish above 432-440",
+      "conviction": "Strong but extended -- prefer pullback entry",
+      "status": "PROPOSED",
+      "entered": false,
+      "outcome": null,
+      "realized_pnl": null
+    },
+    {
+      "id": "shadow-meta-20260803",
+      "rank": 3,
+      "underlying": "META",
+      "structure": "Call Butterfly (defined-risk)",
+      "expiry": "2026-08-14",
+      "legs": "Buy 555C / Sell 2x 570C / Buy 585C",
+      "entry_conditions": "Only after META holds above ~550 AND breaks Friday high near 558",
+      "invalidation": "Bullish gap-fill thesis fails below 539; do not hold if closes decisively above 585 without adjusting",
+      "bias": "Gap-fill toward 570-580, confirmation-dependent",
+      "conviction": "Conditional -- NOT an upside-gap trade, this is a gap-recovery play; avoid naked 1x3 ratio variant",
+      "status": "PROPOSED",
+      "entered": false,
+      "outcome": null,
+      "realized_pnl": null
+    },
+    {
+      "id": "shadow-aapl-20260803",
+      "rank": 4,
+      "underlying": "AAPL",
+      "structure": "Put Spread (bullish) or Call Spread (bearish), conditional",
+      "expiry": "2026-08-14",
+      "bullish_legs": "Sell 295P / Buy 285P -- only after $300 confirmed holding",
+      "bearish_legs": "Sell 320C / Buy 330C -- only if rejected at 310-315",
+      "entry_conditions": "Wait for $300-312 battle to resolve; do not sell naked 300P on round-number assumption",
+      "invalidation": "Bullish: close below 300. Bearish: close above ~320",
+      "bias": "Conditional / lowest conviction",
+      "conviction": "Lowest -- treat $300 as observation level, not guaranteed support",
+      "status": "PROPOSED",
+      "entered": false,
+      "outcome": null,
+      "realized_pnl": null
+    }
+  ],
+  "portfolio_rules": {
+    "max_risk_per_position_pct": "0.5-1.0",
+    "max_combined_risk_pct": "2-3",
+    "allocation": "One primary (AMZN), one secondary (MSFT), one smaller tactical (META or AAPL, not both)",
+    "monday_sequence": [
+      "Wait for first 30min opening range",
+      "Mark Friday high/low and earnings-gap boundaries",
+      "Check 10Y/30Y yield direction",
+      "Enter bullish premium trades only if earnings-day floor intact",
+      "No new short-gamma entries late Thursday ahead of Friday jobs report"
+    ]
+  },
+  "corrections_from_source": [
+    "META was NOT an upside earnings gap -- it gapped down ~8% then recovered 3.3%. Treat as gap-recovery, not gap-support."
+  ]
+}
