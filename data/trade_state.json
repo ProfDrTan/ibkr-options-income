@@ -1,57 +1,57 @@
 {
-  "last_updated": "2026-07-27T16:38:59.471004",
+  "last_updated": "2026-08-03T16:56:52.050680",
   "recommendation": {
-    "date": "2026-07-27",
-    "expiry": "2026-07-31",
+    "date": "2026-08-03",
+    "expiry": "2026-08-07",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7414.35,
-    "short_put": 7120,
-    "long_put": 7110,
+    "spx_price": 7585.78,
+    "short_put": 7130,
+    "long_put": 7120,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
     "max_profit": 180.0,
     "max_risk": 9820.0,
     "profit_target": 90.0,
-    "proceed": true,
-    "reason": "PROCEED: Composite 65.3 | Bias BULLISH | VIX None",
+    "proceed": false,
+    "reason": "SKIP: Composite score 48.9 below minimum 55",
     "intel": {
-      "composite": 65.3,
-      "bias": "BULLISH",
-      "recommended_size": 10,
-      "size_reason": "Full 10 spreads",
+      "composite": 48.9,
+      "bias": "NEUTRAL",
+      "recommended_size": 5,
+      "size_reason": "Half size 5 spreads",
       "individual_scores": {
-        "chatgpt": 65,
-        "gemini": 75,
-        "deepseek": 65,
-        "almanac": 60,
+        "chatgpt": 50,
+        "gemini": 45,
+        "deepseek": 52,
+        "almanac": 45,
         "human": 55
       },
       "agent_summaries": {
         "deepseek": {
-          "score": 65,
-          "bias": "BULLISH",
+          "score": 52,
+          "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "Almanac score 60 supports moderate bullish bias.",
-          "week_outlook": "Mild upside expected; bull put spreads viable with caution on volatility."
-        },
-        "gemini": {
-          "score": 75,
-          "bias": "BULLISH",
-          "confidence": "HIGH",
-          "key_factor": "Seasonal strength and low volatility support high-probability 5-delta credit spread execution.",
-          "week_outlook": "SPX expected to drift higher or consolidate constructively, keeping deep out-of-the-money put options safe."
+          "key_factor": "VIX below 25, composite near 50, seasonal score 45.",
+          "week_outlook": "Rangebound with slight upside bias; sell 5-delta puts for premium decay."
         },
         "chatgpt": {
-          "score": 65,
-          "bias": "BULLISH",
+          "score": 50,
+          "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, positive seasonal score",
-          "week_outlook": "Favorable conditions for bull put spread, monitor for sudden volatility changes"
+          "key_factor": "VIX below 25, composite score at threshold",
+          "week_outlook": "Cautious approach advised due to mixed market signals and seasonal score"
+        },
+        "gemini": {
+          "score": 45,
+          "bias": "NEUTRAL",
+          "confidence": "MEDIUM",
+          "key_factor": "Seasonal score at 45 limits trade size due to strict algorithmic composite rules",
+          "week_outlook": "Expecting range-bound trading with a neutral bias as seasonal headwinds cap significant upward momentum."
         }
       },
-      "timestamp": "2026-07-27T16:38:58.613701"
+      "timestamp": "2026-08-03T16:56:51.029342"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
