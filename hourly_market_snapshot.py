@@ -25,6 +25,7 @@ import os
 import sys
 import json
 import datetime
+from zoneinfo import ZoneInfo
 import urllib.request
 from pathlib import Path
 
@@ -34,6 +35,7 @@ DATA_DIR.mkdir(exist_ok=True)
 
 CACHE_FILE = DATA_DIR / "daily_signal_cache.json"
 POSITION_FILE = DATA_DIR / "position_state.json"
+SGT = ZoneInfo("Asia/Singapore")
 
 # Cross-repo checkout paths (set up by the GitHub Actions workflow).
 # Each agent module lives in its own subfolder (agents/macro/macro_agent.py
@@ -44,6 +46,15 @@ MPE_PATH = REPO_ROOT / "market-prediction-engine"
 for sub in ("macro", "technical", "almanac"):
     sys.path.insert(0, str(MPE_PATH / "agents" / sub))
 sys.path.insert(0, str(REPO_ROOT / "bot_core"))
+
+# futures-alert-monitor checkout (private repo, needs CROSS_REPO_PAT to clone
+# in the workflow) — source of the daily support/resistance/POC/VAH/VAL
+# levels, which ARE genuinely recalculated daily (cron 13:00 UTC, before US
+# open) via that repo's own calculate_levels.py. NOT the same as
+# indicators_NQ.json in that repo, which has no cron wired to it at all and
+# would be stale indefinitely if trusted — so that file is deliberately not
+# read here; the intraday technical read below is computed fresh instead.
+FAM_PATH = REPO_ROOT / "futures-alert-monitor"
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
@@ -79,6 +90,66 @@ def fetch_live_price(yahoo_symbol):
     current = meta["regularMarketPrice"]
     prior_close = meta.get("previousClose", current)
     return current, prior_close
+
+
+def compute_rsi(closes, period=14):
+    if len(closes) < period + 1:
+        return None
+    deltas = [closes[i] - closes[i - 1] for i in range(1, len(closes))]
+    gains = [d for d in deltas[-period:] if d > 0]
+    losses = [-d for d in deltas[-period:] if d < 0]
+    avg_gain = sum(gains) / period if gains else 0.0
+    avg_loss = sum(losses) / period if losses else 0.0
+    if avg_gain == 0 and avg_loss == 0:
+        return 50.0
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return round(100 - (100 / (1 + rs)), 1)
+
+
+def ema_series(closes, period):
+    k = 2 / (period + 1)
+    ema = [closes[0]]
+    for price in closes[1:]:
+        ema.append(price * k + ema[-1] * (1 - k))
+    return ema
+
+
+def fetch_intraday_technical(yahoo_symbol):
+    """Genuinely hour-fresh technical read: 5-min bars for today, EMA8/21
+    cross + RSI14 computed on the spot. Deliberately NOT read from
+    futures-alert-monitor's indicators_NQ.json, which has no cron running it
+    and would silently go stale forever if trusted as live."""
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{yahoo_symbol}"
+           f"?interval=5m&range=1d")
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        data = json.loads(resp.read().decode())
+    result = data["chart"]["result"][0]
+    closes = [c for c in result["indicators"]["quote"][0]["close"] if c is not None]
+    if len(closes) < 22:
+        return None
+    ema8 = ema_series(closes, 8)
+    ema21 = ema_series(closes, 21)
+    prev_diff = ema8[-2] - ema21[-2]
+    curr_diff = ema8[-1] - ema21[-1]
+    if prev_diff <= 0 and curr_diff > 0:
+        cross = "golden_cross_just_occurred"
+    elif prev_diff >= 0 and curr_diff < 0:
+        cross = "death_cross_just_occurred"
+    else:
+        cross = "bullish_bias" if curr_diff > 0 else "bearish_bias"
+    return {"rsi14_intraday": compute_rsi(closes), "ema_cross_state_intraday": cross}
+
+
+def fetch_daily_levels(symbol="NQ"):
+    """Reads the daily support/resistance/POC/VAH/VAL from
+    futures-alert-monitor's levels_NQ.json, checked out by the workflow.
+    Legitimately daily (cron 13:00 UTC before US open) -- not pretended
+    hourly-fresh."""
+    path = FAM_PATH / f"levels_{symbol}.json"
+    return load_json(path, default=None)
 
 
 def compute_daily_signals():
@@ -167,17 +238,23 @@ def get_position_pnl():
     return pnl, note
 
 
-def llm_synthesis(signals, position_note):
-    """One cheap DeepSeek call for a short actionable readout. Skipped
-    entirely (not faked) if no key is configured."""
+def llm_synthesis(signals, position_note, levels, intraday):
+    """One cheap DeepSeek call for a short, decision-oriented readout —
+    explicitly asked for a level to watch and an invalidation point, tied to
+    the actual logged position, not a generic market comment."""
     if not DEEPSEEK_API_KEY:
         return None
     prompt = (
-        "You are a terse trading-desk assistant. In 2 short sentences, max "
-        "40 words total, give an actionable readout for NQ/MNQ futures given:\n"
+        "You are a terse trading-desk assistant. Given the data below, answer "
+        "in exactly this structure, max 55 words total:\n"
+        "BIAS: [one line]\nWATCH LEVEL: [specific price + why]\n"
+        "INVALIDATION: [specific price that would flip the bias]\n"
+        "ACTION: [one line tied to the CURRENT position given, not generic]\n\n"
         f"Daily signals (as of {signals.get('as_of_date')}): {json.dumps(signals)}\n"
+        f"Intraday technical (fresh this hour): {json.dumps(intraday)}\n"
+        f"Daily support/resistance/POC levels: {json.dumps(levels)}\n"
         f"Current position: {position_note}\n"
-        "No disclaimers, no restating the numbers verbatim, just the read."
+        "No disclaimers, no restating numbers verbatim, just the structured read."
     )
     try:
         req = urllib.request.Request(
@@ -185,7 +262,7 @@ def llm_synthesis(signals, position_note):
             data=json.dumps({
                 "model": "deepseek-chat",
                 "messages": [{"role": "user", "content": prompt}],
-                "max_tokens": 120,
+                "max_tokens": 150,
                 "temperature": 0.3,
             }).encode(),
             headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}",
@@ -209,10 +286,11 @@ def send_telegram(message):
     urllib.request.urlopen(req, timeout=10)
 
 
-def build_message(signals, was_recomputed, live_prices, pnl, position_note, synthesis):
+def build_message(signals, was_recomputed, live_prices, pnl, position_note,
+                   intraday, levels, synthesis):
     lines = []
-    now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    lines.append(f"MARKET SNAPSHOT — {now}")
+    now_sgt = datetime.datetime.now(SGT).strftime("%Y-%m-%d %H:%M SGT")
+    lines.append(f"MARKET SNAPSHOT — {now_sgt}")
     lines.append("")
     lines.append("Live price (Yahoo, ~15-20min delayed):")
     for sym, (cur, prior) in live_prices.items():
@@ -221,6 +299,19 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note, synt
     lines.append("")
     lines.append(f"Position: {position_note}")
     lines.append("")
+
+    if intraday:
+        lines.append("Intraday technical (fresh this hour, NQ 5m bars):")
+        lines.append(f"  RSI14: {intraday.get('rsi14_intraday')}, "
+                      f"EMA8/21: {intraday.get('ema_cross_state_intraday')}")
+        lines.append("")
+
+    if levels:
+        lines.append(f"Daily NQ levels (as of last recalc, ~13:00 UTC):")
+        lines.append(f"  Support {levels.get('support')} / Resistance {levels.get('resistance')}")
+        lines.append(f"  POC {levels.get('poc')} / VAH {levels.get('vah')} / VAL {levels.get('val')}")
+        lines.append("")
+
     tag = "recomputed today" if was_recomputed else "cached from earlier today"
     lines.append(f"Daily signals (as of {signals.get('as_of_date')}, {tag}):")
 
@@ -233,10 +324,10 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note, synt
 
     t = signals.get("technical")
     if isinstance(t, dict) and "error" not in t:
-        lines.append(f"  Technical: {t.get('trend')}, RSI {t.get('rsi')}, "
+        lines.append(f"  Technical (daily): {t.get('trend')}, RSI {t.get('rsi')}, "
                       f"{t.get('pct_from_50dma'):+.1f}% from 50dma")
     else:
-        lines.append("  Technical: unavailable")
+        lines.append("  Technical (daily): unavailable")
 
     a = signals.get("almanac")
     if isinstance(a, dict) and "error" not in a:
@@ -254,7 +345,7 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note, synt
         lines.append("  Fundamental: unavailable")
     if synthesis:
         lines.append("")
-        lines.append(f"Read: {synthesis}")
+        lines.append(synthesis)
     return "\n".join(lines)
 
 
@@ -274,10 +365,19 @@ def main():
         except Exception as e:
             print(f"Price fetch failed for {sym}: {e}")
 
-    pnl, position_note = get_position_pnl()
-    synthesis = llm_synthesis(signals, position_note)
+    try:
+        intraday = fetch_intraday_technical(LIVE_TICKERS["NQ"])
+    except Exception as e:
+        print(f"Intraday technical fetch failed: {e}")
+        intraday = None
 
-    message = build_message(signals, was_recomputed, live_prices, pnl, position_note, synthesis)
+    levels = fetch_daily_levels("NQ")
+
+    pnl, position_note = get_position_pnl()
+    synthesis = llm_synthesis(signals, position_note, levels, intraday)
+
+    message = build_message(signals, was_recomputed, live_prices, pnl,
+                             position_note, intraday, levels, synthesis)
     print(message)
     send_telegram(message)
 
