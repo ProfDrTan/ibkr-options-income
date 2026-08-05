@@ -1,0 +1,45 @@
+name: Hourly Market Snapshot
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ibkr-options-income
+        uses: actions/checkout@v4
+
+      - name: Checkout market-prediction-engine (agents source)
+        uses: actions/checkout@v4
+        with:
+          repository: ProfDrTan/market-prediction-engine
+          path: market-prediction-engine
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install yfinance requests
+
+      - name: Run hourly snapshot
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python hourly_market_snapshot.py
+
+      - name: Commit updated daily cache (if changed)
+        run: |
+          git config user.name "hourly-snapshot-bot"
+          git config user.email "actions@github.com"
+          git add data/daily_signal_cache.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update daily signal cache"
+          git push
