@@ -35,9 +35,14 @@ DATA_DIR.mkdir(exist_ok=True)
 CACHE_FILE = DATA_DIR / "daily_signal_cache.json"
 POSITION_FILE = DATA_DIR / "position_state.json"
 
-# Cross-repo checkout paths (set up by the GitHub Actions workflow)
+# Cross-repo checkout paths (set up by the GitHub Actions workflow).
+# Each agent module lives in its own subfolder (agents/macro/macro_agent.py
+# etc.) and internally does sys.path.insert(parents[1]) to reach schemas.py
+# in agents/ — so THIS path needs to point at each subfolder directly for
+# `import macro_agent` etc. to resolve, not at agents/ itself.
 MPE_PATH = REPO_ROOT / "market-prediction-engine"
-sys.path.insert(0, str(MPE_PATH / "agents"))
+for sub in ("macro", "technical", "almanac"):
+    sys.path.insert(0, str(MPE_PATH / "agents" / sub))
 sys.path.insert(0, str(REPO_ROOT / "bot_core"))
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
