@@ -1,8 +1,8 @@
 {
   "symbol": "MNQ",
   "qty": -4,
-  "entry_price": null,
-  "logged_at": "2026-08-05T10:53:00+08:00",
-  "source": "TOS screenshot (Screenshot_20260805_105324_thinkorswim.jpg)",
-  "note": "entry_price unknown -- Prof Dr. Tan to confirm exact fill price from TOS trade history. P&L will not compute until this is set. Do NOT reverse-derive from P/L Open shown on a screenshot -- that back-calculation compounds any rounding/timing error into every future P&L reading."
+  "entry_price": 28735.00,
+  "logged_at": "2026-08-05T11:16:00+08:00",
+  "source": "TOS order history (Screenshot_20260805_111636_thinkorswim.jpg) - confirmed fills: -1@28720.00 (07/27 2:09PM), -1@28735.00 (07/27 4:42PM), -1@28750.00 (07/27 5:46PM), -1@28735.00 (08/03 10:41PM). Average entry = 28735.00.",
+  "note": "NQ long (1 contract) was closed via SELL @29083.75 on 08/04 2:07PM per same order history -- confirms the disappearance from Position Movers observed between 14:09 and 14:26 screenshots that day."
 }
