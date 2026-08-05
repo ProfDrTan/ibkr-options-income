@@ -1,0 +1,8 @@
+{
+  "symbol": "MNQ",
+  "qty": -4,
+  "entry_price": null,
+  "logged_at": "2026-08-05T10:53:00+08:00",
+  "source": "TOS screenshot (Screenshot_20260805_105324_thinkorswim.jpg)",
+  "note": "entry_price unknown -- Prof Dr. Tan to confirm exact fill price from TOS trade history. P&L will not compute until this is set. Do NOT reverse-derive from P/L Open shown on a screenshot -- that back-calculation compounds any rounding/timing error into every future P&L reading."
+}
