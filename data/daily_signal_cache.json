@@ -1,21 +1,21 @@
 {
   "macro": {
     "regime": "risk-off",
-    "dxy_change_1w": -1.13,
-    "yield_10y_change_1w": -0.11,
-    "oil_change_1w": -10.89,
-    "gold_change_1w": 8.06,
-    "vix_level": 15.81,
-    "notes": "DXY -1.13%, 10Y yield -0.11%, Oil -10.89%, Gold +8.06%, VIX 15.81. Fed 2026-07-29: market tone read as 'dovish' but substance (dissents_for_hike=3, dissents_for_cut=0, 10Y reaction +5bps) reads 'hawkish' -- divergence detected, voting risk-off."
+    "dxy_change_1w": -0.05,
+    "yield_10y_change_1w": 0.15,
+    "oil_change_1w": -6.9,
+    "gold_change_1w": 4.93,
+    "vix_level": 15.15,
+    "notes": "DXY -0.05%, 10Y yield +0.15%, Oil -6.90%, Gold +4.93%, VIX 15.15. Fed 2026-07-29: market tone read as 'dovish' but substance (dissents_for_hike=3, dissents_for_cut=0, 10Y reaction +5bps) reads 'hawkish' -- divergence detected, voting risk-off."
   },
   "technical": {
     "ticker": "NQ=F",
     "trend": "sideways",
-    "rsi": 52.51,
-    "pct_from_50dma": -0.03,
-    "pct_from_200dma": 10.57,
-    "momentum_20d": 0.17,
-    "notes": "RSI 52.51 (neutral)"
+    "rsi": 57.09,
+    "pct_from_50dma": 0.05,
+    "pct_from_200dma": 10.53,
+    "momentum_20d": -1.34,
+    "notes": "RSI 57.09 (neutral)"
   },
   "almanac": {
     "month": 8,
@@ -26,10 +26,10 @@
     "notes": "18 years of history for month 8; avg 1.20%, win rate 67%"
   },
   "fundamental": {
-    "score": 8.500000000000014,
+    "score": 5.0,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.45), normal regime | 10Y yield falling (-7bps: 4.70->4.63), tailwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.44), normal regime | 10Y yield flat (+0bps: 4.63->4.63), neutral for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-06"
+  "as_of_date": "2026-08-07"
 }
