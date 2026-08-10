@@ -1,35 +1,35 @@
 {
   "macro": {
-    "regime": "risk-off",
-    "dxy_change_1w": -0.05,
-    "yield_10y_change_1w": 0.15,
-    "oil_change_1w": -6.9,
-    "gold_change_1w": 4.93,
-    "vix_level": 15.15,
-    "notes": "DXY -0.05%, 10Y yield +0.15%, Oil -6.90%, Gold +4.93%, VIX 15.15. Fed 2026-07-29: market tone read as 'dovish' but substance (dissents_for_hike=3, dissents_for_cut=0, 10Y reaction +5bps) reads 'hawkish' -- divergence detected, voting risk-off."
+    "regime": "risk-on",
+    "dxy_change_1w": -0.32,
+    "yield_10y_change_1w": -1.79,
+    "oil_change_1w": -1.78,
+    "gold_change_1w": 8.98,
+    "vix_level": 14.9,
+    "notes": "DXY -0.32%, 10Y yield -1.79%, Oil -1.78%, Gold +8.98%, VIX 14.9. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
-    "trend": "sideways",
-    "rsi": 57.09,
-    "pct_from_50dma": 0.05,
-    "pct_from_200dma": 10.53,
-    "momentum_20d": -1.34,
-    "notes": "RSI 57.09 (neutral)"
+    "trend": "uptrend",
+    "rsi": 55.15,
+    "pct_from_50dma": 1.19,
+    "pct_from_200dma": 11.54,
+    "momentum_20d": 1.29,
+    "notes": "RSI 55.15 (neutral)"
   },
   "almanac": {
     "month": 8,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.012,
+    "avg_return_this_month": 0.0126,
     "win_rate_this_month": 0.6667,
     "years_of_history": 18,
-    "notes": "18 years of history for month 8; avg 1.20%, win rate 67%"
+    "notes": "18 years of history for month 8; avg 1.26%, win rate 67%"
   },
   "fundamental": {
-    "score": 5.0,
+    "score": 1.9999999999999751,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.44), normal regime | 10Y yield flat (+0bps: 4.63->4.63), neutral for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.46), normal regime | 10Y yield rising (+6bps: 4.63->4.69), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-07"
+  "as_of_date": "2026-08-10"
 }
