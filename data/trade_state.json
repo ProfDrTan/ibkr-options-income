@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-08-03T16:56:52.050680",
+  "last_updated": "2026-08-10T15:31:28.394311",
   "recommendation": {
-    "date": "2026-08-03",
-    "expiry": "2026-08-07",
+    "date": "2026-08-10",
+    "expiry": "2026-08-14",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7585.78,
-    "short_put": 7130,
-    "long_put": 7120,
+    "spx_price": 7759.27,
+    "short_put": 7295,
+    "long_put": 7285,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,43 +15,43 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 48.9 below minimum 55",
+    "reason": "SKIP: Composite score 49.0 below minimum 55",
     "intel": {
-      "composite": 48.9,
+      "composite": 49.0,
       "bias": "NEUTRAL",
       "recommended_size": 5,
       "size_reason": "Half size 5 spreads",
       "individual_scores": {
-        "chatgpt": 50,
+        "chatgpt": 55,
         "gemini": 45,
         "deepseek": 52,
         "almanac": 45,
         "human": 55
       },
       "agent_summaries": {
-        "deepseek": {
-          "score": 52,
-          "bias": "NEUTRAL",
-          "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite near 50, seasonal score 45.",
-          "week_outlook": "Rangebound with slight upside bias; sell 5-delta puts for premium decay."
-        },
         "chatgpt": {
-          "score": 50,
+          "score": 55,
           "bias": "NEUTRAL",
-          "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite score at threshold",
-          "week_outlook": "Cautious approach advised due to mixed market signals and seasonal score"
+          "confidence": "LOW",
+          "key_factor": "chatgpt HTTP 429: {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
+          "week_outlook": "chatgpt unavailable"
         },
         "gemini": {
           "score": 45,
           "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "Seasonal score at 45 limits trade size due to strict algorithmic composite rules",
-          "week_outlook": "Expecting range-bound trading with a neutral bias as seasonal headwinds cap significant upward momentum."
+          "key_factor": "Seasonal score is at the minimum threshold of 45 amid August market doldrums",
+          "week_outlook": "Market expected to consolidate sideways with low volume, keeping the index range-bound but requiring cautious risk management."
+        },
+        "deepseek": {
+          "score": 52,
+          "bias": "NEUTRAL",
+          "confidence": "MEDIUM",
+          "key_factor": "VIX below 25, composite near 50, seasonal score 45.",
+          "week_outlook": "Rangebound with mild upside drift; 5-delta puts likely safe but low premium."
         }
       },
-      "timestamp": "2026-08-03T16:56:51.029342"
+      "timestamp": "2026-08-10T15:31:27.505926"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
