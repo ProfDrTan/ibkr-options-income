@@ -1,35 +1,35 @@
 {
   "macro": {
     "regime": "risk-off",
-    "dxy_change_1w": -0.2,
-    "yield_10y_change_1w": 0.28,
-    "oil_change_1w": 2.33,
-    "gold_change_1w": 10.87,
-    "vix_level": 15.46,
-    "notes": "DXY -0.20%, 10Y yield +0.28%, Oil +2.33%, Gold +10.87%, VIX 15.46. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+    "dxy_change_1w": -0.08,
+    "yield_10y_change_1w": 1.23,
+    "oil_change_1w": 10.53,
+    "gold_change_1w": 8.45,
+    "vix_level": 15.28,
+    "notes": "DXY -0.08%, 10Y yield +1.23%, Oil +10.53%, Gold +8.45%, VIX 15.28. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
     "trend": "sideways",
-    "rsi": 54.24,
-    "pct_from_50dma": 0.88,
-    "pct_from_200dma": 11.2,
-    "momentum_20d": 0.98,
-    "notes": "RSI 54.24 (neutral)"
+    "rsi": 54.62,
+    "pct_from_50dma": 0.6,
+    "pct_from_200dma": 10.74,
+    "momentum_20d": -0.42,
+    "notes": "RSI 54.62 (neutral)"
   },
   "almanac": {
     "month": 8,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.0124,
+    "avg_return_this_month": 0.0123,
     "win_rate_this_month": 0.6667,
     "years_of_history": 18,
-    "notes": "18 years of history for month 8; avg 1.24%, win rate 67%"
+    "notes": "18 years of history for month 8; avg 1.23%, win rate 67%"
   },
   "fundamental": {
-    "score": 7.000000000000002,
+    "score": 1.5000000000000302,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.47), normal regime | 10Y yield falling (-4bps: 4.69->4.65), tailwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.48), normal regime | 10Y yield rising (+7bps: 4.65->4.72), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-11"
+  "as_of_date": "2026-08-12"
 }
