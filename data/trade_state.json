@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-08-10T15:31:28.394311",
+  "last_updated": "2026-08-17T14:54:43.989995",
   "recommendation": {
-    "date": "2026-08-10",
-    "expiry": "2026-08-14",
+    "date": "2026-08-17",
+    "expiry": "2026-08-21",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7759.27,
-    "short_put": 7295,
-    "long_put": 7285,
+    "spx_price": 7770.72,
+    "short_put": 7305,
+    "long_put": 7295,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -40,8 +40,8 @@
           "score": 45,
           "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "Seasonal score is at the minimum threshold of 45 amid August market doldrums",
-          "week_outlook": "Market expected to consolidate sideways with low volume, keeping the index range-bound but requiring cautious risk management."
+          "key_factor": "Seasonal score is at 45 threshold, requiring caution despite likely low VIX environment.",
+          "week_outlook": "SPX expected to trade sideways to slightly soft, keeping the 5-delta bull put spread viable but at minimum size."
         },
         "deepseek": {
           "score": 52,
@@ -51,7 +51,7 @@
           "week_outlook": "Rangebound with mild upside drift; 5-delta puts likely safe but low premium."
         }
       },
-      "timestamp": "2026-08-10T15:31:27.505926"
+      "timestamp": "2026-08-17T14:54:43.301899"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
