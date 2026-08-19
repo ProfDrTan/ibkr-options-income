@@ -1,8 +1,18 @@
-{
-  "symbol": "MNQ",
-  "qty": -4,
-  "entry_price": 28735.00,
-  "logged_at": "2026-08-05T11:16:00+08:00",
-  "source": "TOS order history (Screenshot_20260805_111636_thinkorswim.jpg) - confirmed fills: -1@28720.00 (07/27 2:09PM), -1@28735.00 (07/27 4:42PM), -1@28750.00 (07/27 5:46PM), -1@28735.00 (08/03 10:41PM). Average entry = 28735.00.",
-  "note": "NQ long (1 contract) was closed via SELL @29083.75 on 08/04 2:07PM per same order history -- confirms the disappearance from Position Movers observed between 14:09 and 14:26 screenshots that day."
-}
+[
+  {
+    "symbol": "MNQ",
+    "qty": -2,
+    "entry_price": 28735.0,
+    "logged_at": "2026-08-19T09:46:00+08:00",
+    "source": "TOS order history + Telegram bot ACTION line, confirmed by Prof: originally -4 @ avg 28735.00 (opened 5 Aug 2026), partially covered via BOT +1@29650.00 and BOT +1@29680.00 (18 Aug 2026 fills, per Screenshot_20260819_094413_thinkorswim.jpg) -> net -2. Average entry price on the remaining short is carried forward as 28735.00 (original avg) pending an exact blended-entry recompute; flag this as an approximation, not a broker-confirmed average.",
+    "note": "Bot ACTION line as of last recompute (still referencing the original -4 size, needs refresh): hold, add only below 29,498, stop above 30,080."
+  },
+  {
+    "symbol": "MGC",
+    "qty": 1,
+    "entry_price": 4405.4,
+    "logged_at": "2026-08-19T03:44:00+08:00",
+    "source": "TOS Filled orders, Screenshot_20260819_094413_thinkorswim.jpg: MGCZ26 BOT +1 @4405.40 GTC, filled 08/19/26 3:44 AM.",
+    "note": "New position, separate from the MNQ short. No stop/add levels defined yet -- Prof has not specified a plan for this position."
+  }
+]
