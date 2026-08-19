@@ -2,9 +2,9 @@
   {
     "symbol": "MNQ",
     "qty": -2,
-    "entry_price": 28735.0,
-    "logged_at": "2026-08-19T09:46:00+08:00",
-    "source": "TOS order history + Telegram bot ACTION line, confirmed by Prof: originally -4 @ avg 28735.00 (opened 5 Aug 2026), partially covered via BOT +1@29650.00 and BOT +1@29680.00 (18 Aug 2026 fills, per Screenshot_20260819_094413_thinkorswim.jpg) -> net -2. Average entry price on the remaining short is carried forward as 28735.00 (original avg) pending an exact blended-entry recompute; flag this as an approximation, not a broker-confirmed average.",
+    "entry_price": 28742.5,
+    "logged_at": "2026-08-20T00:23:00+08:00",
+    "source": "Broker-confirmed via TOS Positions screenshot (Screenshot_20260820_002344_thinkorswim.jpg): P/L Open -$3,609.00 at mark 29,644.75. Backed out exact average entry as -3609 / (2 x $2/pt) = -902.25pt from mark -> entry = 29644.75 - 902.25 = 28742.50. Replaces the prior 28735.00 approximation (original 4-lot average before partial cover) with a TOS-derived figure.",
     "note": "Bot ACTION line as of last recompute (still referencing the original -4 size, needs refresh): hold, add only below 29,498, stop above 30,080."
   },
   {
@@ -12,7 +12,7 @@
     "qty": 1,
     "entry_price": 4405.4,
     "logged_at": "2026-08-19T03:44:00+08:00",
-    "source": "TOS Filled orders, Screenshot_20260819_094413_thinkorswim.jpg: MGCZ26 BOT +1 @4405.40 GTC, filled 08/19/26 3:44 AM.",
+    "source": "TOS Filled orders, Screenshot_20260819_094413_thinkorswim.jpg: MGCZ26 BOT +1 @4405.40 GTC, filled 08/19/26 3:44 AM. Cross-checked 20 Aug 2026: TOS shows P/L Open +$1,481.00 at mark 4553.50, implying entry (4553.50 - 1481/10) = 4405.40 -- exact match, no correction needed.",
     "note": "New position, separate from the MNQ short. No stop/add levels defined yet -- Prof has not specified a plan for this position."
   }
 ]
