@@ -1,35 +1,35 @@
 {
   "macro": {
-    "regime": "risk-off",
-    "dxy_change_1w": -0.27,
-    "yield_10y_change_1w": 0.53,
-    "oil_change_1w": 3.45,
-    "gold_change_1w": 2.68,
-    "vix_level": 15.19,
-    "notes": "DXY -0.27%, 10Y yield +0.53%, Oil +3.45%, Gold +2.68%, VIX 15.19. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+    "regime": "neutral",
+    "dxy_change_1w": -0.22,
+    "yield_10y_change_1w": 0.47,
+    "oil_change_1w": 1.6,
+    "gold_change_1w": 0.35,
+    "vix_level": 15.84,
+    "notes": "DXY -0.22%, 10Y yield +0.47%, Oil +1.60%, Gold +0.35%, VIX 15.84. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
-    "trend": "uptrend",
-    "rsi": 73.17,
-    "pct_from_50dma": 2.2,
-    "pct_from_200dma": 11.98,
-    "momentum_20d": 4.57,
-    "notes": "RSI 73.17 (overbought)"
+    "trend": "sideways",
+    "rsi": 72.4,
+    "pct_from_50dma": 0.04,
+    "pct_from_200dma": 9.57,
+    "momentum_20d": 0.51,
+    "notes": "RSI 72.4 (overbought)"
   },
   "almanac": {
     "month": 8,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.0131,
+    "avg_return_this_month": 0.0119,
     "win_rate_this_month": 0.6667,
     "years_of_history": 18,
-    "notes": "18 years of history for month 8; avg 1.31%, win rate 67%"
+    "notes": "18 years of history for month 8; avg 1.19%, win rate 67%"
   },
   "fundamental": {
-    "score": 2.500000000000009,
+    "score": 2.9999999999999982,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.53), normal regime | 10Y yield rising (+5bps: 4.63->4.68), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.52), normal regime | 10Y yield rising (+4bps: 4.68->4.72), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-18"
+  "as_of_date": "2026-08-19"
 }
