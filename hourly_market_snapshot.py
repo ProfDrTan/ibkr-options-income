@@ -62,10 +62,13 @@ FRED_API_KEY = os.environ.get("FRED_API_KEY")
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY")
 
 # Yahoo tickers for live-ish price (delayed ~15-20min, same as check_price.py)
-LIVE_TICKERS = {"NQ": "NQ=F", "ES": "ES=F", "MNQ": "NQ=F", "MES": "ES=F"}
+LIVE_TICKERS = {"NQ": "NQ=F", "ES": "ES=F", "MNQ": "NQ=F", "MES": "ES=F",
+                 "GC": "GC=F", "MGC": "GC=F"}
 
-# Futures contract multipliers (USD per point)
-MULTIPLIERS = {"NQ": 20.0, "MNQ": 2.0, "ES": 50.0, "MES": 5.0}
+# Futures contract multipliers (USD per point / per $1 move)
+# MGC (Micro Gold) = 10 troy oz/contract -> $10 per $1/oz move.
+MULTIPLIERS = {"NQ": 20.0, "MNQ": 2.0, "ES": 50.0, "MES": 5.0,
+                "GC": 100.0, "MGC": 10.0}
 
 
 def load_json(path, default=None):
@@ -211,11 +214,8 @@ def get_daily_signals():
     return fresh, True
 
 
-def get_position_pnl():
-    pos = load_json(POSITION_FILE, default=None)
-    if not pos:
-        return None, "No position on file — send a TOS screenshot to log one."
-
+def _pnl_for_one(pos):
+    """Computes P&L note for a single position dict. Returns (pnl, note)."""
     symbol = pos.get("symbol")
     qty = pos.get("qty")  # negative = short
     entry = pos.get("entry_price")
@@ -236,6 +236,26 @@ def get_position_pnl():
             f"now {current:,.2f} -> P&L {'+'if pnl>=0 else ''}{pnl:,.0f} USD "
             f"(position logged {logged_at})")
     return pnl, note
+
+
+def get_position_pnl():
+    """Reads data/position_state.json. Supports EITHER a single position dict
+    (legacy format) OR a list of position dicts (current format, as of 19 Aug
+    2026 when the MGC gold position was added alongside the MNQ short) — each
+    entry tracked and reported independently, since they're unrelated trades.
+    Returns (list_of_pnl, combined_note_string)."""
+    raw = load_json(POSITION_FILE, default=None)
+    if not raw:
+        return [], "No position on file — send a TOS screenshot to log one."
+
+    positions = raw if isinstance(raw, list) else [raw]
+    pnls, notes = [], []
+    for pos in positions:
+        pnl, note = _pnl_for_one(pos)
+        pnls.append(pnl)
+        notes.append(note)
+    combined_note = "\n  ".join(notes)
+    return pnls, combined_note
 
 
 def llm_synthesis(signals, position_note, levels, intraday):
@@ -297,7 +317,8 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note,
         chg = cur - prior
         lines.append(f"  {sym}: {cur:,.2f} ({'+' if chg>=0 else ''}{chg:,.2f})")
     lines.append("")
-    lines.append(f"Position: {position_note}")
+    lines.append("Position:")
+    lines.append(f"  {position_note}")
     lines.append("")
 
     if intraday:
@@ -358,7 +379,7 @@ def main():
     signals, was_recomputed = get_daily_signals()
 
     live_prices = {}
-    for sym in ("NQ", "ES"):
+    for sym in ("NQ", "ES", "GC"):
         try:
             cur, prior = fetch_live_price(LIVE_TICKERS[sym])
             live_prices[sym] = (cur, prior)
@@ -384,3 +405,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
