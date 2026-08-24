@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-08-17T14:54:43.989995",
+  "last_updated": "2026-08-24T15:10:27.699382",
   "recommendation": {
-    "date": "2026-08-17",
-    "expiry": "2026-08-21",
+    "date": "2026-08-24",
+    "expiry": "2026-08-28",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7770.72,
-    "short_put": 7305,
-    "long_put": 7295,
+    "spx_price": 7647.44,
+    "short_put": 7190,
+    "long_put": 7180,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,20 +15,27 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 49.0 below minimum 55",
+    "reason": "SKIP: Composite score 47.9 below minimum 55",
     "intel": {
-      "composite": 49.0,
+      "composite": 47.9,
       "bias": "NEUTRAL",
       "recommended_size": 5,
       "size_reason": "Half size 5 spreads",
       "individual_scores": {
         "chatgpt": 55,
         "gemini": 45,
-        "deepseek": 52,
+        "deepseek": 48,
         "almanac": 45,
         "human": 55
       },
       "agent_summaries": {
+        "gemini": {
+          "score": 45,
+          "bias": "NEUTRAL",
+          "confidence": "MEDIUM",
+          "key_factor": "Seasonal score at 45 threshold and elevated late-August market volatility.",
+          "week_outlook": "Expecting choppy, range-bound trading with a slight downward bias as late-August seasonality limits upward momentum."
+        },
         "chatgpt": {
           "score": 55,
           "bias": "NEUTRAL",
@@ -36,22 +43,15 @@
           "key_factor": "chatgpt HTTP 429: {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
           "week_outlook": "chatgpt unavailable"
         },
-        "gemini": {
-          "score": 45,
-          "bias": "NEUTRAL",
-          "confidence": "MEDIUM",
-          "key_factor": "Seasonal score is at 45 threshold, requiring caution despite likely low VIX environment.",
-          "week_outlook": "SPX expected to trade sideways to slightly soft, keeping the 5-delta bull put spread viable but at minimum size."
-        },
         "deepseek": {
-          "score": 52,
+          "score": 48,
           "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite near 50, seasonal score 45.",
-          "week_outlook": "Rangebound with mild upside drift; 5-delta puts likely safe but low premium."
+          "key_factor": "VIX below 25, composite near 45 threshold, seasonal score 45.",
+          "week_outlook": "Rangebound with mild upward drift; no strong catalyst for breakout."
         }
       },
-      "timestamp": "2026-08-17T14:54:43.301899"
+      "timestamp": "2026-08-24T15:10:26.936838"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
