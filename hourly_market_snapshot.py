@@ -43,7 +43,7 @@ SGT = ZoneInfo("Asia/Singapore")
 # in agents/ — so THIS path needs to point at each subfolder directly for
 # `import macro_agent` etc. to resolve, not at agents/ itself.
 MPE_PATH = REPO_ROOT / "market-prediction-engine"
-for sub in ("macro", "technical", "almanac"):
+for sub in ("macro", "technical", "almanac", "events"):
     sys.path.insert(0, str(MPE_PATH / "agents" / sub))
 sys.path.insert(0, str(REPO_ROOT / "bot_core"))
 
@@ -184,9 +184,19 @@ def compute_daily_signals():
     try:
         import almanac_agent
         a = almanac_agent.run("NQ=F")
-        results["almanac"] = a.__dict__ if a else None
+        a_dict = a.__dict__ if a else None
+        if a_dict:
+            a_dict["chewable_summary"] = almanac_agent.chewable_summary(a, "NQ")
+        results["almanac"] = a_dict
     except Exception as e:
         results["almanac"] = {"error": str(e)}
+
+    try:
+        import events_agent
+        ev = events_agent.run()
+        results["events"] = ev.__dict__ if ev else None
+    except Exception as e:
+        results["events"] = {"error": str(e)}
 
     # --- Fundamental (this repo, bot_core) ---
     try:
@@ -352,9 +362,13 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note,
 
     a = signals.get("almanac")
     if isinstance(a, dict) and "error" not in a:
-        lines.append(f"  Almanac: {a.get('seasonal_bias')} seasonality, "
-                      f"{a.get('win_rate_this_month', 0)*100:.0f}% win rate "
-                      f"over {a.get('years_of_history')}y")
+        chewable = a.get("chewable_summary")
+        if chewable:
+            lines.append(f"  Almanac: {chewable}")
+        else:
+            lines.append(f"  Almanac: {a.get('seasonal_bias')} seasonality, "
+                          f"{a.get('win_rate_this_month', 0)*100:.0f}% win rate "
+                          f"over {a.get('years_of_history')}y")
     else:
         lines.append("  Almanac: unavailable")
 
@@ -364,6 +378,13 @@ def build_message(signals, was_recomputed, live_prices, pnl, position_note,
                       f"(confidence {f.get('confidence')})")
     else:
         lines.append("  Fundamental: unavailable")
+
+    ev = signals.get("events")
+    if isinstance(ev, dict) and "error" not in ev and ev.get("chewable_summary"):
+        lines.append("")
+        lines.append("This week's catalysts:")
+        lines.append(ev["chewable_summary"])
+
     if synthesis:
         lines.append("")
         lines.append(synthesis)
