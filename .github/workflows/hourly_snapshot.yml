@@ -21,11 +21,10 @@ jobs:
           repository: ProfDrTan/market-prediction-engine
           path: market-prediction-engine
 
-      - name: Checkout futures-alert-monitor (daily levels source, private)
+      - name: Checkout futures-alert-monitor (daily levels source, now public — no token needed)
         uses: actions/checkout@v4
         with:
           repository: ProfDrTan/futures-alert-monitor
-          token: ${{ secrets.CROSS_REPO_PAT }}
           path: futures-alert-monitor
 
       - uses: actions/setup-python@v5
