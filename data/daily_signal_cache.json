@@ -1,35 +1,35 @@
 {
   "macro": {
-    "regime": "risk-off",
-    "dxy_change_1w": -0.86,
-    "yield_10y_change_1w": 0.89,
-    "oil_change_1w": 1.86,
-    "gold_change_1w": 6.14,
-    "vix_level": 15.13,
-    "notes": "DXY -0.86%, 10Y yield +0.89%, Oil +1.86%, Gold +6.14%, VIX 15.13. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+    "regime": "neutral",
+    "dxy_change_1w": -0.68,
+    "yield_10y_change_1w": -0.42,
+    "oil_change_1w": 0.72,
+    "gold_change_1w": 7.29,
+    "vix_level": 15.85,
+    "notes": "DXY -0.68%, 10Y yield -0.42%, Oil +0.72%, Gold +7.29%, VIX 15.85. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
     "trend": "sideways",
-    "rsi": 40.37,
-    "pct_from_50dma": -0.3,
-    "pct_from_200dma": 9.0,
-    "momentum_20d": 4.25,
-    "notes": "RSI 40.37 (neutral)"
+    "rsi": 35.16,
+    "pct_from_50dma": -1.52,
+    "pct_from_200dma": 7.65,
+    "momentum_20d": 2.95,
+    "notes": "RSI 35.16 (neutral)"
   },
   "almanac": {
     "month": 8,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.0117,
+    "avg_return_this_month": 0.011,
     "win_rate_this_month": 0.6667,
     "years_of_history": 18,
-    "notes": "18 years of history for month 8; avg 1.17%, win rate 67%"
+    "notes": "18 years of history for month 8; avg 1.10%, win rate 67%"
   },
   "fundamental": {
-    "score": 2.9999999999999982,
+    "score": 2.500000000000009,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.50), normal regime | 10Y yield rising (+4bps: 4.65->4.69), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.46), normal regime | 10Y yield rising (+5bps: 4.69->4.74), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-24"
+  "as_of_date": "2026-08-25"
 }
