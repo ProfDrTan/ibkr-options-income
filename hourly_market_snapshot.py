@@ -274,19 +274,26 @@ def llm_synthesis(signals, position_note, levels, intraday):
     the actual logged position, not a generic market comment."""
     if not DEEPSEEK_API_KEY:
         return None
-    prompt = (
-        "You are a terse trading-desk assistant. Given the data below, answer "
-        "in exactly this structure, max 55 words total:\n"
-        "BIAS: [one line]\nWATCH LEVEL: [specific price + why]\n"
-        "INVALIDATION: [specific price that would flip the bias]\n"
-        "ACTION: [one line tied to the CURRENT position given, not generic]\n\n"
-        f"Daily signals (as of {signals.get('as_of_date')}): {json.dumps(signals)}\n"
-        f"Intraday technical (fresh this hour): {json.dumps(intraday)}\n"
-        f"Daily support/resistance/POC levels: {json.dumps(levels)}\n"
-        f"Current position: {position_note}\n"
-        "No disclaimers, no restating numbers verbatim, just the structured read."
-    )
     try:
+        # default=str: signals can contain nested dataclass instances (e.g.
+        # EventsOutput.events_this_week is a list[CalendarEvent]), which are
+        # not natively JSON-serializable. Without this, json.dumps raises an
+        # uncaught TypeError here -- this call sat OUTSIDE the try before,
+        # which is what took down the entire hourly run (2026-08-25 onward,
+        # once the daily cache was cleared and events/almanac fields were
+        # exercised fresh for the first time).
+        prompt = (
+            "You are a terse trading-desk assistant. Given the data below, answer "
+            "in exactly this structure, max 55 words total:\n"
+            "BIAS: [one line]\nWATCH LEVEL: [specific price + why]\n"
+            "INVALIDATION: [specific price that would flip the bias]\n"
+            "ACTION: [one line tied to the CURRENT position given, not generic]\n\n"
+            f"Daily signals (as of {signals.get('as_of_date')}): {json.dumps(signals, default=str)}\n"
+            f"Intraday technical (fresh this hour): {json.dumps(intraday, default=str)}\n"
+            f"Daily support/resistance/POC levels: {json.dumps(levels, default=str)}\n"
+            f"Current position: {position_note}\n"
+            "No disclaimers, no restating numbers verbatim, just the structured read."
+        )
         req = urllib.request.Request(
             "https://api.deepseek.com/v1/chat/completions",
             data=json.dumps({
@@ -413,17 +420,35 @@ def main():
         print(f"Intraday technical fetch failed: {e}")
         intraday = None
 
-    levels = fetch_daily_levels("NQ")
+    try:
+        levels = fetch_daily_levels("NQ")
+    except Exception as e:
+        print(f"Daily levels fetch failed: {e}")
+        levels = None
 
     pnl, position_note = get_position_pnl()
-    synthesis = llm_synthesis(signals, position_note, levels, intraday)
 
-    message = build_message(signals, was_recomputed, live_prices, pnl,
-                             position_note, intraday, levels, synthesis)
+    try:
+        synthesis = llm_synthesis(signals, position_note, levels, intraday)
+    except Exception as e:
+        print(f"LLM synthesis failed: {e}")
+        synthesis = None
+
+    try:
+        message = build_message(signals, was_recomputed, live_prices, pnl,
+                                 position_note, intraday, levels, synthesis)
+    except Exception as e:
+        # Last-resort fallback: still send SOMETHING rather than going
+        # silent for another cron cycle while this gets debugged.
+        print(f"build_message failed: {e}")
+        message = (f"MARKET SNAPSHOT — build_message failed: {e}\n"
+                   f"Live prices: {live_prices}\nPosition: {position_note}")
+
     print(message)
     send_telegram(message)
 
 
 if __name__ == "__main__":
     main()
+
 
