@@ -1,1 +1,48 @@
-{}
+{
+  "macro": {
+    "regime": "risk-on",
+    "dxy_change_1w": -0.71,
+    "yield_10y_change_1w": -1.42,
+    "oil_change_1w": -5.26,
+    "gold_change_1w": 7.59,
+    "vix_level": 15.45,
+    "notes": "DXY -0.71%, 10Y yield -1.42%, Oil -5.26%, Gold +7.59%, VIX 15.45. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+  },
+  "technical": {
+    "ticker": "NQ=F",
+    "trend": "sideways",
+    "rsi": 39.69,
+    "pct_from_50dma": -1.23,
+    "pct_from_200dma": 7.85,
+    "momentum_20d": 4.21,
+    "notes": "RSI 39.69 (neutral)"
+  },
+  "almanac": {
+    "month": 8,
+    "seasonal_bias": "bullish",
+    "avg_return_this_month": 0.0111,
+    "win_rate_this_month": 0.6667,
+    "years_of_history": 18,
+    "notes": "18 years of history for month 8; avg 1.11%, win rate 67%",
+    "chewable_summary": "NQ has closed higher in 12 of the last 18 Augusts (67% win rate), averaging +1.11% for the month. Seasonal bias: bullish. That's a consistent historical lean over 18 years, worth weighting alongside technical/macro reads, but not a signal to trade on alone."
+  },
+  "events": {
+    "as_of_date": "2026-08-26",
+    "events_this_week": [
+      "CalendarEvent(date='2026-08-26', time_et='08:30', label=\"Core PCE Price Index (Jul) -- Fed's preferred inflation gauge\", category='econ_data', impact='high', notes='SOURCE CONFLICT, FLAGGED NOT RESOLVED: one source has this Wed 8/26, another has it Thu 8/27, both citing 8:30am ET. Verify closer to release rather than trusting this date blindly. Consensus ~0.2% MoM, ~3.2% YoY.')",
+      "CalendarEvent(date='2026-08-26', time_et='17:00', label='NVIDIA (NVDA) Q2 FY27 earnings, after market close', category='earnings', impact='high', notes=\"Largest single-name catalyst for NQ this week given NVDA's index weight. Consensus ~$91-92B revenue vs NVIDIA's own $91.0B +/-2% guidance. Historically moves NQ 5-10%+ on the print. Call starts ~5:00pm ET same day.\")",
+      "CalendarEvent(date='2026-08-27', time_et='08:30', label='Initial Jobless Claims (weekly)', category='econ_data', impact='low', notes='Standard weekly cadence, Thursdays 8:30am ET. Only market-moving on a meaningful surprise vs. the 4-week average.')",
+      "CalendarEvent(date='2026-08-27', time_et='', label='Jackson Hole Economic Policy Symposium begins (through Aug 29)', category='fed', impact='high', notes='Fed Chair Kevin Warsh speaks during the symposium -- historically the marquee keynote lands Friday morning, but exact slot not yet confirmed as of this write. Same macro driver behind the current gold rally (fiscal sustainability / bond buyback concerns); a hawkish surprise pressures gold, a dovish one extends the rally.')",
+      "CalendarEvent(date='2026-08-28', time_et='08:30', label='Non-Farm Payrolls Annual Revision (preliminary)', category='econ_data', impact='medium', notes='Data-quality/revision release, not the regular monthly NFP report -- can still move markets on a large revision surprise.')"
+    ],
+    "chewable_summary": "\ud83d\udd34 2026-08-26 (08:30 ET / 20:30 SGT) -- Core PCE Price Index (Jul) -- Fed's preferred inflation gauge\n    SOURCE CONFLICT, FLAGGED NOT RESOLVED: one source has this Wed 8/26, another has it Thu 8/27, both citing 8:30am ET. Verify closer to release rather than trusting this date blindly. Consensus ~0.2% MoM, ~3.2% YoY.\n\ud83d\udd34 2026-08-26 (17:00 ET / 05:00 SGT) -- NVIDIA (NVDA) Q2 FY27 earnings, after market close\n    Largest single-name catalyst for NQ this week given NVDA's index weight. Consensus ~$91-92B revenue vs NVIDIA's own $91.0B +/-2% guidance. Historically moves NQ 5-10%+ on the print. Call starts ~5:00pm ET same day.\n\u26aa 2026-08-27 (08:30 ET / 20:30 SGT) -- Initial Jobless Claims (weekly)\n    Standard weekly cadence, Thursdays 8:30am ET. Only market-moving on a meaningful surprise vs. the 4-week average.\n\ud83d\udd34 2026-08-27 (time TBD) -- Jackson Hole Economic Policy Symposium begins (through Aug 29)\n    Fed Chair Kevin Warsh speaks during the symposium -- historically the marquee keynote lands Friday morning, but exact slot not yet confirmed as of this write. Same macro driver behind the current gold rally (fiscal sustainability / bond buyback concerns); a hawkish surprise pressures gold, a dovish one extends the rally.\n\ud83d\udfe1 2026-08-28 (08:30 ET / 20:30 SGT) -- Non-Farm Payrolls Annual Revision (preliminary)\n    Data-quality/revision release, not the regular monthly NFP report -- can still move markets on a large revision surprise.",
+    "notes": "5 event(s) on file for the next 7 days as of 2026-08-26. Calendar is manually curated (events_calendar.json) -- verify anything time-critical closer to the actual release; source conflicts on exact dates/times are flagged inline in individual event notes where known, not silently resolved."
+  },
+  "fundamental": {
+    "score": 7.000000000000002,
+    "confidence": 0.6,
+    "rationale": "Macro: Yield curve positive (0.47), normal regime | 10Y yield falling (-4bps: 4.74->4.70), tailwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "stale": false
+  },
+  "as_of_date": "2026-08-26"
+}
