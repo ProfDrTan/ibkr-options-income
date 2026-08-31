@@ -1,44 +1,42 @@
 {
   "macro": {
-    "regime": "risk-on",
-    "dxy_change_1w": 0.37,
-    "yield_10y_change_1w": -0.51,
-    "oil_change_1w": -4.85,
-    "gold_change_1w": 0.78,
-    "vix_level": 14.51,
-    "notes": "DXY +0.37%, 10Y yield -0.51%, Oil -4.85%, Gold +0.78%, VIX 14.51. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+    "regime": "neutral",
+    "dxy_change_1w": 0.61,
+    "yield_10y_change_1w": -0.38,
+    "oil_change_1w": 0.58,
+    "gold_change_1w": -4.0,
+    "vix_level": 14.43,
+    "notes": "DXY +0.61%, 10Y yield -0.38%, Oil +0.58%, Gold -4.00%, VIX 14.43. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
     "trend": "sideways",
-    "rsi": 48.05,
-    "pct_from_50dma": 0.7,
-    "pct_from_200dma": 9.6,
-    "momentum_20d": 4.34,
-    "notes": "RSI 48.05 (neutral)"
+    "rsi": 44.38,
+    "pct_from_50dma": -0.33,
+    "pct_from_200dma": 8.32,
+    "momentum_20d": 1.45,
+    "notes": "RSI 44.38 (neutral)"
   },
   "almanac": {
     "month": 8,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.0122,
+    "avg_return_this_month": 0.0116,
     "win_rate_this_month": 0.6667,
     "years_of_history": 18,
-    "notes": "18 years of history for month 8; avg 1.22%, win rate 67%",
-    "chewable_summary": "NQ has closed higher in 12 of the last 18 Augusts (67% win rate), averaging +1.22% for the month. Seasonal bias: bullish. That's a consistent historical lean over 18 years, worth weighting alongside technical/macro reads, but not a signal to trade on alone."
+    "notes": "18 years of history for month 8; avg 1.16%, win rate 67%",
+    "chewable_summary": "NQ has closed higher in 12 of the last 18 Augusts (67% win rate), averaging +1.16% for the month. Seasonal bias: bullish. That's a consistent historical lean over 18 years, worth weighting alongside technical/macro reads, but not a signal to trade on alone."
   },
   "events": {
-    "as_of_date": "2026-08-28",
-    "events_this_week": [
-      "CalendarEvent(date='2026-08-28', time_et='08:30', label='Non-Farm Payrolls Annual Revision (preliminary)', category='econ_data', impact='medium', notes='Data-quality/revision release, not the regular monthly NFP report -- can still move markets on a large revision surprise.')"
-    ],
-    "chewable_summary": "\ud83d\udfe1 2026-08-28 (08:30 ET / 20:30 SGT) -- Non-Farm Payrolls Annual Revision (preliminary)\n    Data-quality/revision release, not the regular monthly NFP report -- can still move markets on a large revision surprise.",
-    "notes": "1 event(s) on file for the next 7 days as of 2026-08-28. Calendar is manually curated (events_calendar.json) -- verify anything time-critical closer to the actual release; source conflicts on exact dates/times are flagged inline in individual event notes where known, not silently resolved."
+    "as_of_date": "2026-08-31",
+    "events_this_week": [],
+    "chewable_summary": "No events on file for the coming week. This means the calendar hasn't been updated recently, NOT that nothing is happening -- verify manually before trusting this as a quiet week.",
+    "notes": "0 event(s) on file for the next 7 days as of 2026-08-31. Calendar is manually curated (events_calendar.json) -- verify anything time-critical closer to the actual release; source conflicts on exact dates/times are flagged inline in individual event notes where known, not silently resolved."
   },
   "fundamental": {
-    "score": 3.999999999999977,
+    "score": 4.500000000000011,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.47), normal regime | 10Y yield rising (+2bps: 4.64->4.66), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.39), normal regime | 10Y yield rising (+1bps: 4.66->4.67), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-08-28"
+  "as_of_date": "2026-08-31"
 }
