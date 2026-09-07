@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-08-31T20:17:49.005202",
+  "last_updated": "2026-09-07T18:49:28.032176",
   "recommendation": {
-    "date": "2026-08-31",
-    "expiry": "2026-09-04",
+    "date": "2026-09-07",
+    "expiry": "2026-09-11",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7686.14,
-    "short_put": 7225,
-    "long_put": 7215,
+    "spx_price": 7718.6,
+    "short_put": 7255,
+    "long_put": 7245,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,33 +15,33 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 49.0 below minimum 55",
+    "reason": "SKIP: Composite score 46.8 below minimum 55",
     "intel": {
-      "composite": 49.0,
+      "composite": 46.8,
       "bias": "NEUTRAL",
       "recommended_size": 5,
       "size_reason": "Half size 5 spreads",
       "individual_scores": {
         "chatgpt": 55,
-        "gemini": 45,
+        "gemini": 42,
         "deepseek": 52,
-        "almanac": 45,
+        "almanac": 39,
         "human": 55
       },
       "agent_summaries": {
         "gemini": {
-          "score": 45,
-          "bias": "NEUTRAL",
-          "confidence": "MEDIUM",
-          "key_factor": "Seasonal score is at the minimum threshold of 45 amid late August headwinds",
-          "week_outlook": "SPX expected to consolidate with downward bias; trade is barely viable but requires strict risk monitoring."
+          "score": 42,
+          "bias": "BEARISH",
+          "confidence": "HIGH",
+          "key_factor": "Seasonal score of 39/100 triggers mandatory skip under the 45 composite threshold.",
+          "week_outlook": "No trade executed this week. SPX expected to face seasonal headwinds; capital preserved due to low composite score."
         },
         "deepseek": {
           "score": 52,
           "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite near 50, seasonal score 45 caps conviction.",
-          "week_outlook": "Rangebound drift with mild upside bias; sell 5-delta puts for premium decay."
+          "key_factor": "VIX below 25, composite near 50, seasonal weak but positive drift.",
+          "week_outlook": "Rangebound with mild upside bias; sell 5-delta puts below support."
         },
         "chatgpt": {
           "score": 55,
@@ -51,7 +51,7 @@
           "week_outlook": "chatgpt unavailable"
         }
       },
-      "timestamp": "2026-08-31T20:17:48.113029"
+      "timestamp": "2026-09-07T18:49:27.191370"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
