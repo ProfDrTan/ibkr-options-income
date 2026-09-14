@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-09-07T18:49:28.032176",
+  "last_updated": "2026-09-14T19:33:08.588802",
   "recommendation": {
-    "date": "2026-09-07",
-    "expiry": "2026-09-11",
+    "date": "2026-09-14",
+    "expiry": "2026-09-18",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7718.6,
-    "short_put": 7255,
-    "long_put": 7245,
+    "spx_price": 7630.77,
+    "short_put": 7175,
+    "long_put": 7165,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,43 +15,43 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 46.8 below minimum 55",
+    "reason": "SKIP: Composite score 48.5 below minimum 55",
     "intel": {
-      "composite": 46.8,
+      "composite": 48.5,
       "bias": "NEUTRAL",
       "recommended_size": 5,
       "size_reason": "Half size 5 spreads",
       "individual_scores": {
         "chatgpt": 55,
-        "gemini": 42,
-        "deepseek": 52,
+        "gemini": 55,
+        "deepseek": 55,
         "almanac": 39,
         "human": 55
       },
       "agent_summaries": {
-        "gemini": {
-          "score": 42,
-          "bias": "BEARISH",
-          "confidence": "HIGH",
-          "key_factor": "Seasonal score of 39/100 triggers mandatory skip under the 45 composite threshold.",
-          "week_outlook": "No trade executed this week. SPX expected to face seasonal headwinds; capital preserved due to low composite score."
-        },
-        "deepseek": {
-          "score": 52,
-          "bias": "NEUTRAL",
-          "confidence": "MEDIUM",
-          "key_factor": "VIX below 25, composite near 50, seasonal weak but positive drift.",
-          "week_outlook": "Rangebound with mild upside bias; sell 5-delta puts below support."
-        },
         "chatgpt": {
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
           "key_factor": "chatgpt HTTP 429: {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
           "week_outlook": "chatgpt unavailable"
+        },
+        "gemini": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "gemini The read operation timed out",
+          "week_outlook": "gemini unavailable"
+        },
+        "deepseek": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "deepseek The read operation timed out",
+          "week_outlook": "deepseek unavailable"
         }
       },
-      "timestamp": "2026-09-07T18:49:27.191370"
+      "timestamp": "2026-09-14T19:33:07.735606"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
