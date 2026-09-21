@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-09-14T19:33:08.588802",
+  "last_updated": "2026-09-21T19:40:15.795760",
   "recommendation": {
-    "date": "2026-09-14",
-    "expiry": "2026-09-18",
+    "date": "2026-09-21",
+    "expiry": "2026-09-25",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7630.77,
-    "short_put": 7175,
-    "long_put": 7165,
+    "spx_price": 7777.97,
+    "short_put": 7310,
+    "long_put": 7300,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,43 +15,43 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 48.5 below minimum 55",
+    "reason": "SKIP: Composite score 46.5 below minimum 55",
     "intel": {
-      "composite": 48.5,
+      "composite": 46.5,
       "bias": "NEUTRAL",
       "recommended_size": 5,
       "size_reason": "Half size 5 spreads",
       "individual_scores": {
         "chatgpt": 55,
         "gemini": 55,
-        "deepseek": 55,
+        "deepseek": 44,
         "almanac": 39,
         "human": 55
       },
       "agent_summaries": {
+        "deepseek": {
+          "score": 44,
+          "bias": "BEARISH",
+          "confidence": "LOW",
+          "key_factor": "Weak Almanac 39, late-September seasonality, elevated event risk",
+          "week_outlook": "Cautious week; below full-size threshold, near skip line. Favor reduced or skipped bull put spread until composite clears 55."
+        },
+        "gemini": {
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+          "week_outlook": "gemini unavailable"
+        },
         "chatgpt": {
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
           "key_factor": "chatgpt HTTP 429: {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
           "week_outlook": "chatgpt unavailable"
-        },
-        "gemini": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "gemini The read operation timed out",
-          "week_outlook": "gemini unavailable"
-        },
-        "deepseek": {
-          "score": 55,
-          "bias": "NEUTRAL",
-          "confidence": "LOW",
-          "key_factor": "deepseek The read operation timed out",
-          "week_outlook": "deepseek unavailable"
         }
       },
-      "timestamp": "2026-09-14T19:33:07.735606"
+      "timestamp": "2026-09-21T19:40:15.004016"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
