@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-09-21T19:40:15.795760",
+  "last_updated": "2026-09-28T20:41:35.024781",
   "recommendation": {
-    "date": "2026-09-21",
-    "expiry": "2026-09-25",
+    "date": "2026-09-28",
+    "expiry": "2026-10-02",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7777.97,
-    "short_put": 7310,
-    "long_put": 7300,
+    "spx_price": 7683.69,
+    "short_put": 7225,
+    "long_put": 7215,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,33 +15,26 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 46.5 below minimum 55",
+    "reason": "SKIP: Composite score 44.4 below minimum 55",
     "intel": {
-      "composite": 46.5,
+      "composite": 44.4,
       "bias": "NEUTRAL",
-      "recommended_size": 5,
-      "size_reason": "Half size 5 spreads",
+      "recommended_size": 0,
+      "size_reason": "SKIP \u2014 bearish composite",
       "individual_scores": {
         "chatgpt": 55,
-        "gemini": 55,
-        "deepseek": 44,
+        "gemini": 39,
+        "deepseek": 48,
         "almanac": 39,
         "human": 55
       },
       "agent_summaries": {
         "deepseek": {
-          "score": 44,
-          "bias": "BEARISH",
-          "confidence": "LOW",
-          "key_factor": "Weak Almanac 39, late-September seasonality, elevated event risk",
-          "week_outlook": "Cautious week; below full-size threshold, near skip line. Favor reduced or skipped bull put spread until composite clears 55."
-        },
-        "gemini": {
-          "score": 55,
+          "score": 48,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
-          "week_outlook": "gemini unavailable"
+          "key_factor": "Weak seasonal score 39, but VIX likely below 25 threshold",
+          "week_outlook": "Range-bound with downside bias; sell spreads only if VIX stays subdued, otherwise skip given marginal composite score"
         },
         "chatgpt": {
           "score": 55,
@@ -49,9 +42,16 @@
           "confidence": "LOW",
           "key_factor": "chatgpt HTTP 429: {\n    \"error\": {\n        \"message\": \"You have no credits remaining. Add credits to continue using the API at https://platform.openai.com/settings/organization/billing/.\",\n        \"type\": \"insufficient_quota\",\n        \"param\": null,\n        \"code\": \"credit_balance_exhausted\"\n    }\n}\n",
           "week_outlook": "chatgpt unavailable"
+        },
+        "gemini": {
+          "score": 39,
+          "bias": "NEUTRAL",
+          "confidence": "MEDIUM",
+          "key_factor": "Seasonal score of 39/100 triggers mandatory skip under the 45 composite threshold",
+          "week_outlook": "SPX is expected to consolidate or face downward pressure due to unfavorable late-September seasonal patterns, warranting a sit-out week."
         }
       },
-      "timestamp": "2026-09-21T19:40:15.004016"
+      "timestamp": "2026-09-28T20:41:34.355662"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
