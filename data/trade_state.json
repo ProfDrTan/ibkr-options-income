@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-09-28T20:41:35.024781",
+  "last_updated": "2026-10-05T21:35:02.621737",
   "recommendation": {
-    "date": "2026-09-28",
-    "expiry": "2026-10-02",
+    "date": "2026-10-05",
+    "expiry": "2026-10-09",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7683.69,
-    "short_put": 7225,
-    "long_put": 7215,
+    "spx_price": 7773.95,
+    "short_put": 7310,
+    "long_put": 7300,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,26 +15,26 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": false,
-    "reason": "SKIP: Composite score 44.4 below minimum 55",
+    "reason": "SKIP: Composite score 51.7 below minimum 55",
     "intel": {
-      "composite": 44.4,
+      "composite": 51.7,
       "bias": "NEUTRAL",
-      "recommended_size": 0,
-      "size_reason": "SKIP \u2014 bearish composite",
+      "recommended_size": 5,
+      "size_reason": "Half size 5 spreads",
       "individual_scores": {
         "chatgpt": 55,
-        "gemini": 39,
-        "deepseek": 48,
-        "almanac": 39,
+        "gemini": 50,
+        "deepseek": 55,
+        "almanac": 50,
         "human": 55
       },
       "agent_summaries": {
         "deepseek": {
-          "score": 48,
+          "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "Weak seasonal score 39, but VIX likely below 25 threshold",
-          "week_outlook": "Range-bound with downside bias; sell spreads only if VIX stays subdued, otherwise skip given marginal composite score"
+          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: 886e1ee5-b5a2-43ea-9fe8-27789b375341)\",\"type\":\"unknown_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+          "week_outlook": "deepseek unavailable"
         },
         "chatgpt": {
           "score": 55,
@@ -44,14 +44,14 @@
           "week_outlook": "chatgpt unavailable"
         },
         "gemini": {
-          "score": 39,
+          "score": 50,
           "bias": "NEUTRAL",
           "confidence": "MEDIUM",
-          "key_factor": "Seasonal score of 39/100 triggers mandatory skip under the 45 composite threshold",
-          "week_outlook": "SPX is expected to consolidate or face downward pressure due to unfavorable late-September seasonal patterns, warranting a sit-out week."
+          "key_factor": "Seasonal score is neutral at 50/100, requiring broader market indicators to determine trend.",
+          "week_outlook": "SPX is expected to trade sideways to slightly positive, keeping the 5-delta bull put spread viable."
         }
       },
-      "timestamp": "2026-09-28T20:41:34.355662"
+      "timestamp": "2026-10-05T21:35:01.802361"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
