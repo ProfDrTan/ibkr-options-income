@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-11-02T22:51:07.966196",
+  "last_updated": "2026-11-09T23:31:02.564403",
   "recommendation": {
-    "date": "2026-11-02",
-    "expiry": "2026-11-06",
+    "date": "2026-11-09",
+    "expiry": "2026-11-13",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7541.4,
-    "short_put": 7165,
-    "long_put": 7155,
+    "spx_price": 7549.94,
+    "short_put": 7170,
+    "long_put": 7160,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,15 +15,15 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 62.7 | Bias BULLISH | VIX None",
+    "reason": "PROCEED: Composite 59.1 | Bias NEUTRAL | VIX None",
     "intel": {
-      "composite": 62.7,
-      "bias": "BULLISH",
-      "recommended_size": 10,
-      "size_reason": "Full 10 spreads",
+      "composite": 59.1,
+      "bias": "NEUTRAL",
+      "recommended_size": 7,
+      "size_reason": "Reduced 7 spreads",
       "individual_scores": {
         "chatgpt": 55,
-        "gemini": 68,
+        "gemini": 55,
         "deepseek": 55,
         "almanac": 65,
         "human": 55
@@ -33,7 +33,7 @@
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: 28c6390c-3534-4d55-a959-f17a191e6d76)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: 5b8f0d5f-0dc9-45ee-98f2-06c564bc3804)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
           "week_outlook": "deepseek unavailable"
         },
         "chatgpt": {
@@ -44,14 +44,14 @@
           "week_outlook": "chatgpt unavailable"
         },
         "gemini": {
-          "score": 68,
-          "bias": "BULLISH",
-          "confidence": "HIGH",
-          "key_factor": "Strong November seasonal bias and post-election year tailwinds support high-probability put selling.",
-          "week_outlook": "SPX expected to trend higher or consolidate safely above 5-delta put strike levels, favoring premium decay."
+          "score": 55,
+          "bias": "NEUTRAL",
+          "confidence": "LOW",
+          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+          "week_outlook": "gemini unavailable"
         }
       },
-      "timestamp": "2026-11-02T22:51:07.208747"
+      "timestamp": "2026-11-09T23:31:01.674107"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
