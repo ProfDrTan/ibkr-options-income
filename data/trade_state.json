@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-11-09T23:31:02.564403",
+  "last_updated": "2026-11-16T23:28:30.699358",
   "recommendation": {
-    "date": "2026-11-09",
-    "expiry": "2026-11-13",
+    "date": "2026-11-16",
+    "expiry": "2026-11-20",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7549.94,
-    "short_put": 7170,
-    "long_put": 7160,
+    "spx_price": 7416.59,
+    "short_put": 7045,
+    "long_put": 7035,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -33,7 +33,7 @@
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: 5b8f0d5f-0dc9-45ee-98f2-06c564bc3804)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: f6f0842f-198a-4c9c-9057-5515d1390e1f)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
           "week_outlook": "deepseek unavailable"
         },
         "chatgpt": {
@@ -51,7 +51,7 @@
           "week_outlook": "gemini unavailable"
         }
       },
-      "timestamp": "2026-11-09T23:31:01.674107"
+      "timestamp": "2026-11-16T23:28:29.855253"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
