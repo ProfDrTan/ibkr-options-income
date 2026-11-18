@@ -1,42 +1,42 @@
 {
   "macro": {
     "regime": "risk-off",
-    "dxy_change_1w": 1.83,
-    "yield_10y_change_1w": 5.28,
-    "oil_change_1w": -2.13,
-    "gold_change_1w": -5.74,
-    "vix_level": 22.91,
-    "notes": "DXY +1.83%, 10Y yield +5.28%, Oil -2.13%, Gold -5.74%, VIX 22.91. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
+    "dxy_change_1w": 1.35,
+    "yield_10y_change_1w": 2.41,
+    "oil_change_1w": -1.01,
+    "gold_change_1w": -5.93,
+    "vix_level": 25.46,
+    "notes": "DXY +1.35%, 10Y yield +2.41%, Oil -1.01%, Gold -5.93%, VIX 25.46. Most recent Fed event (2026-07-29) is outside the 10-day lookback window."
   },
   "technical": {
     "ticker": "NQ=F",
     "trend": "downtrend",
-    "rsi": 33.96,
-    "pct_from_50dma": -7.37,
-    "pct_from_200dma": -2.6,
-    "momentum_20d": -7.67,
-    "notes": "RSI 33.96 (neutral)"
+    "rsi": 31.29,
+    "pct_from_50dma": -8.09,
+    "pct_from_200dma": -3.55,
+    "momentum_20d": -8.4,
+    "notes": "RSI 31.29 (neutral)"
   },
   "almanac": {
     "month": 11,
     "seasonal_bias": "bullish",
-    "avg_return_this_month": 0.0073,
+    "avg_return_this_month": 0.0068,
     "win_rate_this_month": 0.5882,
     "years_of_history": 17,
-    "notes": "17 years of history for month 11; avg 0.73%, win rate 59%",
-    "chewable_summary": "NQ has closed higher in 10 of the last 17 Novembers (59% win rate), averaging +0.73% for the month. Seasonal bias: bullish. That's a consistent historical lean over 17 years, worth weighting alongside technical/macro reads, but not a signal to trade on alone."
+    "notes": "17 years of history for month 11; avg 0.68%, win rate 59%",
+    "chewable_summary": "NQ has closed higher in 10 of the last 17 Novembers (59% win rate), averaging +0.68% for the month. Seasonal bias: bullish. That's a consistent historical lean over 17 years, worth weighting alongside technical/macro reads, but not a signal to trade on alone."
   },
   "events": {
-    "as_of_date": "2026-11-17",
+    "as_of_date": "2026-11-18",
     "events_this_week": [],
     "chewable_summary": "No events on file for the coming week. This means the calendar hasn't been updated recently, NOT that nothing is happening -- verify manually before trusting this as a quiet week.",
-    "notes": "0 event(s) on file for the next 7 days as of 2026-11-17. Calendar is manually curated (events_calendar.json) -- verify anything time-critical closer to the actual release; source conflicts on exact dates/times are flagged inline in individual event notes where known, not silently resolved."
+    "notes": "0 event(s) on file for the next 7 days as of 2026-11-18. Calendar is manually curated (events_calendar.json) -- verify anything time-critical closer to the actual release; source conflicts on exact dates/times are flagged inline in individual event notes where known, not silently resolved."
   },
   "fundamental": {
-    "score": 2.4999999999999645,
+    "score": 6.500000000000012,
     "confidence": 0.6,
-    "rationale": "Macro: Yield curve positive (0.29), normal regime | 10Y yield rising (+5bps: 5.10->5.15), headwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
+    "rationale": "Macro: Yield curve positive (0.30), normal regime | 10Y yield falling (-3bps: 5.15->5.12), tailwind for long-duration growth/tech | Earnings: Not earnings season \u2014 sub-signal not applicable this week",
     "stale": false
   },
-  "as_of_date": "2026-11-17"
+  "as_of_date": "2026-11-18"
 }
