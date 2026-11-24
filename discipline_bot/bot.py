@@ -20,7 +20,7 @@ Usage (Windows, from the repo folder):
 import csv, datetime as dt, json, math, os, subprocess, sys, time, uuid
 from pathlib import Path
 
-from ib_async import IB, Future, MarketOrder, Order
+from ib_async import IB, Future, LimitOrder, MarketOrder, Order
 
 from discipline_bot import config as C
 
@@ -252,27 +252,34 @@ def enter(ib, state, cmd):
     sign = 1 if side == "BUY" else -1
     stop = round_tick(price - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
     trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
-    parent = MarketOrder(side, qty, orderRef=C.ORDER_REF, outsideRth=True)
+    # IBKR only attaches a trailing stop to a LIMIT parent (error 328), so enter with a marketable limit:
+    # a few ticks through the market, which fills like a market order but caps slippage.
+    buffer = max(8 * spec["tick"], round_tick(0.1 * atr, spec["tick"]))
+    lmt = round_tick(price + sign * buffer, spec["tick"])
+    parent = LimitOrder(side, qty, lmt, orderRef=C.ORDER_REF, outsideRth=True, tif="DAY")
     parent.orderId = ib.client.getReqId()
     parent.transmit = False
     child = trail_order("SELL" if side == "BUY" else "BUY", qty, stop, trail, parent.orderId)
     child.transmit = True                      # transmits parent + child together: no moment without a stop
     t_parent = ib.placeOrder(contract, parent)
     t_child = ib.placeOrder(contract, child)
-    for _ in range(20):                         # wait up to ~20 s for the market order to fill
+    for _ in range(20):                         # wait up to ~20 s for the fill
         ib.sleep(1)
-        if t_parent.orderStatus.status == "Filled":
+        if t_parent.orderStatus.status in ("Filled", "Cancelled", "ApiCancelled", "Inactive"):
             break
-    filled = t_parent.orderStatus.status == "Filled" and t_parent.orderStatus.avgFillPrice
-    fill = t_parent.orderStatus.avgFillPrice if filled else price
+    filled = t_parent.orderStatus.status == "Filled"
     if not filled:
         why = "; ".join(e.message for e in t_parent.log if e.message)[-250:]
-        log_event("entry_pending", sym, f"order {parent.orderId} status {t_parent.orderStatus.status}; {why or 'no message'}")
-        send_telegram(f"⚠️ {sym} entry not confirmed filled (status {t_parent.orderStatus.status}). {why}"[:400])
+        if t_parent.orderStatus.status not in ("Cancelled", "ApiCancelled", "Inactive"):
+            ib.cancelOrder(parent)              # don't leave an unfilled entry working
+        log_event("entry_failed", sym, f"{side} {qty} limit {lmt}: status {t_parent.orderStatus.status}; {why or 'no message'}")
+        send_telegram(f"⚠️ {sym} {side} entry NOT filled (limit {lmt}, status {t_parent.orderStatus.status}); cancelled. {why}"[:400])
+        return
+    fill = t_parent.orderStatus.avgFillPrice
     tid = uuid.uuid4().hex[:8]
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"] * qty
     state["open"][sym] = dict(trade_id=tid, symbol=sym, side=side, qty=qty, source="bot",
-                              entry_time=now().isoformat(timespec="seconds"), entry_price=fill, filled=bool(filled),
+                              entry_time=now().isoformat(timespec="seconds"), entry_price=fill,
                               atr=round(atr, 4), initial_stop=stop, trail_dist=trail, risk_usd=round(risk, 2),
                               note=cmd.get("note", ""))
     state["stops"][sym] = {"orderId": t_child.order.orderId, "trail": trail}
