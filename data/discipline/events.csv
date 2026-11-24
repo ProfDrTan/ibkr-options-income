@@ -40,3 +40,5 @@ time_utc,type,symbol,detail
 2026-11-24T15:42:17+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
 2026-11-24T15:43:22+00:00,ibkr_error,,10141 (req -1): Paper trading disclaimer must first be accepted for API connection.
 2026-11-24T15:43:26+00:00,error,,TimeoutError()
+2026-11-24T15:44:29+00:00,connected,,DUQ138203
+2026-11-24T15:44:31+00:00,restart,,code updated e1b98b8 -> 0722a8d; restarting
