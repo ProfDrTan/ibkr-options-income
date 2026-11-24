@@ -49,7 +49,10 @@ MAX_OPEN_POSITIONS = 4
 MAX_INDEX_POSITIONS = 2           # at most 2 US stock-index futures (MNQ, MYM, M2K) at once — they move together
 MAX_RISK_PER_TRADE_USD = 1500     # 1.5 x ATR x multiplier x contracts must be below this, or the entry is blocked
 DAILY_LOSS_LIMIT_USD = 2000       # realised loss today (UTC) beyond this blocks new entries until tomorrow
-BLACKOUT_MINUTES = 30             # no new entries this many minutes either side of an event in blackout.json
+BLACKOUT_MINUTES = 30
+# Weekly economic calendar (public JSON feed of the Forex Factory calendar; times include a UTC offset).
+# Only USD, high-impact events are used: heads-up 60 min before + entry blackout. No news headlines.
+CALENDAR_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"             # no new entries this many minutes either side of an event in blackout.json
 WEEKEND_FLATTEN_UTC = (4, 20, 30) # Friday (weekday 4) at 20:30 UTC: close everything, cancel stops
 NO_ENTRY_HOURS_BEFORE_WEEKEND = 2 # no new entries in the last 2 hours before the flatten time
 

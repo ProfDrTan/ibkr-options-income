@@ -58,8 +58,15 @@ def send_telegram(msg):
         print("[ALERT not sent]", e, msg)
 
 
+SGT = dt.timezone(dt.timedelta(hours=8), "SGT")
+
+
 def now():
     return dt.datetime.now(dt.timezone.utc)
+
+
+def sgt(t):
+    return t.astimezone(SGT).strftime("%a %d %b %H:%M SGT")
 
 
 # ── journal ───────────────────────────────────────────────────────────────────
@@ -195,7 +202,60 @@ def todays_realised_pnl(ib):
                and not math.isnan(f.commissionReport.realizedPNL))
 
 
+CALENDAR = []          # high-impact USD events, refreshed from the weekly economic calendar
+
+
+def refresh_calendar(state):
+    """High-impact US releases (CPI, NFP, FOMC, PCE...) from the public weekly calendar feed. Feeds the
+    entry blackout and the heads-up alerts. Refreshed every 3 hours."""
+    global CALENDAR
+    last = state.get("calendar_fetched")
+    if last and (now() - dt.datetime.fromisoformat(last)).total_seconds() < 3 * 3600 and CALENDAR:
+        return
+    try:
+        import requests
+        data = requests.get(C.CALENDAR_URL, timeout=20, headers={"User-Agent": "discipline-bot"}).json()
+        CALENDAR = sorted(({"time_utc": dt.datetime.fromisoformat(e["date"]).astimezone(dt.timezone.utc).isoformat(),
+                            "name": e["title"], "forecast": e.get("forecast", ""), "previous": e.get("previous", "")}
+                           for e in data if e.get("country") == "USD" and e.get("impact") == "High"),
+                          key=lambda e: e["time_utc"])
+        state["calendar_fetched"] = now().isoformat(timespec="seconds")
+        state["calendar"] = CALENDAR
+        log_event("calendar", "", f"{len(CALENDAR)} high-impact USD events this week")
+    except Exception as e:
+        CALENDAR = state.get("calendar", [])
+        state["calendar_fetched"] = now().isoformat(timespec="seconds")   # retry in 3 h, don't hammer
+        log_event("calendar_error", "", repr(e)[:200])
+
+
+def calendar_alerts(state):
+    """One heads-up per event, about 60 minutes before, with the Singapore time."""
+    warned = state.setdefault("calendar_warned", [])
+    for ev in CALENDAR:
+        t = dt.datetime.fromisoformat(ev["time_utc"])
+        mins = (t - now()).total_seconds() / 60
+        key = ev["time_utc"] + ev["name"]
+        if 0 < mins <= 60 and key not in warned:
+            warned.append(key)
+            extra = f" (forecast {ev['forecast']}, previous {ev['previous']})" if ev.get("forecast") else ""
+            send_telegram(f"📅 High-impact US data in {mins:.0f} min: {ev['name']}{extra} at {sgt(t)}.\n"
+                          f"No new entries {C.BLACKOUT_MINUTES} min either side; open stops stay in place.")
+    state["calendar_warned"] = warned[-50:]
+
+
+def calendar_text():
+    up = [e for e in CALENDAR if dt.datetime.fromisoformat(e["time_utc"]) > now() - dt.timedelta(hours=1)]
+    if not up:
+        return "📅 No high-impact US releases left this week."
+    return "📅 High-impact US releases (SGT):\n" + "\n".join(
+        f"• {sgt(dt.datetime.fromisoformat(e['time_utc']))} — {e['name']}" for e in up[:15])
+
+
 def in_blackout():
+    for ev in CALENDAR:
+        t = dt.datetime.fromisoformat(ev["time_utc"])
+        if abs((now() - t).total_seconds()) <= C.BLACKOUT_MINUTES * 60:
+            return ev["name"]
     if not BLACKOUT.exists():
         return None
     for ev in json.loads(BLACKOUT.read_text()).get("events", []):
@@ -529,7 +589,7 @@ def telegram_commands(ib, state):
         if text in ("/status", "status", "/positions", "positions"):
             write_snapshot(ib, state)
             snap = json.loads((JDIR / "snapshot.json").read_text())
-            lines = [f"📊 Status {now():%H:%M} UTC · {C.BAR_SIZE} bars · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}"]
+            lines = [f"📊 Status {now().astimezone(SGT):%H:%M} SGT · {C.BAR_SIZE} bars · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}"]
             total = 0.0
             for p_ in snap["positions"]:
                 st = p_["stop"]
@@ -541,8 +601,10 @@ def telegram_commands(ib, state):
                 lines.append("No open positions.")
             lines.append(f"Open P&L ${total:,.0f} · realised today ${todays_realised_pnl(ib):,.0f}")
             send_telegram("\n".join(lines))
+        elif text in ("/calendar", "calendar", "/macro", "macro"):
+            send_telegram(calendar_text())
         elif text in ("/help", "help", "/start"):
-            send_telegram("Type /status to see positions, P&L and stops.")
+            send_telegram("/status — positions, P&L and stops\n/calendar — this week's high-impact US releases (SGT)")
 
 
 # ── commands ──────────────────────────────────────────────────────────────────
@@ -612,6 +674,8 @@ def run():
                 return                                  # run_bot.bat starts the new code within 5 seconds
             code_rev = new_rev or code_rev
             process_commands(ib, state)
+            refresh_calendar(state)
+            calendar_alerts(state)
             telegram_commands(ib, state)
             n = now()
             bar_key = n.strftime("%Y%m%d%H") + f"{n.minute // C.BAR_MINUTES:02d}"
