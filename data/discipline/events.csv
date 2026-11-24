@@ -26,3 +26,4 @@ time_utc,type,symbol,detail
 2026-11-24T14:21:29+00:00,ibkr_error,,328 (req 40): Trailing stop orders can be attached to limit or stop-limit orders only.
 2026-11-24T14:21:49+00:00,entry_pending,MNQ,"order 39 status ValidationError; Error 10349, reqId 39: Order TIF was set to DAY based on order preset.; Warning 2109, reqId 39: Order Event Warning:Attribute 'Outside Regular Trading Hours' is ignored based on the order type and destination. PlaceOrder is now being processed."
 2026-11-24T14:21:50+00:00,entry,MNQ,SELL 1 @ 26277.0 | stop 26430.75 | trail 307.25 | risk $307
+2026-11-24T14:24:02+00:00,restart,,code updated 327cf3d -> 1c6e087; restarting
