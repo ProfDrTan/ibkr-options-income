@@ -196,10 +196,21 @@ def round_tick(x, tick):
 
 # ── guardrails ────────────────────────────────────────────────────────────────
 def todays_realised_pnl(ib):
-    today = now().date()
-    return sum(f.commissionReport.realizedPNL or 0 for f in ib.fills()
-               if f.time.date() == today and f.commissionReport.realizedPNL
-               and not math.isnan(f.commissionReport.realizedPNL))
+    """Realised P&L for today (Singapore date) from the trade journal, so it survives restarts
+    (IBKR's fills list only covers the current connection)."""
+    if not TRADES.exists():
+        return 0.0
+    today = now().astimezone(SGT).date()
+    total = 0.0
+    for r in csv.DictReader(TRADES.open()):
+        try:
+            if r["exit_time"] and dt.datetime.fromisoformat(r["exit_time"]).astimezone(SGT).date() == today:
+                v = float(r["pnl_usd"])
+                if not math.isnan(v):
+                    total += v
+        except (ValueError, KeyError):
+            pass
+    return total
 
 
 CALENDAR = []          # high-impact USD events, refreshed from the weekly economic calendar
