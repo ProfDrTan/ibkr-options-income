@@ -1,0 +1,2 @@
+trade_id,symbol,side,qty,source,entry_time,entry_price,atr,initial_stop,trail_dist,risk_usd,exit_time,exit_price,exit_reason,pnl_usd,r_multiple,hours_held,note
+1b9579a5,MNQ,SELL,1,bot,2026-11-24T13:16:04+00:00,26152.5,102.6429,26306.5,308.0,307.93,2026-11-24T13:16:08+00:00,nan,other,nan,nan,0.0,auto breakout 2026-11-24 13:00:00+00:00

@@ -1,2 +1,3 @@
 bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guardrails,taken
 2026-11-24 12:30:00+00:00,MGC,MGCG7,BUY,3672.2,3667.1,8.4857,3659.5,25.5,127,already holding MGC,
+2026-11-24 13:00:00+00:00,MNQ,MNQZ6,SELL,26197.0,26254.25,105.6071,26355.5,316.75,317,pass,
