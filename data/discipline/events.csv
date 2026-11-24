@@ -42,3 +42,5 @@ time_utc,type,symbol,detail
 2026-11-24T15:43:26+00:00,error,,TimeoutError()
 2026-11-24T15:44:29+00:00,connected,,DUQ138203
 2026-11-24T15:44:31+00:00,restart,,code updated e1b98b8 -> 0722a8d; restarting
+2026-11-24T15:44:39+00:00,start,,port 4002 | code f923d96 | auto entries ON
+2026-11-24T15:44:40+00:00,connected,,DUQ138203
