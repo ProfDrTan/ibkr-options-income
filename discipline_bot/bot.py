@@ -38,10 +38,24 @@ TRADE_COLS = ["trade_id", "symbol", "side", "qty", "source", "entry_time", "entr
               "pnl_usd", "r_multiple", "hours_held", "note"]
 
 sys.path.insert(0, str(ROOT))
-try:
-    from alerts import send_telegram          # existing repo helper (reads TELEGRAM_* env vars)
-except Exception:                              # pragma: no cover
-    def send_telegram(msg): print("[ALERT]", msg)
+TG_FILE = Path(__file__).resolve().parent / "telegram.json"
+
+
+def send_telegram(msg):
+    """Send through Discipline Bot's own Telegram bot (telegram.json); fall back to the repo's alerts helper."""
+    try:
+        if TG_FILE.exists():
+            import requests
+            cfg = json.loads(TG_FILE.read_text())
+            r = requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/sendMessage",
+                              data={"chat_id": cfg["chat_id"], "text": msg}, timeout=15)
+            if r.ok:
+                return
+            print("telegram error:", r.status_code, r.text[:200])
+        from alerts import send_telegram as legacy
+        legacy(msg)
+    except Exception as e:
+        print("[ALERT not sent]", e, msg)
 
 
 def now():
@@ -472,6 +486,8 @@ def run():
     ib, flattened_for = None, None
     code_rev = git_out("rev-parse", "HEAD")
     log_event("start", "", f"port {C.IB_PORT} | code {code_rev[:7]} | auto entries {'ON' if C.AUTO_ENTRIES else 'OFF'}")
+    send_telegram(f"✅ Discipline Bot online (paper). Bars: {C.BAR_SIZE}. Auto entries: {'ON' if C.AUTO_ENTRIES else 'OFF'}. "
+                  f"I'll message you here about entries, exits, blocked trades and errors.")
     while True:
         try:
             if ib is None or not ib.isConnected():
