@@ -21,3 +21,4 @@ time_utc,type,symbol,detail
 2026-11-24T13:25:05+00:00,restart,,code updated b451487 -> dce3aa5; restarting
 2026-11-24T13:25:13+00:00,start,,port 4002 | code 70f3b1c | auto entries ON
 2026-11-24T13:25:14+00:00,connected,,DUQ138203
+2026-11-24T14:00:33+00:00,signal,MGC,SELL MGCG7 close 3643.7 vs 20-bar low 3644.3
