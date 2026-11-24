@@ -30,3 +30,4 @@ time_utc,type,symbol,detail
 2026-11-24T14:24:10+00:00,start,,port 4002 | code 38c6318 | auto entries ON
 2026-11-24T14:24:11+00:00,connected,,DUQ138203
 2026-11-24T14:26:27+00:00,entry,MNQ,SELL 1 @ 26300.75 | stop 26458.0 | trail 309.0 | risk $309
+2026-11-24T14:48:32+00:00,exit,MNQ,trailing_stop @ 26459.0 | P&L $-316 | -1.024R | 0.4h
