@@ -612,6 +612,7 @@ def run():
                 return                                  # run_bot.bat starts the new code within 5 seconds
             code_rev = new_rev or code_rev
             process_commands(ib, state)
+            telegram_commands(ib, state)
             n = now()
             bar_key = n.strftime("%Y%m%d%H") + f"{n.minute // C.BAR_MINUTES:02d}"
             if C.SIGNAL_ALERTS and n.minute % C.BAR_MINUTES < 5 and state.get("signal_checked") != bar_key:
