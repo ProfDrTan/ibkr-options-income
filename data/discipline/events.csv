@@ -64,3 +64,4 @@ time_utc,type,symbol,detail
 2026-11-24T16:09:00+00:00,start,,port 4002 | code 73118a6 | auto entries ON
 2026-11-24T16:09:16+00:00,connected,,DUQ138203
 2026-11-24T16:09:17+00:00,calendar,,2 high-impact USD events this week
+2026-11-24T16:11:30+00:00,telegram_cmd,,/status
