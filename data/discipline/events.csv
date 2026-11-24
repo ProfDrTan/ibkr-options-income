@@ -2,3 +2,5 @@ time_utc,type,symbol,detail
 2026-11-24T11:16:55+00:00,start,,port 4002
 2026-11-24T11:16:55+00:00,connected,,DUQ138203
 2026-11-24T11:36:03+00:00,blocked,,unknown action ping
+2026-11-24T12:04:21+00:00,start,,port 4002 | code 4cd0486 | auto entries ON
+2026-11-24T12:04:22+00:00,connected,,DUQ138203
