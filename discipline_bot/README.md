@@ -15,8 +15,11 @@ Backtests, 24 Nov 2026, IBKR bars, after 1 tick slippage each way and $0.50 comm
   (MGC +0.42R/trade over 34 trades, MNQ +0.45R over 39); 15-minute was worse. The bot uses 1-hour.
 
 **Signals:** at each completed hour, a 20-bar breakout on MGC or MNQ sends a Telegram alert with the
-ready-made stop, trail and dollar risk, and is logged to `signals.csv`. The bot never enters on its own —
-you reply "take it" to Claude (or use the CLI). Small samples from a volatile period: treat as unproven.
+ready-made stop, trail and dollar risk, and is logged to `signals.csv`. On the PAPER account the bot enters
+breakouts automatically (`AUTO_ENTRIES = True`), so night-time signals are taken; each entry passes the
+guardrails and carries its trailing stop. Live trading stays off (`ALLOW_LIVE = False`).
+
+**Code updates:** `run_bot.bat` loops, and the bot restarts itself within a minute when new code is pulled. Small samples from a volatile period: treat as unproven.
 
 ## One-time setup on the Lenovo (Windows, x64)
 
