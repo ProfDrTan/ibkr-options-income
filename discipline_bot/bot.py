@@ -502,6 +502,43 @@ def write_snapshot(ib, state):
     (JDIR / "snapshot.json").write_text(json.dumps(snap, indent=2, default=str))
 
 
+def telegram_commands(ib, state):
+    """Answer /status (or 'status') typed in the Discipline Bot chat, so positions can be checked from the
+    phone without logging in to IBKR (which would knock IB Gateway off the paper login)."""
+    if not TG_FILE.exists():
+        return
+    import requests
+    cfg = json.loads(TG_FILE.read_text())
+    try:
+        r = requests.get(f"https://api.telegram.org/bot{cfg['bot_token']}/getUpdates",
+                         params={"offset": state.get("tg_offset", 0), "timeout": 0}, timeout=15).json()
+    except Exception:
+        return
+    for u in r.get("result", []):
+        state["tg_offset"] = u["update_id"] + 1
+        msg = u.get("message") or {}
+        if str(msg.get("chat", {}).get("id")) != str(cfg["chat_id"]):
+            continue                                # only answer you
+        text = (msg.get("text") or "").strip().lower()
+        if text in ("/status", "status", "/positions", "positions"):
+            write_snapshot(ib, state)
+            snap = json.loads((JDIR / "snapshot.json").read_text())
+            lines = [f"📊 Status {now():%H:%M} UTC · {C.BAR_SIZE} bars · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}"]
+            total = 0.0
+            for p_ in snap["positions"]:
+                st = p_["stop"]
+                total += p_["unrealized_usd"] or 0
+                lines.append(f"{'LONG' if p_['qty'] > 0 else 'SHORT'} {abs(p_['qty']):g} {p_['contract']} @ {p_['avg_price']} · now {p_['last']:.2f} · "
+                             f"{'+' if p_['unrealized_usd'] >= 0 else ''}${p_['unrealized_usd']:,.0f} · "
+                             + (f"stop {st['stop_price']} trail {st['trail']}" if st else "⚠️ NO STOP"))
+            if not snap["positions"]:
+                lines.append("No open positions.")
+            lines.append(f"Open P&L ${total:,.0f} · realised today ${todays_realised_pnl(ib):,.0f}")
+            send_telegram("\n".join(lines))
+        elif text in ("/help", "help", "/start"):
+            send_telegram("Type /status to see positions, P&L and stops.")
+
+
 # ── commands ──────────────────────────────────────────────────────────────────
 def read_queue():
     if not QUEUE.exists():
