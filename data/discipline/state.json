@@ -14,24 +14,24 @@
       "risk_usd": 627.05
     },
     "MNQ": {
-      "trade_id": "faa998da",
+      "trade_id": "aef0f442",
       "symbol": "MNQ",
       "side": "SELL",
       "qty": 1,
       "source": "bot",
-      "entry_time": "2026-11-24T14:21:50+00:00",
-      "entry_price": 26277.0,
-      "filled": false,
-      "atr": 102.4464,
-      "initial_stop": 26430.75,
-      "trail_dist": 307.25,
-      "risk_usd": 307.34,
-      "note": "test order to diagnose failed MNQ entry"
+      "entry_time": "2026-11-24T14:26:27+00:00",
+      "entry_price": 26300.75,
+      "atr": 103.0,
+      "initial_stop": 26458.0,
+      "trail_dist": 309.0,
+      "risk_usd": 309.0,
+      "note": "test 2: limit parent + trailing stop"
     }
   },
   "processed_commands": [
     "ping-1934",
-    "test-mnq-2220"
+    "test-mnq-2220",
+    "test-mnq-2226"
   ],
   "stops": {
     "MGC": {
@@ -39,8 +39,8 @@
       "trail": 125.4
     },
     "MNQ": {
-      "orderId": 40,
-      "trail": 307.25
+      "orderId": 47,
+      "trail": 309.0
     }
   },
   "signal_checked": "202611241401",
@@ -48,7 +48,5 @@
     "MNQ": "2026-11-24 14:00:00+00:00",
     "MGC": "2026-11-24 14:00:00+00:00"
   },
-  "missing_since": {
-    "MNQ": "2026-11-24T14:25:20+00:00"
-  }
+  "missing_since": {}
 }
