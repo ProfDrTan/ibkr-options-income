@@ -14,3 +14,4 @@ time_utc,type,symbol,detail
 2026-11-24T13:15:59+00:00,signal,MNQ,SELL MNQZ6 close 26197.0 vs 20-bar low 26254.25
 2026-11-24T13:16:04+00:00,entry,MNQ,SELL 1 @ 26152.5 | stop 26306.5 | trail 308.0 | risk $308
 2026-11-24T13:16:08+00:00,exit,MNQ,other @ nan | P&L $nan | nanR | 0.0h
+2026-11-24T13:20:31+00:00,restart,,code updated c12b3a2 -> a08ab3f; restarting
