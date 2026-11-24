@@ -50,9 +50,11 @@ GUARD_MANUAL_POSITIONS = True
 SIGNAL_ALERTS = True
 BREAKOUT_BARS = 20
 
-# Automatic entries are OFF: signals are sent to you, you decide. The 24 Nov 2026 backtest validated the exits only;
+# Automatic entries: ON for the PAPER account, so breakouts at 3 am are taken while you sleep.
+# Every auto entry passes the same guardrails and goes in with its trailing stop attached.
+# ALLOW_LIVE = False keeps the whole bot on paper; decide on live trading only after the paper record. The 24 Nov 2026 backtest validated the exits only;
 # a simple EMA-20 cross entry lost money on MNQ (-0.16 ATR/trade, 61 trades). You choose entries.
-AUTO_ENTRIES = False
+AUTO_ENTRIES = True
 
 # ── LOOP, JOURNAL, ALERTS ─────────────────────────────────────────────────────
 LOOP_SECONDS = 60

@@ -122,6 +122,13 @@ def git(*args):
         print("git error:", e)
 
 
+def git_out(*args):
+    try:
+        return subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True, text=True, timeout=60).stdout.strip()
+    except Exception:
+        return ""
+
+
 def git_push_journal():
     git("add", C.JOURNAL_DIR, C.COMMAND_FILE)
     git("commit", "-q", "-m", "discipline_bot journal update")
@@ -397,6 +404,11 @@ def check_signals(ib, state):
                         round(risk), why or "pass", ""])
         log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close} vs 20-bar {'high' if sign > 0 else 'low'} {level}")
         verdict = f"Guardrails: PASS" if not why else f"Guardrails: BLOCKED — {why}"
+        if C.AUTO_ENTRIES and not why:
+            send_telegram(f"🤖 {sym} breakout: 1h bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
+                          f"{'high' if sign > 0 else 'low'} {level}. Entering {side} 1 automatically (paper).")
+            enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto breakout {key}"})
+            continue
         send_telegram(f"📈 {sym} breakout: 1h bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
                       f"{'high' if sign > 0 else 'low'} {level}.\n{side} setup on {contract.localSymbol}: stop {stop}, "
                       f"trail {trail}, risk ${risk:,.0f} per contract.\n{verdict}\nTell Claude \"take it\" or ignore.")
@@ -440,13 +452,22 @@ def connect():
 def run():
     state = load_state()
     ib, flattened_for = None, None
-    log_event("start", "", f"port {C.IB_PORT}")
+    code_rev = git_out("rev-parse", "HEAD")
+    log_event("start", "", f"port {C.IB_PORT} | code {code_rev[:7]} | auto entries {'ON' if C.AUTO_ENTRIES else 'OFF'}")
     while True:
         try:
             if ib is None or not ib.isConnected():
                 ib = connect()
                 log_event("connected", "", ",".join(ib.managedAccounts()))
             git("pull", "-q", "--rebase", "--autostash")
+            new_rev = git_out("rev-parse", "HEAD")
+            if code_rev and new_rev != code_rev and git_out("diff", "--name-only", code_rev, new_rev, "--", "discipline_bot/*.py"):
+                log_event("restart", "", f"code updated {code_rev[:7]} -> {new_rev[:7]}; restarting")
+                save_state(state)
+                git_push_journal()
+                ib.disconnect()
+                return                                  # run_bot.bat starts the new code within 5 seconds
+            code_rev = new_rev or code_rev
             process_commands(ib, state)
             hour_key = now().strftime("%Y%m%d%H")
             if C.SIGNAL_ALERTS and now().minute < 10 and state.get("signal_checked") != hour_key:
