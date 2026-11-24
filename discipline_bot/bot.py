@@ -591,7 +591,10 @@ def run():
             raise
         except Exception as e:
             log_event("error", "", repr(e))
-            send_telegram(f"⚠️ discipline_bot error: {e!r}"[:300])
+            last_alert = state.get("last_error_alert")
+            if not last_alert or (now() - dt.datetime.fromisoformat(last_alert)).total_seconds() > 1800:
+                state["last_error_alert"] = now().isoformat(timespec="seconds")   # at most one alert per 30 min
+                send_telegram(f"⚠️ discipline_bot error (is IB Gateway logged in?): {e!r}"[:300])
             try:
                 if ib:
                     ib.disconnect()
