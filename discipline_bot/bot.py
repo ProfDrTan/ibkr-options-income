@@ -7,8 +7,10 @@ What it does, every LOOP_SECONDS:
      (initial stop 1.5 x ATR, trails at 3 x ATR, tightens only; the stop lives on IBKR's servers)
   3. guardian: any futures position with no protective stop gets one; a widened or cancelled stop
      is restored and logged as an override
-  4. Friday 20:30 UTC: cancel the stops, close everything
-  5. journal every trade and event to data/discipline/, recompute the bias metrics, git push
+  4. at each completed bar: 20-bar breakout check on MGC and MNQ -> Telegram alert with the
+     ready-made bracket (you decide whether to take it); every signal is logged to signals.csv
+  5. Friday 20:30 UTC: cancel the stops, close everything
+  6. journal every trade and event to data/discipline/, recompute the bias metrics, git push
 
 Usage (Windows, from the repo folder):
   python -m discipline_bot.bot run                      # the loop (Task Scheduler starts this)
@@ -28,6 +30,7 @@ STATE = JDIR / "state.json"
 TRADES = JDIR / "trades.csv"
 EVENTS = JDIR / "events.csv"
 METRICS = JDIR / "metrics.json"
+SIGNALS = JDIR / "signals.csv"
 QUEUE = ROOT / C.COMMAND_FILE
 BLACKOUT = ROOT / C.BLACKOUT_FILE
 TRADE_COLS = ["trade_id", "symbol", "side", "qty", "source", "entry_time", "entry_price", "atr",
@@ -336,6 +339,50 @@ def record_exits(ib, state):
         send_telegram(f"🏁 {sym} closed ({reason}) @ {exit_price}: ${pnl:,.0f}, {tr['r_multiple']}R after {hours:.1f}h")
 
 
+# ── entry signals (alerts only) ───────────────────────────────────────────────
+def check_signals(ib, state):
+    """20-bar breakout on the last COMPLETED bar. Sends an alert; never places an order."""
+    seen = state.setdefault("signal_bar", {})
+    for sym, spec in C.INSTRUMENTS.items():
+        contract = front_contract(ib, sym)
+        bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="10 D", barSizeSetting=C.BAR_SIZE,
+                                    whatToShow="TRADES", useRTH=False, formatDate=2)
+        if len(bars) < max(C.BREAKOUT_BARS, C.ATR_PERIOD) + 3:
+            continue
+        done = bars[:-1]                       # the last bar returned is still forming
+        bar, prior = done[-1], done[-1 - C.BREAKOUT_BARS:-1]
+        key = str(bar.date)
+        if seen.get(sym) == key:
+            continue
+        seen[sym] = key
+        hi, lo = max(b.high for b in prior), min(b.low for b in prior)
+        side = "BUY" if bar.close > hi else "SELL" if bar.close < lo else None
+        if not side:
+            continue
+        trs = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
+        atr = sum(trs[-C.ATR_PERIOD:]) / C.ATR_PERIOD
+        sign = 1 if side == "BUY" else -1
+        stop = round_tick(bar.close - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
+        trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
+        risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"]
+        why = check_entry(ib, state, sym, 1, atr)
+        level = hi if side == "BUY" else lo
+        JDIR.mkdir(parents=True, exist_ok=True)
+        new = not SIGNALS.exists()
+        with SIGNALS.open("a", newline="") as f:
+            w = csv.writer(f)
+            if new:
+                w.writerow(["bar_time", "symbol", "contract", "side", "close", "breakout_level", "atr", "stop", "trail",
+                            "risk_usd", "guardrails", "taken"])
+            w.writerow([key, sym, contract.localSymbol, side, bar.close, level, round(atr, 4), stop, trail,
+                        round(risk), why or "pass", ""])
+        log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close} vs 20-bar {'high' if sign > 0 else 'low'} {level}")
+        verdict = f"Guardrails: PASS" if not why else f"Guardrails: BLOCKED — {why}"
+        send_telegram(f"📈 {sym} breakout: 1h bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
+                      f"{'high' if sign > 0 else 'low'} {level}.\n{side} setup on {contract.localSymbol}: stop {stop}, "
+                      f"trail {trail}, risk ${risk:,.0f} per contract.\n{verdict}\nTell Claude \"take it\" or ignore.")
+
+
 # ── commands ──────────────────────────────────────────────────────────────────
 def read_queue():
     if not QUEUE.exists():
@@ -382,6 +429,10 @@ def run():
                 log_event("connected", "", ",".join(ib.managedAccounts()))
             git("pull", "-q", "--rebase", "--autostash")
             process_commands(ib, state)
+            hour_key = now().strftime("%Y%m%d%H")
+            if C.SIGNAL_ALERTS and now().minute < 10 and state.get("signal_checked") != hour_key:
+                state["signal_checked"] = hour_key
+                check_signals(ib, state)
             if C.GUARD_MANUAL_POSITIONS or state["open"]:
                 guardian(ib, state)
             fl = weekend_flatten_time()

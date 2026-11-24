@@ -5,8 +5,8 @@ The bot exists to remove two biases from futures trading:
   * loss aversion     -> every position gets a stop at the moment it opens, and stops never widen
   * disposition effect -> winners leave only through a trailing stop, never by "taking profit early"
 
-Exit rule (Rule D, backtested 24 Nov 2026 on 4-hour IBKR bars, MGC Nov25-Nov26 and MNQ Mar-Nov26):
-  initial stop   = 1.5 x ATR(14, 4-hour) from entry
+Exit rule (Rule D, backtested 24 Nov 2026 on IBKR bars; 1-hour chosen after comparing 4h/1h/15m, Sep-Nov 2026):
+  initial stop   = 1.5 x ATR(14, 1-hour) from entry
   trailing stop  = follows at 3 x ATR, only ever tightens (one IBKR TRAIL order, held on IBKR's servers)
   flat before the weekend close
 """
@@ -28,7 +28,7 @@ INSTRUMENTS = {
 
 # ── EXIT RULE (do not change without re-running the backtest) ─────────────────
 ATR_PERIOD = 14
-BAR_SIZE = "4 hours"
+BAR_SIZE = "1 hour"      # 1h beat or matched 4h on MGC and MNQ, Sep-Nov 2026; 15 min was worse
 INITIAL_STOP_ATR = 1.5
 TRAIL_ATR = 3.0
 
@@ -44,7 +44,13 @@ NO_ENTRY_HOURS_BEFORE_WEEKEND = 2 # no new entries in the last 2 hours before th
 # Positions opened by hand (TWS, mobile) with no protective stop get one attached automatically.
 GUARD_MANUAL_POSITIONS = True
 
-# Automatic entry signals are OFF. The 24 Nov 2026 backtest validated the exits only;
+# Entry SIGNALS (alerts only): 20-bar breakout on the BAR_SIZE chart — a completed bar closing above the
+# highest high (buy) or below the lowest low (sell) of the previous 20 bars. Backtest Sep-Nov 2026, 1-hour,
+# Rule D exits, after costs: MGC 34 trades +0.42R avg, MNQ 39 trades +0.45R avg. Small sample, volatile period.
+SIGNAL_ALERTS = True
+BREAKOUT_BARS = 20
+
+# Automatic entries are OFF: signals are sent to you, you decide. The 24 Nov 2026 backtest validated the exits only;
 # a simple EMA-20 cross entry lost money on MNQ (-0.16 ATR/trade, 61 trades). You choose entries.
 AUTO_ENTRIES = False
 

@@ -8,10 +8,15 @@ sure every position has the backtested exit from the moment it opens, and that t
 | Loss aversion (holding losers) | Entry and stop go to IBKR as one bracket. A stop that is widened or cancelled by hand is restored and logged. A position opened by hand with no stop gets one within a minute. |
 | Disposition effect (selling winners early) | No profit target. Winners leave only through the 3 × ATR trailing stop, held on IBKR's servers. A hand exit is allowed, but logged, and shows up in the metrics if it was a winner. |
 
-Exit rule (Rule D): initial stop **1.5 × ATR(14, 4-hour)**, trailing **3 × ATR**, flat Friday 20:30 UTC.
-Backtest, 24 Nov 2026, 4-hour IBKR bars, after 1 tick slippage each way and $0.50 commission:
-+0.30 ATR/trade on MGC and +0.47 on MNQ with trend-side entries; positive in both halves of the
-period. It tests exits only — **no entry signal has been validated**, so automatic entries are off.
+Exit rule (Rule D): initial stop **1.5 × ATR(14, 1-hour)**, trailing **3 × ATR**, flat Friday 20:30 UTC.
+Backtests, 24 Nov 2026, IBKR bars, after 1 tick slippage each way and $0.50 commission:
+- Exit rule on 4-hour bars (MGC 12 months, MNQ 8 months): positive in both halves with trend-side entries.
+- Timeframe comparison, Sep–Nov 2026, 20-bar breakout entries + Rule D: 1-hour matched or beat 4-hour
+  (MGC +0.42R/trade over 34 trades, MNQ +0.45R over 39); 15-minute was worse. The bot uses 1-hour.
+
+**Signals:** at each completed hour, a 20-bar breakout on MGC or MNQ sends a Telegram alert with the
+ready-made stop, trail and dollar risk, and is logged to `signals.csv`. The bot never enters on its own —
+you reply "take it" to Claude (or use the CLI). Small samples from a volatile period: treat as unproven.
 
 ## One-time setup on the Lenovo (Windows, x64)
 
