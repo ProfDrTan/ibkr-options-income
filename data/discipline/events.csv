@@ -8,3 +8,6 @@ time_utc,type,symbol,detail
 2026-11-24T12:12:02+00:00,start,,port 4002 | code 0f00e2f | auto entries ON
 2026-11-24T12:12:02+00:00,connected,,DUQ138203
 2026-11-24T12:45:30+00:00,restart,,code updated b0ba8c1 -> 422f1c5; restarting
+2026-11-24T12:45:38+00:00,start,,port 4002 | code 93f375a | auto entries ON
+2026-11-24T12:45:43+00:00,connected,,DUQ138203
+2026-11-24T12:45:46+00:00,signal,MGC,BUY MGCG7 close 3672.2 vs 20-bar high 3667.1
