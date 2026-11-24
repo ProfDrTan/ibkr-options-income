@@ -1,13 +1,13 @@
 {
-  "last_updated": "2026-11-16T23:28:30.699358",
+  "last_updated": "2026-11-24T01:49:11.886568",
   "recommendation": {
-    "date": "2026-11-16",
-    "expiry": "2026-11-20",
+    "date": "2026-11-24",
+    "expiry": "2026-11-27",
     "underlying": "SPX",
     "strategy": "Bull Put Spread",
-    "spx_price": 7416.59,
-    "short_put": 7045,
-    "long_put": 7035,
+    "spx_price": 7237.17,
+    "short_put": 6875,
+    "long_put": 6865,
     "spread_width": 10,
     "num_spreads": 10,
     "est_premium": 18.0,
@@ -15,17 +15,17 @@
     "max_risk": 9820.0,
     "profit_target": 90.0,
     "proceed": true,
-    "reason": "PROCEED: Composite 59.1 | Bias NEUTRAL | VIX None",
+    "reason": "PROCEED: Composite 60.3 | Bias NEUTRAL | VIX None",
     "intel": {
-      "composite": 59.1,
+      "composite": 60.3,
       "bias": "NEUTRAL",
-      "recommended_size": 7,
-      "size_reason": "Reduced 7 spreads",
+      "recommended_size": 10,
+      "size_reason": "Full 10 spreads",
       "individual_scores": {
         "chatgpt": 55,
         "gemini": 55,
         "deepseek": 55,
-        "almanac": 65,
+        "almanac": 68,
         "human": 55
       },
       "agent_summaries": {
@@ -33,7 +33,7 @@
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: f6f0842f-198a-4c9c-9057-5515d1390e1f)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
+          "key_factor": "deepseek HTTP 402: {\"error\":{\"message\":\"Insufficient Balance (request_id: 50f1799e-512d-42e4-887c-c284fe3b11be)\",\"type\":\"insufficient_balance_error\",\"param\":null,\"code\":\"invalid_request_error\"}}",
           "week_outlook": "deepseek unavailable"
         },
         "chatgpt": {
@@ -47,11 +47,11 @@
           "score": 55,
           "bias": "NEUTRAL",
           "confidence": "LOW",
-          "key_factor": "gemini HTTP 503: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+          "key_factor": "gemini The read operation timed out",
           "week_outlook": "gemini unavailable"
         }
       },
-      "timestamp": "2026-11-16T23:28:29.855253"
+      "timestamp": "2026-11-24T01:49:11.202327"
     },
     "status": "PENDING_APPROVAL",
     "approved": false,
