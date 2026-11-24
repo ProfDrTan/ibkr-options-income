@@ -512,14 +512,20 @@ def telegram_commands(ib, state):
     try:
         r = requests.get(f"https://api.telegram.org/bot{cfg['bot_token']}/getUpdates",
                          params={"offset": state.get("tg_offset", 0), "timeout": 0}, timeout=15).json()
-    except Exception:
+    except Exception as e:
+        log_event("telegram_error", "", f"getUpdates failed: {e!r}"[:200])
+        return
+    if not r.get("ok"):
+        log_event("telegram_error", "", f"getUpdates: {str(r)[:200]}")
         return
     for u in r.get("result", []):
         state["tg_offset"] = u["update_id"] + 1
         msg = u.get("message") or {}
         if str(msg.get("chat", {}).get("id")) != str(cfg["chat_id"]):
+            log_event("telegram_cmd", "", f"ignored message from chat {msg.get('chat', {}).get('id')}")
             continue                                # only answer you
         text = (msg.get("text") or "").strip().lower()
+        log_event("telegram_cmd", "", text[:40])
         if text in ("/status", "status", "/positions", "positions"):
             write_snapshot(ib, state)
             snap = json.loads((JDIR / "snapshot.json").read_text())
