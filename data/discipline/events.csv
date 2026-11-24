@@ -82,3 +82,4 @@ time_utc,type,symbol,detail
 2026-11-24T18:46:05+00:00,signal,MGC,SELL MGCG7 close 3584.8 vs 20-bar low 3587.6
 2026-11-24T18:46:09+00:00,entry,MGC,SELL 1 @ 3582.6 | stop 3597.9 | trail 30.6 | risk $153
 2026-11-24T19:14:02+00:00,calendar,,2 high-impact USD events this week
+2026-11-24T19:31:06+00:00,signal,MCL,BUY MCLF7 close 82.04 vs 20-bar high 81.98
