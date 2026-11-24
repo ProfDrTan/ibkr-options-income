@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-24T15:30:45+00:00",
+  "time_utc": "2026-11-24T15:46:20+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "positions": [
@@ -7,12 +7,25 @@
       "contract": "MGCG7",
       "qty": 1.0,
       "avg_price": 3649.3,
-      "last": 3614.0,
-      "unrealized_usd": -353.05,
+      "last": 3612.7910156,
+      "unrealized_usd": -365.14,
       "stop": {
         "type": "TRAIL",
         "trail": 125.4,
         "stop_price": 3586.6,
+        "status": "PreSubmitted"
+      }
+    },
+    {
+      "contract": "MNQZ6",
+      "qty": -1.0,
+      "avg_price": 26111.67,
+      "last": 26108.75,
+      "unrealized_usd": 5.84,
+      "stop": {
+        "type": "TRAIL",
+        "trail": 478.5,
+        "stop_price": 26367.25,
         "status": "PreSubmitted"
       }
     }

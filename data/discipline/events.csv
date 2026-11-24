@@ -44,3 +44,5 @@ time_utc,type,symbol,detail
 2026-11-24T15:44:31+00:00,restart,,code updated e1b98b8 -> 0722a8d; restarting
 2026-11-24T15:44:39+00:00,start,,port 4002 | code f923d96 | auto entries ON
 2026-11-24T15:44:40+00:00,connected,,DUQ138203
+2026-11-24T15:45:50+00:00,signal,MNQ,SELL MNQZ6 close 26070.0 vs 20-bar low 26110.0
+2026-11-24T15:46:10+00:00,entry,MNQ,SELL 1 @ 26112.0 | stop 26367.25 | trail 478.5 | risk $478
