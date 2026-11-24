@@ -12,20 +12,6 @@
       "initial_stop": 3586.6,
       "trail_dist": 125.4,
       "risk_usd": 627.05
-    },
-    "MNQ": {
-      "trade_id": "7bc35c7a",
-      "symbol": "MNQ",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-24T15:46:10+00:00",
-      "entry_price": 26112.0,
-      "atr": 159.4643,
-      "initial_stop": 26367.25,
-      "trail_dist": 478.5,
-      "risk_usd": 478.39,
-      "note": "auto breakout 2026-11-24 15:30:00+00:00"
     }
   },
   "processed_commands": [
@@ -37,10 +23,6 @@
     "MGC": {
       "orderId": 0,
       "trail": 125.4
-    },
-    "MNQ": {
-      "orderId": 11,
-      "trail": 478.5
     }
   },
   "signal_checked": "202611241702",
@@ -53,9 +35,7 @@
     "ZN": "2026-11-24 17:15:00+00:00",
     "MBT": "2026-11-24 17:15:00+00:00"
   },
-  "missing_since": {
-    "MNQ": "2026-11-24T17:31:15+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423665,
   "calendar_fetched": "2026-11-24T16:13:54+00:00",
   "calendar": [
