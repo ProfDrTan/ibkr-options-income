@@ -266,7 +266,9 @@ def enter(ib, state, cmd):
     filled = t_parent.orderStatus.status == "Filled" and t_parent.orderStatus.avgFillPrice
     fill = t_parent.orderStatus.avgFillPrice if filled else price
     if not filled:
-        log_event("entry_pending", sym, f"order {parent.orderId} status {t_parent.orderStatus.status}; using ref price {price}")
+        why = "; ".join(e.message for e in t_parent.log if e.message)[-250:]
+        log_event("entry_pending", sym, f"order {parent.orderId} status {t_parent.orderStatus.status}; {why or 'no message'}")
+        send_telegram(f"⚠️ {sym} entry not confirmed filled (status {t_parent.orderStatus.status}). {why}"[:400])
     tid = uuid.uuid4().hex[:8]
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"] * qty
     state["open"][sym] = dict(trade_id=tid, symbol=sym, side=side, qty=qty, source="bot",
@@ -499,8 +501,18 @@ def process_commands(ib, state):
 
 
 # ── main loop ─────────────────────────────────────────────────────────────────
+BENIGN = {1100, 1101, 1102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2119, 2157, 2158, 10167}
+
+
+def on_error(reqId, code, msg, contract):
+    """Record IBKR errors (order rejections etc.) in the journal so they are visible remotely."""
+    if code not in BENIGN:
+        log_event("ibkr_error", getattr(contract, "symbol", "") if contract else "", f"{code} (req {reqId}): {msg}"[:300])
+
+
 def connect():
     ib = IB()
+    ib.errorEvent += on_error
     ib.connect(C.IB_HOST, C.IB_PORT, clientId=C.CLIENT_ID)
     accts = ib.managedAccounts()
     if not C.ALLOW_LIVE and not all(a.startswith("DU") for a in accts):
