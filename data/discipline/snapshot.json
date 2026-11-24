@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-24T20:30:10+00:00",
+  "time_utc": "2026-11-24T20:39:12+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "positions": [
@@ -7,8 +7,8 @@
       "contract": "MCLF7",
       "qty": 1.0,
       "avg_price": 81.85,
-      "last": 81.5400009,
-      "unrealized_usd": -30.94,
+      "last": 81.41000365,
+      "unrealized_usd": -43.94,
       "stop": {
         "type": "TRAIL",
         "trail": 1.49,
@@ -20,8 +20,8 @@
       "contract": "MGCG7",
       "qty": -1.0,
       "avg_price": 3582.5,
-      "last": 3581.19433595,
-      "unrealized_usd": 13.01,
+      "last": 3576.10009765,
+      "unrealized_usd": 63.95,
       "stop": {
         "type": "TRAIL",
         "trail": 30.6,

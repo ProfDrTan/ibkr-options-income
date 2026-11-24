@@ -84,3 +84,4 @@ time_utc,type,symbol,detail
 2026-11-24T19:14:02+00:00,calendar,,2 high-impact USD events this week
 2026-11-24T19:31:06+00:00,signal,MCL,BUY MCLF7 close 82.04 vs 20-bar high 81.98
 2026-11-24T20:33:29+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
+2026-11-24T20:39:12+00:00,telegram_cmd,,/status
