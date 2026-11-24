@@ -86,3 +86,5 @@ time_utc,type,symbol,detail
 2026-11-24T20:33:29+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
 2026-11-24T20:39:12+00:00,telegram_cmd,,/status
 2026-11-24T20:46:07+00:00,signal,MGC,SELL MGCG7 close 3576.1 vs 20-bar low 3577.3
+2026-11-24T21:01:12+00:00,signal,ZN,SELL ZNH7 close 106.59375 vs 20-bar low 106.65625
+2026-11-24T21:01:30+00:00,entry,ZN,SELL 1 @ 106.59375 | stop 106.703125 | trail 0.1875 | risk $90
