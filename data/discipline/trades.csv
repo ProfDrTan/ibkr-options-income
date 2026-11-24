@@ -1,3 +1,4 @@
 trade_id,symbol,side,qty,source,entry_time,entry_price,atr,initial_stop,trail_dist,risk_usd,exit_time,exit_price,exit_reason,pnl_usd,r_multiple,hours_held,note
 1b9579a5,MNQ,SELL,1,bot,2026-11-24T13:16:04+00:00,26152.5,102.6429,26306.5,308.0,307.93,2026-11-24T13:16:08+00:00,nan,other,nan,nan,0.0,auto breakout 2026-11-24 13:00:00+00:00
 aef0f442,MNQ,SELL,1,bot,2026-11-24T14:26:27+00:00,26300.75,103.0,26458.0,309.0,309.0,2026-11-24T14:48:32+00:00,26459.0,trailing_stop,-316.5,-1.024,0.4,test 2: limit parent + trailing stop
+4c0c7c3c,MCL,SELL,1,bot,2026-11-24T16:00:47+00:00,79.94,0.4443,80.6,1.33,66.64,2026-11-24T16:26:48+00:00,80.6,trailing_stop,-66.0,-0.99,0.4,auto breakout 2026-11-24 15:45:00+00:00

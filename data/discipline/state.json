@@ -26,20 +26,6 @@
       "trail_dist": 478.5,
       "risk_usd": 478.39,
       "note": "auto breakout 2026-11-24 15:30:00+00:00"
-    },
-    "MCL": {
-      "trade_id": "4c0c7c3c",
-      "symbol": "MCL",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-24T16:00:47+00:00",
-      "entry_price": 79.94,
-      "atr": 0.4443,
-      "initial_stop": 80.6,
-      "trail_dist": 1.33,
-      "risk_usd": 66.64,
-      "note": "auto breakout 2026-11-24 15:45:00+00:00"
     }
   },
   "processed_commands": [
@@ -55,10 +41,6 @@
     "MNQ": {
       "orderId": 11,
       "trail": 478.5
-    },
-    "MCL": {
-      "orderId": 28,
-      "trail": 1.33
     }
   },
   "signal_checked": "202611241601",
@@ -71,9 +53,7 @@
     "ZN": "2026-11-24 16:00:00+00:00",
     "MBT": "2026-11-24 16:00:00+00:00"
   },
-  "missing_since": {
-    "MCL": "2026-11-24T16:24:35+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423665,
   "calendar_fetched": "2026-11-24T16:13:54+00:00",
   "calendar": [
