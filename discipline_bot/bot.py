@@ -100,7 +100,7 @@ def update_metrics():
     if not TRADES.exists():
         return
     rows = list(csv.DictReader(TRADES.open()))
-    closed = [r for r in rows if r["r_multiple"] not in ("", None)]
+    closed = [r for r in rows if r["r_multiple"] not in ("", None, "nan")]
     ev = list(csv.DictReader(EVENTS.open())) if EVENTS.exists() else []
     def mean(xs): return round(sum(xs) / len(xs), 3) if xs else None
     wins = [r for r in closed if float(r["r_multiple"]) > 0]
@@ -257,14 +257,20 @@ def enter(ib, state, cmd):
     parent.transmit = False
     child = trail_order("SELL" if side == "BUY" else "BUY", qty, stop, trail, parent.orderId)
     child.transmit = True                      # transmits parent + child together: no moment without a stop
-    ib.placeOrder(contract, parent)
+    t_parent = ib.placeOrder(contract, parent)
     t_child = ib.placeOrder(contract, child)
-    ib.sleep(3)
-    fill = next((f.execution.avgPrice for f in ib.fills() if f.execution.orderId == parent.orderId), price)
+    for _ in range(20):                         # wait up to ~20 s for the market order to fill
+        ib.sleep(1)
+        if t_parent.orderStatus.status == "Filled":
+            break
+    filled = t_parent.orderStatus.status == "Filled" and t_parent.orderStatus.avgFillPrice
+    fill = t_parent.orderStatus.avgFillPrice if filled else price
+    if not filled:
+        log_event("entry_pending", sym, f"order {parent.orderId} status {t_parent.orderStatus.status}; using ref price {price}")
     tid = uuid.uuid4().hex[:8]
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"] * qty
     state["open"][sym] = dict(trade_id=tid, symbol=sym, side=side, qty=qty, source="bot",
-                              entry_time=now().isoformat(timespec="seconds"), entry_price=fill,
+                              entry_time=now().isoformat(timespec="seconds"), entry_price=fill, filled=bool(filled),
                               atr=round(atr, 4), initial_stop=stop, trail_dist=trail, risk_usd=round(risk, 2),
                               note=cmd.get("note", ""))
     state["stops"][sym] = {"orderId": t_child.order.orderId, "trail": trail}
@@ -305,6 +311,14 @@ def guardian(ib, state):
             send_telegram(f"⚠️ {sym} stop was widened by hand — restored. Widening a stop is loss aversion talking.")
             continue
         if t:
+            if sym not in state["open"]:          # e.g. lost after a restart: start journaling it again
+                state["open"][sym] = dict(trade_id=uuid.uuid4().hex[:8], symbol=sym, side="BUY" if p.position > 0 else "SELL",
+                                          qty=abs(p.position), source="adopted", entry_time=now().isoformat(timespec="seconds"),
+                                          entry_price=round(p.avgCost / spec["multiplier"], 2), atr="", initial_stop=t.order.trailStopPrice,
+                                          trail_dist=t.order.auxPrice,
+                                          risk_usd=round(abs(p.avgCost / spec["multiplier"] - (t.order.trailStopPrice or 0)) * spec["multiplier"] * abs(p.position), 2) or 1)
+                state["stops"].setdefault(sym, {"orderId": t.order.orderId, "trail": t.order.auxPrice})
+                log_event("adopted", sym, f"{p.position} @ {state['open'][sym]['entry_price']} with existing {t.order.orderType} stop")
             continue
         atr, price = atr_and_last(ib, contract)
         entry = p.avgCost / spec["multiplier"]
@@ -355,15 +369,29 @@ def flatten(ib, state, sym, reason):
 
 def record_exits(ib, state):
     held = {p.contract.symbol for p in ib.positions() if p.position}
+    missing = state.setdefault("missing_since", {})
     for sym in list(state["open"]):
         if sym in held:
+            missing.pop(sym, None)
             continue
-        tr = state["open"].pop(sym)
-        state["stops"].pop(sym, None)
+        tr = state["open"][sym]
+        age = (now() - dt.datetime.fromisoformat(tr["entry_time"])).total_seconds()
+        if age < 180:                          # IBKR can take a moment to report a new position
+            continue
+        missing.setdefault(sym, now().isoformat(timespec="seconds"))
+        if (now() - dt.datetime.fromisoformat(missing[sym])).total_seconds() < 120:
+            continue                            # must be gone for 2 minutes before we call it closed
+        entry_t = dt.datetime.fromisoformat(tr["entry_time"])
         spec = C.INSTRUMENTS[sym]
-        fills = sorted((f for f in ib.fills() if f.contract.symbol == sym), key=lambda f: f.time)
-        last = fills[-1] if fills else None
-        exit_price = last.execution.avgPrice if last else float("nan")
+        fills = sorted((f for f in ib.fills() if f.contract.symbol == sym and f.time >= entry_t), key=lambda f: f.time)
+        closing = [f for f in fills if f.execution.side == ("SLD" if tr["side"] == "BUY" else "BOT")]
+        if not closing:
+            log_event("position_missing", sym, "no position and no closing fill found; dropped from journal (entry may not have filled)")
+            state["open"].pop(sym); state["stops"].pop(sym, None); missing.pop(sym, None)
+            continue
+        state["open"].pop(sym); state["stops"].pop(sym, None); missing.pop(sym, None)
+        last = closing[-1]
+        exit_price = last.execution.avgPrice
         reason = state.get("pending_reason", {}).pop(sym, None)
         if reason is None:
             reason = "trailing_stop" if last and last.execution.side in ("SLD", "BOT") and \
