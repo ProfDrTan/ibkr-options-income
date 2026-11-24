@@ -13,5 +13,14 @@
     "qty": 1,
     "note": "test order to diagnose failed MNQ entry",
     "created_utc": "2026-11-24T14:20:00+00:00"
+  },
+  {
+    "id": "test-mnq-2226",
+    "action": "enter",
+    "symbol": "MNQ",
+    "side": "SELL",
+    "qty": 1,
+    "note": "test 2: limit parent + trailing stop",
+    "created_utc": "2026-11-24T14:26:00+00:00"
   }
 ]
