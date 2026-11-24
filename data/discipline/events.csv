@@ -36,3 +36,5 @@ time_utc,type,symbol,detail
 2026-11-24T15:30:32+00:00,start,,port 4002 | code 44088f1 | auto entries ON
 2026-11-24T15:30:33+00:00,connected,,DUQ138203
 2026-11-24T15:30:35+00:00,signal,MGC,SELL MGCG7 close 3620.2 vs 20-bar low 3630.4
+2026-11-24T15:42:14+00:00,start,,port 4002 | code e1b98b8 | auto entries ON
+2026-11-24T15:42:17+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
