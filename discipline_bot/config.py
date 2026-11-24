@@ -21,9 +21,16 @@ ALLOW_LIVE = False
 
 # ── INSTRUMENTS ───────────────────────────────────────────────────────────────
 # roll_days: skip any contract that expires within this many days (use the next one instead)
+# multiplier/tick are overwritten at runtime with IBKR's own contract details (front_contract), so they
+# can't drift from the exchange's specs. index=True marks US stock-index futures (they move together).
 INSTRUMENTS = {
-    "MNQ": {"exchange": "CME",   "multiplier": 2.0,  "tick": 0.25, "roll_days": 8},
-    "MGC": {"exchange": "COMEX", "multiplier": 10.0, "tick": 0.10, "roll_days": 35},
+    "MGC": {"exchange": "COMEX", "multiplier": 10.0,   "tick": 0.10,     "roll_days": 35},  # Micro gold
+    "MNQ": {"exchange": "CME",   "multiplier": 2.0,    "tick": 0.25,     "roll_days": 8, "index": True},  # Micro Nasdaq
+    "MYM": {"exchange": "CBOT",  "multiplier": 0.5,    "tick": 1.0,      "roll_days": 8, "index": True},  # Micro Dow
+    "M2K": {"exchange": "CME",   "multiplier": 5.0,    "tick": 0.10,     "roll_days": 8, "index": True},  # Micro Russell 2000
+    "MCL": {"exchange": "NYMEX", "multiplier": 100.0,  "tick": 0.01,     "roll_days": 10},  # Micro WTI crude
+    "ZN":  {"exchange": "CBOT",  "multiplier": 1000.0, "tick": 0.015625, "roll_days": 40},  # 10-year T-note (TNX proxy)
+    "MBT": {"exchange": "CME",   "multiplier": 0.1,    "tick": 5.0,      "roll_days": 5},   # Micro bitcoin
 }
 
 # ── EXIT RULE (do not change without re-running the backtest) ─────────────────
@@ -38,7 +45,8 @@ TRAIL_ATR = 3.0
 
 # ── GUARDRAILS ────────────────────────────────────────────────────────────────
 MAX_CONTRACTS_PER_SYMBOL = 1
-MAX_OPEN_POSITIONS = 2
+MAX_OPEN_POSITIONS = 4
+MAX_INDEX_POSITIONS = 2           # at most 2 US stock-index futures (MNQ, MYM, M2K) at once — they move together
 MAX_RISK_PER_TRADE_USD = 1500     # 1.5 x ATR x multiplier x contracts must be below this, or the entry is blocked
 DAILY_LOSS_LIMIT_USD = 2000       # realised loss today (UTC) beyond this blocks new entries until tomorrow
 BLACKOUT_MINUTES = 30             # no new entries this many minutes either side of an event in blackout.json

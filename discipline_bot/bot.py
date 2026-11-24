@@ -158,7 +158,14 @@ def front_contract(ib, sym):
                   key=lambda c: c.lastTradeDateOrContractMonth)
     if not live:
         raise RuntimeError(f"no tradable {sym} contract found")
-    return live[0]
+    c = live[0]
+    d = next(x for x in details if x.contract.conId == c.conId)
+    try:                                         # use IBKR's own contract specs
+        spec["multiplier"] = float(c.multiplier or spec["multiplier"])
+        spec["tick"] = float(d.minTick or spec["tick"])
+    except (TypeError, ValueError):
+        pass
+    return c
 
 
 def atr_and_last(ib, contract):
@@ -214,6 +221,10 @@ def check_entry(ib, state, sym, qty, atr):
         return f"already holding {sym}"
     if len(held) >= C.MAX_OPEN_POSITIONS:
         return f"already {len(held)} open positions (max {C.MAX_OPEN_POSITIONS})"
+    if spec.get("index"):
+        n_idx = sum(1 for s_ in held if C.INSTRUMENTS.get(s_, {}).get("index"))
+        if n_idx >= C.MAX_INDEX_POSITIONS:
+            return f"already {n_idx} stock-index positions (max {C.MAX_INDEX_POSITIONS}; they move together)"
     if qty < 1 or qty > C.MAX_CONTRACTS_PER_SYMBOL:
         return f"quantity {qty} outside 1..{C.MAX_CONTRACTS_PER_SYMBOL}"
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"] * qty
@@ -421,21 +432,29 @@ def check_signals(ib, state):
     """20-bar breakout on the last COMPLETED bar. Sends an alert; never places an order."""
     seen = state.setdefault("signal_bar", {})
     for sym, spec in C.INSTRUMENTS.items():
+        try:
+            check_one_signal(ib, state, seen, sym, spec)
+        except Exception as e:
+            log_event("signal_error", sym, repr(e)[:200])
+
+
+def check_one_signal(ib, state, seen, sym, spec):
+    if True:  # single symbol
         contract = front_contract(ib, sym)
         bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="5 D", barSizeSetting=C.BAR_SIZE,
                                     whatToShow="TRADES", useRTH=False, formatDate=2)
         if len(bars) < max(C.BREAKOUT_BARS, C.ATR_PERIOD) + 3:
-            continue
+            return
         done = bars[:-1]                       # the last bar returned is still forming
         bar, prior = done[-1], done[-1 - C.BREAKOUT_BARS:-1]
         key = str(bar.date)
         if seen.get(sym) == key:
-            continue
+            return
         seen[sym] = key
         hi, lo = max(b.high for b in prior), min(b.low for b in prior)
         side = "BUY" if bar.close > hi else "SELL" if bar.close < lo else None
         if not side:
-            continue
+            return
         trs = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
         atr = sum(trs[-C.ATR_PERIOD:]) / C.ATR_PERIOD
         sign = 1 if side == "BUY" else -1
@@ -459,7 +478,7 @@ def check_signals(ib, state):
             send_telegram(f"🤖 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
                           f"{'high' if sign > 0 else 'low'} {level}. Entering {side} 1 automatically (paper).")
             enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto breakout {key}"})
-            continue
+            return
         send_telegram(f"📈 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
                       f"{'high' if sign > 0 else 'low'} {level}.\n{side} setup on {contract.localSymbol}: stop {stop}, "
                       f"trail {trail}, risk ${risk:,.0f} per contract.\n{verdict}\nTell Claude \"take it\" or ignore.")
