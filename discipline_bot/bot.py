@@ -148,7 +148,7 @@ def front_contract(ib, sym):
 
 
 def atr_and_last(ib, contract):
-    bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="20 D", barSizeSetting=C.BAR_SIZE,
+    bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="5 D", barSizeSetting=C.BAR_SIZE,
                                 whatToShow="TRADES", useRTH=False, formatDate=2)
     if len(bars) < C.ATR_PERIOD + 2:
         raise RuntimeError("not enough 4-hour bars for ATR")
@@ -371,7 +371,7 @@ def check_signals(ib, state):
     seen = state.setdefault("signal_bar", {})
     for sym, spec in C.INSTRUMENTS.items():
         contract = front_contract(ib, sym)
-        bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="10 D", barSizeSetting=C.BAR_SIZE,
+        bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="5 D", barSizeSetting=C.BAR_SIZE,
                                     whatToShow="TRADES", useRTH=False, formatDate=2)
         if len(bars) < max(C.BREAKOUT_BARS, C.ATR_PERIOD) + 3:
             continue
@@ -405,13 +405,31 @@ def check_signals(ib, state):
         log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close} vs 20-bar {'high' if sign > 0 else 'low'} {level}")
         verdict = f"Guardrails: PASS" if not why else f"Guardrails: BLOCKED — {why}"
         if C.AUTO_ENTRIES and not why:
-            send_telegram(f"🤖 {sym} breakout: 1h bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
+            send_telegram(f"🤖 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
                           f"{'high' if sign > 0 else 'low'} {level}. Entering {side} 1 automatically (paper).")
             enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto breakout {key}"})
             continue
-        send_telegram(f"📈 {sym} breakout: 1h bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
+        send_telegram(f"📈 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
                       f"{'high' if sign > 0 else 'low'} {level}.\n{side} setup on {contract.localSymbol}: stop {stop}, "
                       f"trail {trail}, risk ${risk:,.0f} per contract.\n{verdict}\nTell Claude \"take it\" or ignore.")
+
+
+def write_snapshot(ib, state):
+    """Positions, prices, P&L and stops, written each bar so Claude can read them from GitHub."""
+    trades = ib.reqAllOpenOrders()
+    snap = {"time_utc": now().isoformat(timespec="seconds"), "bar_size": C.BAR_SIZE,
+            "auto_entries": C.AUTO_ENTRIES, "positions": []}
+    for it in ib.portfolio():
+        if not it.position:
+            continue
+        mult = C.INSTRUMENTS.get(it.contract.symbol, {"multiplier": 1})["multiplier"]
+        t = protective_stop(ib, it.contract, trades)
+        snap["positions"].append({
+            "contract": it.contract.localSymbol, "qty": it.position, "avg_price": round(it.averageCost / mult, 2),
+            "last": it.marketPrice, "unrealized_usd": round(it.unrealizedPNL, 2),
+            "stop": None if not t else {"type": t.order.orderType, "trail": t.order.auxPrice,
+                                        "stop_price": t.order.trailStopPrice, "status": t.orderStatus.status}})
+    (JDIR / "snapshot.json").write_text(json.dumps(snap, indent=2, default=str))
 
 
 # ── commands ──────────────────────────────────────────────────────────────────
@@ -469,10 +487,12 @@ def run():
                 return                                  # run_bot.bat starts the new code within 5 seconds
             code_rev = new_rev or code_rev
             process_commands(ib, state)
-            hour_key = now().strftime("%Y%m%d%H")
-            if C.SIGNAL_ALERTS and now().minute < 10 and state.get("signal_checked") != hour_key:
-                state["signal_checked"] = hour_key
+            n = now()
+            bar_key = n.strftime("%Y%m%d%H") + f"{n.minute // C.BAR_MINUTES:02d}"
+            if C.SIGNAL_ALERTS and n.minute % C.BAR_MINUTES < 5 and state.get("signal_checked") != bar_key:
+                state["signal_checked"] = bar_key
                 check_signals(ib, state)
+                write_snapshot(ib, state)
             if C.GUARD_MANUAL_POSITIONS or state["open"]:
                 guardian(ib, state)
             fl = weekend_flatten_time()
