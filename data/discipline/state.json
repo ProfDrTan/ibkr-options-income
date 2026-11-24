@@ -62,7 +62,7 @@
       "trail": 0.1875
     }
   },
-  "signal_checked": "202611242200",
+  "signal_checked": "202611242201",
   "signal_bar": {
     "MNQ": "2026-11-24 21:30:00+00:00",
     "MGC": "2026-11-24 21:30:00+00:00",
@@ -89,5 +89,6 @@
       "previous": "3.4%"
     }
   ],
-  "calendar_warned": []
+  "calendar_warned": [],
+  "last_error_alert": "2026-11-24T22:15:44+00:00"
 }

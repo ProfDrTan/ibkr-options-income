@@ -89,3 +89,11 @@ time_utc,type,symbol,detail
 2026-11-24T21:01:12+00:00,signal,ZN,SELL ZNH7 close 106.59375 vs 20-bar low 106.65625
 2026-11-24T21:01:30+00:00,entry,ZN,SELL 1 @ 106.59375 | stop 106.703125 | trail 0.1875 | risk $90
 2026-11-24T22:14:37+00:00,calendar,,2 high-impact USD events this week
+2026-11-24T22:15:44+00:00,signal_error,MGC,ConnectionError('Socket disconnect')
+2026-11-24T22:15:44+00:00,signal_error,MNQ,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,signal_error,MYM,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,signal_error,M2K,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,signal_error,MCL,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,signal_error,ZN,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,signal_error,MBT,ConnectionError('Not connected')
+2026-11-24T22:15:44+00:00,error,,ConnectionError('Not connected')
