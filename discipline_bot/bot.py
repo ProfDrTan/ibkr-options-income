@@ -115,7 +115,9 @@ def git(*args):
     if not C.GIT_SYNC:
         return
     try:
-        subprocess.run(["git", "-C", str(ROOT), *args], check=False, capture_output=True, timeout=60)
+        r = subprocess.run(["git", "-C", str(ROOT), *args], check=False, capture_output=True, text=True, timeout=60)
+        if r.returncode and args[0] in ("push", "pull") and r.stderr.strip():
+            print(f"git {args[0]} failed:", r.stderr.strip()[:300])
     except Exception as e:
         print("git error:", e)
 
@@ -466,12 +468,18 @@ def run():
             raise
         except Exception as e:
             log_event("error", "", repr(e))
+            send_telegram(f"⚠️ discipline_bot error: {e!r}"[:300])
             try:
                 if ib:
                     ib.disconnect()
             except Exception:
                 pass
             ib = None
+            try:                                   # still publish the journal so the error is visible remotely
+                save_state(state)
+                git_push_journal()
+            except Exception:
+                pass
         time.sleep(C.LOOP_SECONDS)
 
 
