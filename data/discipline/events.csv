@@ -61,3 +61,6 @@ time_utc,type,symbol,detail
 2026-11-24T16:00:47+00:00,entry,MCL,SELL 1 @ 79.94 | stop 80.6 | trail 1.33 | risk $67
 2026-11-24T16:05:16+00:00,telegram_cmd,,/status
 2026-11-24T16:08:52+00:00,restart,,code updated ca34461 -> dc9466b; restarting
+2026-11-24T16:09:00+00:00,start,,port 4002 | code 73118a6 | auto entries ON
+2026-11-24T16:09:16+00:00,connected,,DUQ138203
+2026-11-24T16:09:17+00:00,calendar,,2 high-impact USD events this week
