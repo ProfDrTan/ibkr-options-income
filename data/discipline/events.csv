@@ -59,3 +59,4 @@ time_utc,type,symbol,detail
 2026-11-24T16:00:37+00:00,signal,MGC,SELL MGCG7 close 3597.4 vs 20-bar low 3607.7
 2026-11-24T16:00:43+00:00,signal,MCL,SELL MCLF7 close 79.75 vs 20-bar low 79.82
 2026-11-24T16:00:47+00:00,entry,MCL,SELL 1 @ 79.94 | stop 80.6 | trail 1.33 | risk $67
+2026-11-24T16:05:16+00:00,telegram_cmd,,/status
