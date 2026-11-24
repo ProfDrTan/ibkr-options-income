@@ -12,15 +12,35 @@
       "initial_stop": 3586.6,
       "trail_dist": 125.4,
       "risk_usd": 627.05
+    },
+    "MNQ": {
+      "trade_id": "faa998da",
+      "symbol": "MNQ",
+      "side": "SELL",
+      "qty": 1,
+      "source": "bot",
+      "entry_time": "2026-11-24T14:21:50+00:00",
+      "entry_price": 26277.0,
+      "filled": false,
+      "atr": 102.4464,
+      "initial_stop": 26430.75,
+      "trail_dist": 307.25,
+      "risk_usd": 307.34,
+      "note": "test order to diagnose failed MNQ entry"
     }
   },
   "processed_commands": [
-    "ping-1934"
+    "ping-1934",
+    "test-mnq-2220"
   ],
   "stops": {
     "MGC": {
       "orderId": 0,
       "trail": 125.4
+    },
+    "MNQ": {
+      "orderId": 40,
+      "trail": 307.25
     }
   },
   "signal_checked": "202611241401",
