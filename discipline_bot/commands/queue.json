@@ -1,1 +1,17 @@
-[{"id": "ping-1934", "action": "ping", "symbol": "", "note": "end-to-end test from Claude"}]
+[
+  {
+    "id": "ping-1934",
+    "action": "ping",
+    "symbol": "",
+    "note": "end-to-end test from Claude"
+  },
+  {
+    "id": "test-mnq-2220",
+    "action": "enter",
+    "symbol": "MNQ",
+    "side": "SELL",
+    "qty": 1,
+    "note": "test order to diagnose failed MNQ entry",
+    "created_utc": "2026-11-24T14:20:00+00:00"
+  }
+]
