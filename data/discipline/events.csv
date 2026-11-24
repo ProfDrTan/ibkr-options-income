@@ -74,3 +74,5 @@ time_utc,type,symbol,detail
 2026-11-24T16:15:35+00:00,signal,MNQ,SELL MNQZ6 close 26025.75 vs 20-bar low 26043.0
 2026-11-24T16:26:48+00:00,exit,MCL,trailing_stop @ 80.6 | P&L $-66 | -0.99R | 0.4h
 2026-11-24T17:33:43+00:00,exit,MNQ,trailing_stop @ 26367.25 | P&L $-510 | -1.067R | 1.8h
+2026-11-24T18:31:05+00:00,signal,MCL,BUY MCLF7 close 81.8 vs 20-bar high 81.65
+2026-11-24T18:31:08+00:00,entry,MCL,BUY 1 @ 81.84 | stop 81.08 | trail 1.49 | risk $75
