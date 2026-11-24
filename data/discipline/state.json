@@ -1,5 +1,7 @@
 {
   "open": {},
-  "processed_commands": [],
+  "processed_commands": [
+    "ping-1934"
+  ],
   "stops": {}
 }
