@@ -249,15 +249,21 @@ def enter(ib, state, cmd):
     send_telegram(f"✅ {side} {qty} {sym} @ {fill}\nStop {stop} (1.5×ATR), trails {trail} (3×ATR). Risk ${risk:,.0f}.")
 
 
-def protective_stop(ib, contract):
-    for t in ib.openTrades():
-        if t.contract.conId == contract.conId and t.order.orderType in ("TRAIL", "STP", "STP LMT", "TRAIL LIMIT"):
+STOP_TYPES = ("TRAIL", "STP", "STP LMT", "TRAIL LIMIT")
+
+
+def protective_stop(ib, contract, trades=None):
+    """Find a working stop on this contract placed by ANY client (TWS, mobile, web, this bot).
+    ib.openTrades() only shows this client's own orders, so ask IBKR for all of them."""
+    for t in (trades if trades is not None else ib.reqAllOpenOrders()):
+        if t.contract.conId == contract.conId and t.order.orderType in STOP_TYPES:
             return t
     return None
 
 
 def guardian(ib, state):
     """Every position must have a stop; a stop may never be widened or removed."""
+    all_trades = ib.reqAllOpenOrders()
     for p in ib.positions():
         if not p.position or p.contract.secType != "FUT" or p.contract.symbol not in C.INSTRUMENTS:
             continue
@@ -267,7 +273,7 @@ def guardian(ib, state):
         contract = ib.qualifyContracts(p.contract)[0] if not p.contract.exchange else p.contract
         if not contract.exchange:
             contract.exchange = spec["exchange"]
-        t = protective_stop(ib, contract)
+        t = protective_stop(ib, contract, all_trades)
         known = state["stops"].get(sym)
         if t and known and t.order.auxPrice and t.order.auxPrice > known["trail"] * 1.001:
             t.order.auxPrice = known["trail"]
@@ -299,9 +305,20 @@ def guardian(ib, state):
 
 
 def flatten(ib, state, sym, reason):
+    """Close a position the bot protects. A position whose stop was placed elsewhere (TWS, mobile) is NOT
+    market-closed: this client can't cancel that stop, and closing would leave it live to open a new
+    position later. You get an alert to close it yourself instead."""
+    if sym not in state["stops"]:
+        held = [p for p in ib.positions() if p.contract.symbol == sym and p.position]
+        if held:
+            log_event("flatten_skipped", sym, f"{reason}: stop not placed by the bot")
+            send_telegram(f"⚠️ {reason}: please close your {sym} position and its stop yourself — "
+                          f"the stop was placed outside the bot, so the bot can't safely cancel it.")
+        return
     for t in ib.openTrades():
-        if t.contract.symbol == sym and t.order.orderType in ("TRAIL", "STP", "STP LMT", "TRAIL LIMIT"):
+        if t.contract.symbol == sym and t.order.orderType in STOP_TYPES:
             ib.cancelOrder(t.order)
+    ib.sleep(2)
     for p in ib.positions():
         if p.contract.symbol == sym and p.position:
             c = p.contract
