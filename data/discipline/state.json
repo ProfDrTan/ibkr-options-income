@@ -1,12 +1,32 @@
 {
-  "open": {},
+  "open": {
+    "MGC": {
+      "trade_id": "cd5b1a5e",
+      "symbol": "MGC",
+      "side": "BUY",
+      "qty": 1.0,
+      "source": "adopted",
+      "entry_time": "2026-11-24T13:20:41+00:00",
+      "entry_price": 3649.3,
+      "atr": "",
+      "initial_stop": 3586.6,
+      "trail_dist": 125.4,
+      "risk_usd": 627.05
+    }
+  },
   "processed_commands": [
     "ping-1934"
   ],
-  "stops": {},
+  "stops": {
+    "MGC": {
+      "orderId": 0,
+      "trail": 125.4
+    }
+  },
   "signal_checked": "202611241301",
   "signal_bar": {
     "MNQ": "2026-11-24 13:00:00+00:00",
     "MGC": "2026-11-24 13:00:00+00:00"
-  }
+  },
+  "missing_since": {}
 }
