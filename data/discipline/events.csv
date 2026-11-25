@@ -102,3 +102,4 @@ time_utc,type,symbol,detail
 2026-11-25T00:16:01+00:00,entry,M2K,SELL 1 @ 2679.4 | stop 2686.4 | trail 13.5 | risk $34
 2026-11-25T00:30:08+00:00,signal,MGC,SELL MGCG7 close 3569.4 vs 20-bar low 3573.4
 2026-11-25T00:30:16+00:00,signal,MBT,SELL MBTZ6 close 59550.0 vs 20-bar low 59565.0
+2026-11-25T00:43:00+00:00,telegram_cmd,,/status
