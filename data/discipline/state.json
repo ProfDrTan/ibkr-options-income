@@ -27,20 +27,6 @@
       "trail_dist": 220.0,
       "risk_usd": 220.07,
       "note": "auto breakout 2026-11-25 01:45:00+00:00"
-    },
-    "MGC": {
-      "trade_id": "d71fe07f",
-      "symbol": "MGC",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-25T06:00:40+00:00",
-      "entry_price": 3546.5,
-      "atr": 8.2714,
-      "initial_stop": 3559.6,
-      "trail_dist": 24.8,
-      "risk_usd": 124.07,
-      "note": "auto squeeze 2026-11-25 05:45:00+00:00"
     }
   },
   "processed_commands": [
@@ -58,10 +44,6 @@
     "MNQ": {
       "orderId": 461,
       "trail": 220.0
-    },
-    "MGC": {
-      "orderId": 531,
-      "trail": 24.8
     }
   },
   "signal_checked": "202611250703",
@@ -74,9 +56,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "MGC": "2026-11-25T07:46:47+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423674,
   "calendar_fetched": "2026-11-25T07:11:33+00:00",
   "calendar": [
