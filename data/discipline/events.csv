@@ -117,3 +117,4 @@ time_utc,type,symbol,detail
 2026-11-25T01:37:45+00:00,connected,,DUQ138203
 2026-11-25T01:37:46+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T01:45:37+00:00,signal,MBT,SELL MBTZ6 close 59435.0 vs 20-bar low 59490.0
+2026-11-25T01:54:45+00:00,exit,ZN,trailing_stop @ 106.703125 | P&L $-109 | -1.21R | 4.9h
