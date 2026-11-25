@@ -146,3 +146,6 @@ time_utc,type,symbol,detail
 2026-11-25T04:10:34+00:00,download_started,,20-year daily ETF + VIX history download started
 2026-11-25T04:10:34+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T04:48:29+00:00,restart,,code updated 0e9652e -> b77d114; restarting
+2026-11-25T04:48:37+00:00,start,,port 4002 | code ca6ba1f | auto entries ON
+2026-11-25T04:48:38+00:00,connected,,DUQ138203
+2026-11-25T04:48:39+00:00,calendar,,2 high-impact USD events this week
