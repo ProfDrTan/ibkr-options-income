@@ -127,3 +127,8 @@ time_utc,type,symbol,detail
 2026-11-25T02:15:40+00:00,signal,MCL,SELL MCLF7 close 80.97 vs 20-bar low 81.29
 2026-11-25T02:15:44+00:00,entry,MCL,SELL 1 @ 80.92 | stop 81.19 | trail 0.54 | risk $27
 2026-11-25T02:22:43+00:00,restart,,code updated e58dc28 -> 25b0889; restarting
+2026-11-25T02:22:51+00:00,start,,port 4002 | code 88fb906 | auto entries ON
+2026-11-25T02:22:52+00:00,connected,,DUQ138203
+2026-11-25T02:22:53+00:00,download_started,,2-year 15-minute history download started
+2026-11-25T02:22:53+00:00,calendar,,2 high-impact USD events this week
+2026-11-25T02:22:56+00:00,exit,MGC,trailing_stop @ 3591.7 | P&L $-91 | -0.595R | 7.6h

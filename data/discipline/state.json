@@ -1,19 +1,5 @@
 {
   "open": {
-    "MGC": {
-      "trade_id": "44b11fdf",
-      "symbol": "MGC",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-24T18:46:09+00:00",
-      "entry_price": 3582.6,
-      "atr": 10.1929,
-      "initial_stop": 3597.9,
-      "trail_dist": 30.6,
-      "risk_usd": 152.89,
-      "note": "auto breakout 2026-11-24 18:30:00+00:00"
-    },
     "M2K": {
       "trade_id": "35c1c85a",
       "symbol": "M2K",
@@ -60,13 +46,10 @@
   "processed_commands": [
     "ping-1934",
     "test-mnq-2220",
-    "test-mnq-2226"
+    "test-mnq-2226",
+    "download-2y"
   ],
   "stops": {
-    "MGC": {
-      "orderId": 182,
-      "trail": 30.6
-    },
     "M2K": {
       "orderId": 436,
       "trail": 13.5
@@ -90,11 +73,9 @@
     "ZN": "2026-11-25 02:00:00+00:00",
     "MBT": "2026-11-25 02:00:00+00:00"
   },
-  "missing_since": {
-    "MGC": "2026-11-25T02:20:33+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423667,
-  "calendar_fetched": "2026-11-25T01:37:46+00:00",
+  "calendar_fetched": "2026-11-25T02:22:53+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
