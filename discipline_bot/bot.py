@@ -41,14 +41,28 @@ sys.path.insert(0, str(ROOT))
 TG_FILE = Path(__file__).resolve().parent / "telegram.json"
 
 
-def send_telegram(msg):
+COLOR = {"MGC": "🟡", "MNQ": "🔵", "MYM": "🟢", "M2K": "🟣", "MCL": "🟤", "ZN": "⚪", "MBT": "🟠"}
+NAME = {"MGC": "Gold", "MNQ": "Nasdaq", "MYM": "Dow", "M2K": "Russell", "MCL": "Crude", "ZN": "10-yr note", "MBT": "Bitcoin"}
+EXPECT_R = {"MGC": 0.22, "MNQ": 0.30, "MYM": 0.17}   # 2-year backtest of the squeeze rule, per trade after costs
+
+
+def colorize(msg):
+    """Put each market's colour dot in front of its symbol (MGC, MGCZ6 ...) so markets are easy to tell apart."""
+    import re
+    return re.sub(r"(?<![🟡🔵🟢🟣🟤⚪🟠\w])(MGC|MNQ|MYM|M2K|MCL|ZN|MBT)(?=\w*)", lambda m: COLOR[m.group(1)] + m.group(1), msg)
+
+
+def send_telegram(msg, html=False):
     """Send through Discipline Bot's own Telegram bot (telegram.json); fall back to the repo's alerts helper."""
+    msg = colorize(msg)
     try:
         if TG_FILE.exists():
             import requests
             cfg = json.loads(TG_FILE.read_text())
-            r = requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/sendMessage",
-                              data={"chat_id": cfg["chat_id"], "text": msg}, timeout=15)
+            data = {"chat_id": cfg["chat_id"], "text": msg}
+            if html:
+                data["parse_mode"] = "HTML"
+            r = requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/sendMessage", data=data, timeout=15)
             if r.ok:
                 return
             print("telegram error:", r.status_code, r.text[:200])
@@ -602,6 +616,76 @@ def write_snapshot(ib, state):
     (JDIR / "snapshot.json").write_text(json.dumps(snap, indent=2, default=str))
 
 
+STRATEGY = ("<b>Strategy</b>: squeeze breakout with 1h trend, 15-min bars\n"
+            "Entry = quiet market (40-bar band width in lowest 20%) + close beyond 40-bar high/low + 1h trend agrees\n"
+            "Exit = stop 1.5 ATR, trail 3 ATR, no target · entries on 🟡MGC 🔵MNQ 🟢MYM")
+
+
+def _esc(x):
+    return str(x).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def status_text(ib, state):
+    write_snapshot(ib, state)
+    snap = json.loads((JDIR / "snapshot.json").read_text())
+    out = [f"📊 <b>Status {now().astimezone(SGT):%a %d %b %H:%M} SGT</b> · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}", STRATEGY, ""]
+    total = 0.0
+    pos = sorted(snap["positions"], key=lambda p: list(COLOR).index(p["contract"][:3]) if p["contract"][:3] in COLOR else 9)
+    out.append("<b>Open positions</b>")
+    for p_ in pos:
+        st, u = p_["stop"], p_["unrealized_usd"] or 0
+        total += u
+        sym = next((k for k in COLOR if p_["contract"].startswith(k)), p_["contract"])
+        out.append(f"{'📈 LONG' if p_['qty'] > 0 else '📉 SHORT'} <b>{_esc(p_['contract'])}</b> ({NAME.get(sym, '')})\n"
+                   f"   entry {p_['avg_price']} → now {p_['last']:.2f}\n"
+                   f"   {'✅' if u >= 0 else '🔻'} <b>{'+' if u >= 0 else '−'}${abs(u):,.0f}</b> · "
+                   + (f"stop {st['stop_price']} (trail {st['trail']})" if st else "⚠️ NO STOP"))
+    if not pos:
+        out.append("None.")
+    out.append(f"\nOpen P&amp;L <b>${total:,.0f}</b> · realised today <b>${todays_realised_pnl(ib):,.0f}</b>")
+    if state.get("signal_status"):
+        out.append("\n<b>Setups</b> (needs squeeze + breakout + trend)")
+        for k, v in state["signal_status"].items():
+            out.append(f"{k}: {_esc(v)}")
+    out.append("\n/summary for performance")
+    return "\n".join(out)
+
+
+def summary_text(ib):
+    rows = list(csv.DictReader(TRADES.open())) if TRADES.exists() else []
+    def num(x):
+        try:
+            v = float(x)
+            return None if math.isnan(v) else v
+        except (TypeError, ValueError):
+            return None
+    new = [r for r in rows if "squeeze" in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
+    old = [r for r in rows if "squeeze" not in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
+    out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b>", STRATEGY, "",
+           "<b>Squeeze rule</b> (live since 25 Nov 11:38 SGT), closed trades:"]
+    for sym in EXPECT_R:
+        t = [r for r in new if r["symbol"] == sym]
+        if not t:
+            out.append(f"{sym} ({NAME[sym]}): no closed trades yet · backtest +{EXPECT_R[sym]}R/trade")
+            continue
+        pnl = sum(num(r["pnl_usd"]) for r in t); rs = [num(r["r_multiple"]) or 0 for r in t]
+        w = sum(1 for x in rs if x > 0)
+        out.append(f"{sym} ({NAME[sym]}): {len(t)} trades · {w} won · <b>{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}</b> · "
+                   f"{sum(rs)/len(rs):+.2f}R/trade (backtest +{EXPECT_R[sym]}R)")
+    if new:
+        pnl = sum(num(r["pnl_usd"]) for r in new); rs = [num(r["r_multiple"]) or 0 for r in new]
+        out.append(f"<b>Total: {len(new)} trades · {sum(1 for x in rs if x > 0)} won · "
+                   f"{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f} · {sum(rs)/len(rs):+.2f}R/trade</b>")
+        big = max(rs); out.append(f"Biggest win {big:+.1f}R · losers cut at about −1R as designed")
+    out.append("Expect: about 1 win in 3; profit comes from a few big winners. Judge after 30+ trades, not days.")
+    if old:
+        pnl = sum(num(r["pnl_usd"]) for r in old)
+        out.append(f"\n<i>Old 20-bar breakout rule (retired): {len(old)} trades · {'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}</i>")
+    out.append("\n/status for positions and setups")
+    return "\n".join(out)
+
+
+
 def telegram_commands(ib, state):
     """Answer /status (or 'status') typed in the Discipline Bot chat, so positions can be checked from the
     phone without logging in to IBKR (which would knock IB Gateway off the paper login)."""
@@ -627,27 +711,14 @@ def telegram_commands(ib, state):
         text = (msg.get("text") or "").strip().lower()
         log_event("telegram_cmd", "", text[:40])
         if text in ("/status", "status", "/positions", "positions"):
-            write_snapshot(ib, state)
-            snap = json.loads((JDIR / "snapshot.json").read_text())
-            lines = [f"📊 Status {now().astimezone(SGT):%H:%M} SGT · {C.BAR_SIZE} bars · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}"]
-            total = 0.0
-            for p_ in snap["positions"]:
-                st = p_["stop"]
-                total += p_["unrealized_usd"] or 0
-                lines.append(f"{'LONG' if p_['qty'] > 0 else 'SHORT'} {abs(p_['qty']):g} {p_['contract']} @ {p_['avg_price']} · now {p_['last']:.2f} · "
-                             f"{'+' if p_['unrealized_usd'] >= 0 else ''}${p_['unrealized_usd']:,.0f} · "
-                             + (f"stop {st['stop_price']} trail {st['trail']}" if st else "⚠️ NO STOP"))
-            if not snap["positions"]:
-                lines.append("No open positions.")
-            lines.append(f"Open P&L ${total:,.0f} · realised today ${todays_realised_pnl(ib):,.0f}")
-            if state.get("signal_status"):
-                lines.append("Setups (squeeze + breakout + 1h trend):")
-                lines += [f"  {k}: {v}" for k, v in state["signal_status"].items()]
-            send_telegram("\n".join(lines))
+            send_telegram(status_text(ib, state), html=True)
+        elif text in ("/summary", "summary", "/performance", "performance"):
+            send_telegram(summary_text(ib), html=True)
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
         elif text in ("/help", "help", "/start"):
-            send_telegram("/status — positions, P&L and stops\n/calendar — this week's high-impact US releases (SGT)")
+            send_telegram("/status — strategy, positions, stops and setups\n/summary — performance so far vs the backtest\n"
+                          "/calendar — this week's high-impact US releases (SGT)")
 
 
 # ── commands ──────────────────────────────────────────────────────────────────
