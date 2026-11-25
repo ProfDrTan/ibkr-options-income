@@ -8,11 +8,11 @@
     "download-daily-20y"
   ],
   "stops": {},
-  "signal_checked": "202611251602",
+  "signal_checked": "202611251603",
   "signal_bar": {
-    "MNQ": "2026-11-25 16:15:00+00:00",
-    "MGC": "2026-11-25 16:00:00+00:00",
-    "MYM": "2026-11-25 16:15:00+00:00",
+    "MNQ": "2026-11-25 16:30:00+00:00",
+    "MGC": "2026-11-25 16:30:00+00:00",
+    "MYM": "2026-11-25 16:30:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -41,8 +41,8 @@
   ],
   "last_error_alert": "2026-11-24T22:15:44+00:00",
   "signal_status": {
-    "MGC": "00:15 no squeeze",
-    "MNQ": "00:30 no squeeze; no 24h breakout",
-    "MYM": "00:30 no squeeze; no 24h breakout"
+    "MGC": "00:45 no squeeze; no 24h breakout",
+    "MNQ": "00:45 no squeeze; no 24h breakout",
+    "MYM": "00:46 no squeeze; no 24h breakout"
   }
 }
