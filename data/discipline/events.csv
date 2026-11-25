@@ -104,3 +104,4 @@ time_utc,type,symbol,detail
 2026-11-25T00:30:16+00:00,signal,MBT,SELL MBTZ6 close 59550.0 vs 20-bar low 59565.0
 2026-11-25T00:43:00+00:00,telegram_cmd,,/status
 2026-11-25T00:52:06+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
+2026-11-25T01:00:06+00:00,restart,,code updated 5135b44 -> 5b0ba70; restarting
