@@ -1,20 +1,5 @@
 {
-  "open": {
-    "MYM": {
-      "trade_id": "2b8c2b2b",
-      "symbol": "MYM",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-25T09:31:07+00:00",
-      "entry_price": 49677.0,
-      "atr": 81.5714,
-      "initial_stop": 49804.0,
-      "trail_dist": 245.0,
-      "risk_usd": 61.18,
-      "note": "auto squeeze 2026-11-25 09:15:00+00:00"
-    }
-  },
+  "open": {},
   "processed_commands": [
     "ping-1934",
     "test-mnq-2220",
@@ -22,12 +7,7 @@
     "download-2y",
     "download-daily-20y"
   ],
-  "stops": {
-    "MYM": {
-      "orderId": 589,
-      "trail": 245.0
-    }
-  },
+  "stops": {},
   "signal_checked": "202611251403",
   "signal_bar": {
     "MNQ": "2026-11-25 14:30:00+00:00",
@@ -38,9 +18,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "MYM": "2026-11-25T14:56:03+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423677,
   "calendar_fetched": "2026-11-25T13:54:02+00:00",
   "calendar": [

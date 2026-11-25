@@ -181,3 +181,4 @@ time_utc,type,symbol,detail
 2026-11-25T12:17:13+00:00,telegram_cmd,,/summary
 2026-11-25T12:23:15+00:00,telegram_cmd,,/status
 2026-11-25T13:54:02+00:00,calendar,,2 high-impact USD events this week
+2026-11-25T14:58:32+00:00,exit,MYM,trailing_stop @ 49187.0 | P&L $245 | 4.005R | 5.5h
