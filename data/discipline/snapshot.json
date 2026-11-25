@@ -1,19 +1,19 @@
 {
-  "time_utc": "2026-11-25T06:31:08+00:00",
+  "time_utc": "2026-11-25T06:46:01+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
-    "MGC": "14:31 squeeze, no breakout",
-    "MNQ": "14:31 no squeeze",
-    "MYM": "14:31 no squeeze"
+    "MGC": "14:45 squeeze, no breakout",
+    "MNQ": "14:46 no squeeze",
+    "MYM": "14:46 no squeeze"
   },
   "positions": [
     {
       "contract": "M2KZ6",
       "qty": -1.0,
       "avg_price": 2679.27,
-      "last": 2674.7260742,
-      "unrealized_usd": 22.7,
+      "last": 2674.3276367,
+      "unrealized_usd": 24.7,
       "stop": {
         "type": "TRAIL",
         "trail": 13.5,
@@ -25,8 +25,8 @@
       "contract": "MNQZ6",
       "qty": -1.0,
       "avg_price": 26068.67,
-      "last": 25904.0,
-      "unrealized_usd": 329.34,
+      "last": 25908.0703125,
+      "unrealized_usd": 321.19,
       "stop": {
         "type": "TRAIL",
         "trail": 220.0,
@@ -38,8 +38,8 @@
       "contract": "MGCG7",
       "qty": -1.0,
       "avg_price": 3546.4,
-      "last": 3550.69995115,
-      "unrealized_usd": -43.05,
+      "last": 3547.30004885,
+      "unrealized_usd": -9.05,
       "stop": {
         "type": "TRAIL",
         "trail": 24.8,
