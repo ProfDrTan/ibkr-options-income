@@ -502,10 +502,38 @@ def record_exits(ib, state, force=()):
 
 
 # ── entry signals (alerts only) ───────────────────────────────────────────────
+BARS = {}   # localSymbol -> list of completed+forming 15m bars, kept between loops
+
+
+def history(ib, contract):
+    """~30 days of 15m bars: fetched in 10-day chunks once, then topped up with the last day each bar."""
+    key = contract.localSymbol
+    def req(end, dur):
+        return ib.reqHistoricalData(contract, endDateTime=end, durationStr=dur, barSizeSetting=C.BAR_SIZE,
+                                    whatToShow="TRADES", useRTH=False, formatDate=2)
+    if key not in BARS:
+        bars, end = [], ""
+        for _ in range(C.HISTORY_DAYS // 10):
+            chunk = req(end, "10 D")
+            if not chunk:
+                break
+            bars = list(chunk) + [b for b in bars if b.date > chunk[-1].date]
+            first = chunk[0].date
+            end = (first - dt.timedelta(seconds=1)).astimezone(dt.timezone.utc).strftime("%Y%m%d-%H:%M:%S")
+        BARS[key] = bars
+    else:
+        top = req("", "1 D")
+        if top:
+            BARS[key] = ([b for b in BARS[key] if b.date < top[0].date] + list(top))[-3000:]
+    return BARS[key]
+
+
 def check_signals(ib, state):
-    """20-bar breakout on the last COMPLETED bar. Sends an alert; never places an order."""
+    """Squeeze-breakout-with-trend on the last COMPLETED bar (see signals.py), for markets with entries on."""
     seen = state.setdefault("signal_bar", {})
     for sym, spec in C.INSTRUMENTS.items():
+        if not spec.get("entries", True):
+            continue
         try:
             check_one_signal(ib, state, seen, sym, spec)
         except Exception as e:
@@ -513,49 +541,46 @@ def check_signals(ib, state):
 
 
 def check_one_signal(ib, state, seen, sym, spec):
-    if True:  # single symbol
-        contract = front_contract(ib, sym)
-        bars = ib.reqHistoricalData(contract, endDateTime="", durationStr="5 D", barSizeSetting=C.BAR_SIZE,
-                                    whatToShow="TRADES", useRTH=False, formatDate=2)
-        if len(bars) < max(C.BREAKOUT_BARS, C.ATR_PERIOD) + 3:
-            return
-        done = bars[:-1]                       # the last bar returned is still forming
-        bar, prior = done[-1], done[-1 - C.BREAKOUT_BARS:-1]
-        key = str(bar.date)
-        if seen.get(sym) == key:
-            return
-        seen[sym] = key
-        hi, lo = max(b.high for b in prior), min(b.low for b in prior)
-        side = "BUY" if bar.close > hi else "SELL" if bar.close < lo else None
-        if not side:
-            return
-        trs = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
-        atr = sum(trs[-C.ATR_PERIOD:]) / C.ATR_PERIOD
-        sign = 1 if side == "BUY" else -1
-        stop = round_tick(bar.close - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
-        trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
-        risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"]
-        why = check_entry(ib, state, sym, 1, atr)
-        level = hi if side == "BUY" else lo
-        JDIR.mkdir(parents=True, exist_ok=True)
-        new = not SIGNALS.exists()
-        with SIGNALS.open("a", newline="") as f:
-            w = csv.writer(f)
-            if new:
-                w.writerow(["bar_time", "symbol", "contract", "side", "close", "breakout_level", "atr", "stop", "trail",
-                            "risk_usd", "guardrails", "taken"])
-            w.writerow([key, sym, contract.localSymbol, side, bar.close, level, round(atr, 4), stop, trail,
-                        round(risk), why or "pass", ""])
-        log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close} vs 20-bar {'high' if sign > 0 else 'low'} {level}")
-        verdict = f"Guardrails: PASS" if not why else f"Guardrails: BLOCKED — {why}"
-        if C.AUTO_ENTRIES and not why:
-            send_telegram(f"🤖 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
-                          f"{'high' if sign > 0 else 'low'} {level}. Entering {side} 1 automatically (paper).")
-            enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto breakout {key}"})
-            return
-        send_telegram(f"📈 {sym} breakout: {C.BAR_SIZE} bar closed {bar.close} {'above' if sign > 0 else 'below'} the 20-bar "
-                      f"{'high' if sign > 0 else 'low'} {level}.\n{side} setup on {contract.localSymbol}: stop {stop}, "
-                      f"trail {trail}, risk ${risk:,.0f} per contract.\n{verdict}\nTell Claude \"take it\" or ignore.")
+    from discipline_bot.signals import squeeze_signal
+    contract = front_contract(ib, sym)
+    bars = history(ib, contract)
+    done = bars[:-1]                       # the last bar returned is still forming
+    if len(done) < C.ATR_PERIOD + 3:
+        return
+    bar = done[-1]
+    key = str(bar.date)
+    if seen.get(sym) == key:
+        return
+    seen[sym] = key
+    sign, reason = squeeze_signal([b.high for b in done], [b.low for b in done], [b.close for b in done])
+    if not sign:
+        if reason.startswith("warming"):
+            log_event("signal_info", sym, reason)
+        return
+    side = "BUY" if sign > 0 else "SELL"
+    trs = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
+    atr = sum(trs[-C.ATR_PERIOD:]) / C.ATR_PERIOD
+    stop = round_tick(bar.close - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
+    trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
+    risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"]
+    why = check_entry(ib, state, sym, 1, atr)
+    JDIR.mkdir(parents=True, exist_ok=True)
+    new = not SIGNALS.exists()
+    with SIGNALS.open("a", newline="") as f:
+        w = csv.writer(f)
+        if new:
+            w.writerow(["bar_time", "symbol", "contract", "side", "close", "breakout_level", "atr", "stop", "trail",
+                        "risk_usd", "guardrails", "taken"])
+        w.writerow([key, sym, contract.localSymbol, side, bar.close, reason, round(atr, 4), stop, trail,
+                    round(risk), why or "pass", ""])
+    log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close}: {reason}")
+    if C.AUTO_ENTRIES and not why:
+        send_telegram(f"🤖 {sym} {reason} ({C.BAR_SIZE} close {bar.close}). Entering {side} 1 automatically (paper).")
+        enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto squeeze {key}"})
+        return
+    send_telegram(f"📈 {sym} {reason} ({C.BAR_SIZE} close {bar.close}).\n{side} setup on {contract.localSymbol}: "
+                  f"stop {stop}, trail {trail}, risk ${risk:,.0f} per contract.\n"
+                  f"Guardrails: {'PASS' if not why else 'BLOCKED — ' + why}")
 
 
 def write_snapshot(ib, state):

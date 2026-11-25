@@ -1,0 +1,74 @@
+"""
+discipline_bot/signals.py: entry rules, pure Python (no pandas needed on the Lenovo).
+
+SQUEEZE BREAKOUT WITH TREND (chosen 25 Nov 2026 from a 2-year, 15-minute walk-forward test):
+  1. Squeeze: the 40-bar Bollinger band width (4 x stdev / mean) ranked in the lowest 20% of the
+     last 500 bars, at any time in the last 6 bars. The market has gone quiet and coiled.
+  2. Breakout: the bar closes above the highest high (long) or below the lowest low (short) of
+     the prior 40 bars.
+  3. Trend: only in the direction of the 1-hour trend, EMA(200) vs EMA(800) of 15-minute closes
+     (about EMA 50 vs 200 on 1-hour bars).
+Exits are unchanged: initial stop 1.5 ATR, trailing 3 ATR, no profit target.
+Must stay identical to research/strategies.py squeeze(n=40, pct=0.2) and is checked against it.
+"""
+import math
+
+N = 40          # breakout and band lookback
+PCT = 0.20      # squeeze = band width in lowest 20%
+LOOK = 500      # bars used to rank band width
+RECENT = 6      # squeeze must have occurred within the last 6 bars
+FAST, SLOW = 200, 800
+MIN_BARS = SLOW * 2   # EMA warm-up
+
+
+def _ema(xs, n):
+    a, out, e = 2 / (n + 1), [], None
+    for x in xs:
+        e = x if e is None else a * x + (1 - a) * e
+        out.append(e)
+    return out
+
+
+def _widths(closes, n):
+    out = [None] * len(closes)
+    for i in range(n - 1, len(closes)):
+        w = closes[i - n + 1:i + 1]
+        m = sum(w) / n
+        sd = math.sqrt(sum((x - m) ** 2 for x in w) / (n - 1))
+        out[i] = 4 * sd / m
+    return out
+
+
+def _pct_rank(window):
+    """pandas rank(pct=True) of the last value, ties averaged."""
+    v = window[-1]
+    less = sum(1 for x in window if x < v)
+    eq = sum(1 for x in window if x == v)
+    return (less + (eq + 1) / 2) / len(window)
+
+
+def squeeze_signal(highs, lows, closes):
+    """Signal on the LAST completed bar: +1 long, -1 short, 0 none, plus a reason string."""
+    k = len(closes)
+    if k < MIN_BARS:
+        return 0, f"warming up ({k}/{MIN_BARS} bars)"
+    wid = _widths(closes, N)
+    squeezed = False
+    for j in range(k - RECENT, k):
+        win = [w for w in wid[j - LOOK + 1:j + 1] if w is not None]
+        if len(win) == LOOK and _pct_rank(win) < PCT:
+            squeezed = True
+            break
+    if not squeezed:
+        return 0, "no squeeze"
+    hi, lo = max(highs[-N - 1:-1]), min(lows[-N - 1:-1])
+    c = closes[-1]
+    brk = 1 if c > hi else -1 if c < lo else 0
+    if not brk:
+        return 0, "squeeze, no breakout"
+    f, s = _ema(closes, FAST)[-1], _ema(closes, SLOW)[-1]
+    trend = 1 if f > s else -1 if f < s else 0
+    if brk != trend:
+        return 0, "breakout against 1h trend"
+    return brk, (f"squeeze breakout {'above' if brk > 0 else 'below'} 40-bar {'high' if brk > 0 else 'low'} "
+                 f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")

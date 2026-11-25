@@ -23,14 +23,17 @@ ALLOW_LIVE = False
 # roll_days: skip any contract that expires within this many days (use the next one instead)
 # multiplier/tick are overwritten at runtime with IBKR's own contract details (front_contract), so they
 # can't drift from the exchange's specs. index=True marks US stock-index futures (they move together).
+# "entries": True = the squeeze-breakout entry rule trades it. False = no new entries (open positions are
+# still managed). 25 Nov 2026, 2-year 15m test of the squeeze rule: MGC +0.22R, MNQ +0.30R, MYM +0.17R per trade,
+# positive in both years; M2K -0.03R, MCL -0.03R, ZN -0.67R (stop is only ~4 ticks, costs eat it); MBT pending.
 INSTRUMENTS = {
-    "MGC": {"exchange": "COMEX", "multiplier": 10.0,   "tick": 0.10,     "roll_days": 35},  # Micro gold
-    "MNQ": {"exchange": "CME",   "multiplier": 2.0,    "tick": 0.25,     "roll_days": 8, "index": True},  # Micro Nasdaq
-    "MYM": {"exchange": "CBOT",  "multiplier": 0.5,    "tick": 1.0,      "roll_days": 8, "index": True},  # Micro Dow
-    "M2K": {"exchange": "CME",   "multiplier": 5.0,    "tick": 0.10,     "roll_days": 8, "index": True},  # Micro Russell 2000
-    "MCL": {"exchange": "NYMEX", "multiplier": 100.0,  "tick": 0.01,     "roll_days": 10},  # Micro WTI crude
-    "ZN":  {"exchange": "CBOT",  "multiplier": 1000.0, "tick": 0.015625, "roll_days": 40},  # 10-year T-note (TNX proxy)
-    "MBT": {"exchange": "CME",   "multiplier": 0.1,    "tick": 5.0,      "roll_days": 5},   # Micro bitcoin
+    "MGC": {"exchange": "COMEX", "multiplier": 10.0,   "tick": 0.10,     "roll_days": 35, "entries": True},  # Micro gold
+    "MNQ": {"exchange": "CME",   "multiplier": 2.0,    "tick": 0.25,     "roll_days": 8, "index": True, "entries": True},  # Micro Nasdaq
+    "MYM": {"exchange": "CBOT",  "multiplier": 0.5,    "tick": 1.0,      "roll_days": 8, "index": True, "entries": True},  # Micro Dow
+    "M2K": {"exchange": "CME",   "multiplier": 5.0,    "tick": 0.10,     "roll_days": 8, "index": True, "entries": False},  # Micro Russell 2000
+    "MCL": {"exchange": "NYMEX", "multiplier": 100.0,  "tick": 0.01,     "roll_days": 10, "entries": False},  # Micro WTI crude
+    "ZN":  {"exchange": "CBOT",  "multiplier": 1000.0, "tick": 0.015625, "roll_days": 40, "entries": False},  # 10-year T-note (TNX proxy)
+    "MBT": {"exchange": "CME",   "multiplier": 0.1,    "tick": 5.0,      "roll_days": 5, "entries": False},   # Micro bitcoin
 }
 
 # ── EXIT RULE (do not change without re-running the backtest) ─────────────────
@@ -64,7 +67,8 @@ GUARD_MANUAL_POSITIONS = True
 # highest high (buy) or below the lowest low (sell) of the previous 20 bars. Backtest Sep-Nov 2026, 1-hour,
 # Rule D exits, after costs: MGC 34 trades +0.42R avg, MNQ 39 trades +0.45R avg. Small sample, volatile period.
 SIGNAL_ALERTS = True
-BREAKOUT_BARS = 20
+BREAKOUT_BARS = 20  # old rule, no longer used for entries (see signals.py)
+HISTORY_DAYS = 40   # 15m bars kept per market for the squeeze rule's 1h-trend EMAs
 
 # Automatic entries: ON for the PAPER account, so breakouts at 3 am are taken while you sleep.
 # Every auto entry passes the same guardrails and goes in with its trailing stop attached.
