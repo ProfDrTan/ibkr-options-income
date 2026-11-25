@@ -133,3 +133,6 @@ time_utc,type,symbol,detail
 2026-11-25T02:22:53+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T02:22:56+00:00,exit,MGC,trailing_stop @ 3591.7 | P&L $-91 | -0.595R | 7.6h
 2026-11-25T02:26:13+00:00,telegram_cmd,,/status
+2026-11-25T03:00:44+00:00,signal,MNQ,SELL MNQZ6 close 25925.25 vs 20-bar low 25960.5
+2026-11-25T03:00:47+00:00,signal,M2K,SELL M2KZ6 close 2674.6 vs 20-bar low 2675.3
+2026-11-25T03:00:49+00:00,signal,MCL,SELL MCLF7 close 80.67 vs 20-bar low 80.8
