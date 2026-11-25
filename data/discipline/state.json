@@ -1,5 +1,20 @@
 {
-  "open": {},
+  "open": {
+    "MYM": {
+      "trade_id": "2b8c2b2b",
+      "symbol": "MYM",
+      "side": "SELL",
+      "qty": 1,
+      "source": "bot",
+      "entry_time": "2026-11-25T09:31:07+00:00",
+      "entry_price": 49677.0,
+      "atr": 81.5714,
+      "initial_stop": 49804.0,
+      "trail_dist": 245.0,
+      "risk_usd": 61.18,
+      "note": "auto squeeze 2026-11-25 09:15:00+00:00"
+    }
+  },
   "processed_commands": [
     "ping-1934",
     "test-mnq-2220",
@@ -7,12 +22,17 @@
     "download-2y",
     "download-daily-20y"
   ],
-  "stops": {},
-  "signal_checked": "202611250901",
+  "stops": {
+    "MYM": {
+      "orderId": 589,
+      "trail": 245.0
+    }
+  },
+  "signal_checked": "202611250902",
   "signal_bar": {
-    "MNQ": "2026-11-25 09:00:00+00:00",
-    "MGC": "2026-11-25 09:00:00+00:00",
-    "MYM": "2026-11-25 09:00:00+00:00",
+    "MNQ": "2026-11-25 09:15:00+00:00",
+    "MGC": "2026-11-25 09:15:00+00:00",
+    "MYM": "2026-11-25 09:15:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -38,8 +58,8 @@
   "calendar_warned": [],
   "last_error_alert": "2026-11-24T22:15:44+00:00",
   "signal_status": {
-    "MGC": "17:15 no squeeze",
-    "MNQ": "17:15 no squeeze",
-    "MYM": "17:15 squeeze, no breakout"
+    "MGC": "17:31 no squeeze",
+    "MNQ": "17:31 no squeeze",
+    "MYM": "17:31 squeeze breakout below 40-bar low 49695.0, 1h trend down"
   }
 }

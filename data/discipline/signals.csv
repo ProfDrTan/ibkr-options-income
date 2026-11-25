@@ -27,3 +27,4 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-25 02:45:00+00:00,M2K,M2KZ6,SELL,2674.6,2675.3,3.7929,2680.3,11.4,28,already holding M2K,
 2026-11-25 02:45:00+00:00,MCL,MCLF7,SELL,80.67,80.8,0.1886,80.95,0.57,28,already holding MCL,
 2026-11-25 05:45:00+00:00,MGC,MGCG7,SELL,3550.6,"squeeze breakout below 40-bar low 3557.7, 1h trend down",9.4071,3564.7,28.2,141,pass,
+2026-11-25 09:15:00+00:00,MYM,MYMZ6,SELL,49673.0,"squeeze breakout below 40-bar low 49695.0, 1h trend down",88.0,49805.0,264.0,66,pass,
