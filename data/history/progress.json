@@ -1,10 +1,11 @@
 {
   "MGC": "complete: 47270 bars",
-  "updated_utc": "2026-11-25T03:46:18+00:00",
+  "updated_utc": "2026-11-25T03:47:30+00:00",
   "MNQ": "complete: 47204 bars",
   "MYM": "complete: 47204 bars",
   "M2K": "complete: 44039 bars",
   "MCL": "complete: 47270 bars",
   "ZN": "complete: 47237 bars",
-  "MBT": "MBTV6 done, 49537 bars so far"
+  "MBT": "complete: 52491 bars",
+  "finished": true
 }
