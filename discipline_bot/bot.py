@@ -20,7 +20,7 @@ Usage (Windows, from the repo folder):
 import csv, datetime as dt, json, math, os, subprocess, sys, time, uuid
 from pathlib import Path
 
-from ib_async import IB, Future, LimitOrder, MarketOrder, Order
+from ib_async import IB, Future, Index, LimitOrder, MarketOrder, Order
 
 from discipline_bot import config as C
 
@@ -546,6 +546,27 @@ def history(ib, contract):
     return BARS[key]
 
 
+VIXC = {"t": None, "v": None}
+
+
+def prior_vix(ib):
+    """Yesterday's VIX close (cached 1 hour). Used by the fear guard: no stock-index longs when VIX > 22."""
+    if VIXC["t"] and (now() - VIXC["t"]).total_seconds() < 3600:
+        return VIXC["v"]
+    try:
+        vix = Index("VIX", "CBOE", "USD")
+        ib.qualifyContracts(vix)
+        bars = ib.reqHistoricalData(vix, endDateTime="", durationStr="5 D", barSizeSetting="1 day",
+                                    whatToShow="TRADES", useRTH=True, formatDate=1)
+        today = now().astimezone(dt.timezone(dt.timedelta(hours=-5))).date()   # US date
+        done = [b for b in bars if b.date < today]
+        VIXC.update(t=now(), v=done[-1].close if done else None)
+    except Exception as e:
+        log_event("vix_error", "", repr(e)[:200])
+        VIXC.update(t=now(), v=None)
+    return VIXC["v"]
+
+
 def check_signals(ib, state):
     """Squeeze-breakout-with-trend on the last COMPLETED bar (see signals.py), for markets with entries on."""
     seen = state.setdefault("signal_bar", {})
@@ -584,6 +605,12 @@ def check_one_signal(ib, state, seen, sym, spec):
         if reason.startswith("warming"):
             log_event("signal_info", sym, reason)
         return
+    if sign > 0 and spec.get("index"):
+        v = prior_vix(ib)
+        if v is not None and v > C.VIX_NO_INDEX_LONGS:
+            state["signal_status"][sym] += f" · LONG skipped: VIX {v:.1f} > {C.VIX_NO_INDEX_LONGS} (fear guard)"
+            log_event("blocked", sym, f"{rule} long skipped, prior VIX close {v:.1f} > {C.VIX_NO_INDEX_LONGS}")
+            return
     side = "BUY" if sign > 0 else "SELL"
     trs = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
     atr = sum(trs[-C.ATR_PERIOD:]) / C.ATR_PERIOD
@@ -633,6 +660,7 @@ def write_snapshot(ib, state):
 STRATEGY = ("<b>Strategy</b>: two entry rules, both only with the 1h trend, 15-min bars\n"
             "1) Squeeze: quiet market (40-bar band width in lowest 20%) + close beyond 40-bar high/low\n"
             "2) 24h breakout: close beyond the 24-hour high/low (catches trends already running)\n"
+            "Fear guard: no Nasdaq/Dow longs while yesterday's VIX close is above 22\n"
             "Exit = stop 1.5 ATR, trail 3 ATR, no target · entries on 🟡MGC 🔵MNQ 🟢MYM")
 
 

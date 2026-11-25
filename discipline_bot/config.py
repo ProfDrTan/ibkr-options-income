@@ -83,3 +83,8 @@ JOURNAL_DIR = "data/discipline"
 COMMAND_FILE = "discipline_bot/commands/queue.json"
 BLACKOUT_FILE = "discipline_bot/blackout.json"
 ORDER_REF = "discipline_bot"      # tag on every order the bot places
+
+# 26 Nov 2026 fear guard: no stock-index (MNQ/MYM) LONG entries while yesterday's VIX close is above this.
+# 2-year test: index longs taken with VIX > 22 averaged -0.05R (MNQ, 23 trades) and -0.53R (MYM, 26 trades);
+# skipping them kept every big-move day and raised MYM to +0.27/+0.04R. Small sample: review after 3 months.
+VIX_NO_INDEX_LONGS = 22.0
