@@ -81,7 +81,8 @@ def squeeze_signal(highs, lows, closes):
 DAY = 96
 
 
-def daybreak_signal(highs, lows, closes):
+def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW):
+    """fast/slow: trend EMAs. MGC and MNQ use the faster 100/400 (about 1h EMA 25/100), MYM keeps 200/800."""
     k = len(closes)
     if k < MIN_BARS:
         return 0, f"warming up ({k}/{MIN_BARS} bars)"
@@ -90,9 +91,9 @@ def daybreak_signal(highs, lows, closes):
     brk = 1 if c > hi else -1 if c < lo else 0
     if not brk:
         return 0, "no 24h breakout"
-    f, s = _ema(closes, FAST)[-1], _ema(closes, SLOW)[-1]
+    f, s = _ema(closes, fast)[-1], _ema(closes, slow)[-1]
     trend = 1 if f > s else -1 if f < s else 0
     if brk != trend:
-        return 0, "24h breakout against 1h trend"
+        return 0, "24h breakout against trend"
     return brk, (f"24h breakout {'above' if brk > 0 else 'below'} 24-hour {'high' if brk > 0 else 'low'} "
                  f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")

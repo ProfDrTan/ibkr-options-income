@@ -88,3 +88,8 @@ ORDER_REF = "discipline_bot"      # tag on every order the bot places
 # 2-year test: index longs taken with VIX > 22 averaged -0.05R (MNQ, 23 trades) and -0.53R (MYM, 26 trades);
 # skipping them kept every big-move day and raised MYM to +0.27/+0.04R. Small sample: review after 3 months.
 VIX_NO_INDEX_LONGS = 22.0
+
+# 26 Nov 2026: trend EMAs (15m bars) for the 24h-breakout rule. Faster trend turns sooner after V-reversals.
+# 2-year test vs 200/800: MGC +0.08/+0.23R, big days 13/15 (was 11); MNQ +0.41/+0.12R, big days 11/15 (was 10).
+# MYM got worse with the faster trend (+0.12/-0.01R), so it keeps 200/800.
+DAYBREAK_TREND = {"MGC": (100, 400), "MNQ": (100, 400), "MYM": (200, 800)}

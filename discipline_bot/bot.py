@@ -595,7 +595,7 @@ def check_one_signal(ib, state, seen, sym, spec):
     sign, reason = squeeze_signal(H, L, Cl)
     rule = "squeeze"
     if not sign and not reason.startswith("warming"):
-        sign2, reason2 = daybreak_signal(H, L, Cl)
+        sign2, reason2 = daybreak_signal(H, L, Cl, *C.DAYBREAK_TREND.get(sym, (200, 800)))
         if sign2:
             sign, reason, rule = sign2, reason2, "24h breakout"
         else:
