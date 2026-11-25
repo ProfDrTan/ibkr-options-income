@@ -156,3 +156,4 @@ time_utc,type,symbol,detail
 2026-11-25T06:04:04+00:00,exit,MCL,trailing_stop @ 81.0 | P&L $-8 | -0.294R | 3.8h
 2026-11-25T06:05:09+00:00,telegram_cmd,,/status
 2026-11-25T06:05:25+00:00,telegram_cmd,,/calendar
+2026-11-25T07:04:29+00:00,telegram_cmd,,/status
