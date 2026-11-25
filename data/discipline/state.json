@@ -1,34 +1,5 @@
 {
-  "open": {
-    "M2K": {
-      "trade_id": "35c1c85a",
-      "symbol": "M2K",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-25T00:16:01+00:00",
-      "entry_price": 2679.4,
-      "atr": 4.5071,
-      "initial_stop": 2686.4,
-      "trail_dist": 13.5,
-      "risk_usd": 33.8,
-      "note": "auto breakout 2026-11-25 00:00:00+00:00"
-    },
-    "MNQ": {
-      "trade_id": "55964e9e",
-      "symbol": "MNQ",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-25T02:00:20+00:00",
-      "entry_price": 26069.0,
-      "atr": 73.3571,
-      "initial_stop": 26179.25,
-      "trail_dist": 220.0,
-      "risk_usd": 220.07,
-      "note": "auto breakout 2026-11-25 01:45:00+00:00"
-    }
-  },
+  "open": {},
   "processed_commands": [
     "ping-1934",
     "test-mnq-2220",
@@ -36,16 +7,7 @@
     "download-2y",
     "download-daily-20y"
   ],
-  "stops": {
-    "M2K": {
-      "orderId": 436,
-      "trail": 13.5
-    },
-    "MNQ": {
-      "orderId": 461,
-      "trail": 220.0
-    }
-  },
+  "stops": {},
   "signal_checked": "202611250802",
   "signal_bar": {
     "MNQ": "2026-11-25 08:15:00+00:00",
@@ -56,11 +18,8 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "M2K": "2026-11-25T08:30:32+00:00",
-    "MNQ": "2026-11-25T08:30:32+00:00"
-  },
-  "tg_offset": 667423674,
+  "missing_since": {},
+  "tg_offset": 667423675,
   "calendar_fetched": "2026-11-25T07:52:44+00:00",
   "calendar": [
     {

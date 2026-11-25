@@ -171,3 +171,6 @@ time_utc,type,symbol,detail
 2026-11-25T07:52:24+00:00,start,,port 4002 | code 56210ed | auto entries ON
 2026-11-25T07:52:43+00:00,connected,,DUQ138203
 2026-11-25T07:52:44+00:00,calendar,,2 high-impact USD events this week
+2026-11-25T08:32:42+00:00,telegram_cmd,,/status
+2026-11-25T08:32:45+00:00,exit,M2K,trailing_stop @ 2676.3 | P&L $15 | 0.459R | 8.3h
+2026-11-25T08:32:46+00:00,exit,MNQ,trailing_stop @ 25856.75 | P&L $424 | 1.929R | 6.5h
