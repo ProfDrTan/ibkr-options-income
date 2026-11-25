@@ -151,3 +151,5 @@ time_utc,type,symbol,detail
 2026-11-25T04:48:39+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T05:45:23+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
 2026-11-25T05:46:43+00:00,ibkr_error,MGC,366 (req 519): No historical data query found for ticker id:519
+2026-11-25T06:00:22+00:00,signal,MGC,"SELL MGCG7 close 3550.6: squeeze breakout below 40-bar low 3557.7, 1h trend down"
+2026-11-25T06:00:40+00:00,entry,MGC,SELL 1 @ 3546.5 | stop 3559.6 | trail 24.8 | risk $124
