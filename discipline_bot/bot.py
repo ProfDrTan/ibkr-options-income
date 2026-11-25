@@ -600,7 +600,9 @@ def check_one_signal(ib, state, seen, sym, spec):
             sign, reason, rule = sign2, reason2, "24h breakout"
         else:
             reason = f"{reason}; {reason2}"
-    state.setdefault("signal_status", {})[sym] = f"{now().astimezone(SGT):%H:%M} {reason}"
+    lo24, hi24 = min(L[-97:-1]), max(H[-97:-1])
+    state.setdefault("signal_status", {})[sym] = (f"{now().astimezone(SGT):%H:%M} close {Cl[-1]:g} · 24h range "
+                                                  f"{lo24:g}–{hi24:g} · {reason}")
     if not sign:
         if reason.startswith("warming"):
             log_event("signal_info", sym, reason)
