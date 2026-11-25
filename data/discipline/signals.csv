@@ -17,3 +17,4 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-25 00:00:00+00:00,M2K,M2KZ6,SELL,2680.2,2682.8,4.9786,2687.7,14.9,37,pass,
 2026-11-25 00:15:00+00:00,MGC,MGCG7,SELL,3569.4,3573.4,8.2214,3581.7,24.7,123,already holding MGC,
 2026-11-25 00:15:00+00:00,MBT,MBTZ6,SELL,59550.0,59565.0,160.7143,59790.0,480.0,24,already 4 open positions (max 4),
+2026-11-25 01:30:00+00:00,MBT,MBTZ6,SELL,59435.0,59490.0,189.2857,59720.0,570.0,28,already 4 open positions (max 4),
