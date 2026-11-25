@@ -162,3 +162,5 @@ time_utc,type,symbol,detail
 2026-11-25T07:11:28+00:00,start,,port 4002 | code 76c999a | auto entries ON
 2026-11-25T07:11:32+00:00,connected,,DUQ138203
 2026-11-25T07:11:33+00:00,calendar,,2 high-impact USD events this week
+2026-11-25T07:16:56+00:00,telegram_cmd,,/help
+2026-11-25T07:16:57+00:00,telegram_cmd,,/status
