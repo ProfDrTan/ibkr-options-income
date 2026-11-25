@@ -324,6 +324,8 @@ def trail_order(action, qty, stop_price, trail_dist, parent_id=0):
 def enter(ib, state, cmd):
     sym, side, qty = cmd["symbol"].upper(), cmd["side"].upper(), int(cmd.get("qty", 1))
     spec = C.INSTRUMENTS[sym]
+    if sym in state["open"] and not any(p.position for p in ib.positions() if p.contract.symbol == sym):
+        record_exits(ib, state, force=(sym,))   # previous trade in this market closed since the last loop: journal it first
     contract = front_contract(ib, sym)
     atr, price = atr_and_last(ib, contract)
     why = check_entry(ib, state, sym, qty, atr)
@@ -458,7 +460,7 @@ def flatten(ib, state, sym, reason):
     log_event("flatten", sym, reason)
 
 
-def record_exits(ib, state):
+def record_exits(ib, state, force=()):
     held = {p.contract.symbol for p in ib.positions() if p.position}
     missing = state.setdefault("missing_since", {})
     for sym in list(state["open"]):
@@ -467,11 +469,12 @@ def record_exits(ib, state):
             continue
         tr = state["open"][sym]
         age = (now() - dt.datetime.fromisoformat(tr["entry_time"])).total_seconds()
-        if age < 180:                          # IBKR can take a moment to report a new position
-            continue
-        missing.setdefault(sym, now().isoformat(timespec="seconds"))
-        if (now() - dt.datetime.fromisoformat(missing[sym])).total_seconds() < 120:
-            continue                            # must be gone for 2 minutes before we call it closed
+        if sym not in force:
+            if age < 180:                      # IBKR can take a moment to report a new position
+                continue
+            missing.setdefault(sym, now().isoformat(timespec="seconds"))
+            if (now() - dt.datetime.fromisoformat(missing[sym])).total_seconds() < 120:
+                continue                            # must be gone for 2 minutes before we call it closed
         entry_t = dt.datetime.fromisoformat(tr["entry_time"])
         spec = C.INSTRUMENTS[sym]
         fills = sorted((f for f in ib.fills() if f.contract.symbol == sym and f.time >= entry_t), key=lambda f: f.time)
