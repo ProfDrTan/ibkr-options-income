@@ -151,7 +151,7 @@ def git_out(*args):
 
 
 def git_push_journal():
-    git("add", C.JOURNAL_DIR, C.COMMAND_FILE)
+    git("add", C.JOURNAL_DIR, C.COMMAND_FILE, *(["data/history"] if (ROOT / "data" / "history").exists() else []))
     git("commit", "-q", "-m", "discipline_bot journal update")
     git("push", "-q")
 
@@ -639,6 +639,13 @@ def process_commands(ib, state):
                 enter(ib, state, cmd)
             elif cmd["action"] == "exit":
                 flatten(ib, state, cmd["symbol"].upper(), "manual_exit")
+            elif cmd["action"] == "download_history":
+                root = Path(__file__).resolve().parent.parent
+                (root / "data" / "history").mkdir(parents=True, exist_ok=True)
+                log = open(root / "data" / "history" / "download.log", "a")
+                subprocess.Popen([sys.executable, "-u", "-m", "discipline_bot.download"], cwd=root,
+                                 stdout=log, stderr=subprocess.STDOUT)
+                log_event("download_started", "", "2-year 15-minute history download started")
             else:
                 log_event("blocked", cmd.get("symbol", ""), f"unknown action {cmd['action']}")
         except Exception as e:
