@@ -1,6 +1,6 @@
 {
   "SPY": "5026 bars (20 Y)",
-  "updated_utc": "2026-11-25T04:13:50+00:00",
+  "updated_utc": "2026-11-25T04:15:11+00:00",
   "QQQ": "4938 bars (20 Y)",
   "IWM": "5026 bars (20 Y)",
   "DIA": "4212 bars (20 Y)",
@@ -10,5 +10,10 @@
   "IEF": "2341 bars (20 Y)",
   "SHY": "2341 bars (20 Y)",
   "HYG": "4938 bars (20 Y)",
-  "LQD": "4994 bars (20 Y)"
+  "LQD": "4994 bars (20 Y)",
+  "UUP": "4972 bars (20 Y)",
+  "USO": "5026 bars (20 Y)",
+  "EFA": "5027 bars (20 Y)",
+  "EEM": "5027 bars (20 Y)",
+  "VNQ": "5026 bars (20 Y)"
 }
