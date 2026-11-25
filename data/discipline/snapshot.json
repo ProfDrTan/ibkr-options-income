@@ -1,11 +1,11 @@
 {
-  "time_utc": "2026-11-25T16:00:10+00:00",
+  "time_utc": "2026-11-25T16:15:13+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
-    "MGC": "00:00 no squeeze",
-    "MNQ": "00:00 no squeeze",
-    "MYM": "00:00 no squeeze"
+    "MGC": "00:15 no squeeze",
+    "MNQ": "00:15 no squeeze",
+    "MYM": "00:15 no squeeze"
   },
   "positions": []
 }
