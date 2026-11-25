@@ -178,3 +178,4 @@ time_utc,type,symbol,detail
 2026-11-25T09:31:07+00:00,entry,MYM,SELL 1 @ 49677.0 | stop 49804.0 | trail 245.0 | risk $61
 2026-11-25T09:45:35+00:00,signal,MYM,"SELL MYMZ6 close 49645.0: squeeze breakout below 40-bar low 49664.0, 1h trend down"
 2026-11-25T10:53:43+00:00,calendar,,2 high-impact USD events this week
+2026-11-25T12:17:13+00:00,telegram_cmd,,/summary
