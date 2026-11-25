@@ -196,3 +196,4 @@ time_utc,type,symbol,detail
 2026-11-25T22:15:23+00:00,signal_error,MYM,ConnectionError('Not connected')
 2026-11-25T22:15:23+00:00,error,,ConnectionError('Not connected')
 2026-11-25T22:16:27+00:00,connected,,DUQ138203
+2026-11-25T22:30:49+00:00,restart,,code updated b5ef80f -> 8dccd1a; restarting
