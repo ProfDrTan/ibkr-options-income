@@ -72,3 +72,27 @@ def squeeze_signal(highs, lows, closes):
         return 0, "breakout against 1h trend"
     return brk, (f"squeeze breakout {'above' if brk > 0 else 'below'} 40-bar {'high' if brk > 0 else 'low'} "
                  f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")
+
+
+# 24-HOUR BREAKOUT WITH TREND (added 26 Nov 2026; catches trends already under way, when there is no squeeze):
+#   the bar closes beyond the highest high / lowest low of the prior 96 bars (24 hours), in the direction
+#   of the same 1-hour trend. 2-year test, combined with the squeeze rule: MGC +0.10/+0.24R, MNQ +0.29/+0.13R,
+#   MYM +0.20/+0.04R per trade (year 1/year 2). Identical to research/cont.py day_break(n=96).
+DAY = 96
+
+
+def daybreak_signal(highs, lows, closes):
+    k = len(closes)
+    if k < MIN_BARS:
+        return 0, f"warming up ({k}/{MIN_BARS} bars)"
+    hi, lo = max(highs[-DAY - 1:-1]), min(lows[-DAY - 1:-1])
+    c = closes[-1]
+    brk = 1 if c > hi else -1 if c < lo else 0
+    if not brk:
+        return 0, "no 24h breakout"
+    f, s = _ema(closes, FAST)[-1], _ema(closes, SLOW)[-1]
+    trend = 1 if f > s else -1 if f < s else 0
+    if brk != trend:
+        return 0, "24h breakout against 1h trend"
+    return brk, (f"24h breakout {'above' if brk > 0 else 'below'} 24-hour {'high' if brk > 0 else 'low'} "
+                 f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")

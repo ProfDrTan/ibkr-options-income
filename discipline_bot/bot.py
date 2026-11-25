@@ -43,7 +43,7 @@ TG_FILE = Path(__file__).resolve().parent / "telegram.json"
 
 COLOR = {"MGC": "🟡", "MNQ": "🔵", "MYM": "🟢", "M2K": "🟣", "MCL": "🟤", "ZN": "⚪", "MBT": "🟠"}
 NAME = {"MGC": "Gold", "MNQ": "Nasdaq", "MYM": "Dow", "M2K": "Russell", "MCL": "Crude", "ZN": "10-yr note", "MBT": "Bitcoin"}
-EXPECT_R = {"MGC": 0.22, "MNQ": 0.30, "MYM": 0.17}   # 2-year backtest of the squeeze rule, per trade after costs
+EXPECT_R = {"MGC": 0.17, "MNQ": 0.21, "MYM": 0.12}   # 2-year backtest, squeeze + 24h breakout combined, per trade after costs
 
 
 def colorize(msg):
@@ -559,7 +559,7 @@ def check_signals(ib, state):
 
 
 def check_one_signal(ib, state, seen, sym, spec):
-    from discipline_bot.signals import squeeze_signal
+    from discipline_bot.signals import squeeze_signal, daybreak_signal
     contract = front_contract(ib, sym)
     bars = history(ib, contract)
     done = bars[:-1]                       # the last bar returned is still forming
@@ -570,7 +570,15 @@ def check_one_signal(ib, state, seen, sym, spec):
     if seen.get(sym) == key:
         return
     seen[sym] = key
-    sign, reason = squeeze_signal([b.high for b in done], [b.low for b in done], [b.close for b in done])
+    H, L, Cl = [b.high for b in done], [b.low for b in done], [b.close for b in done]
+    sign, reason = squeeze_signal(H, L, Cl)
+    rule = "squeeze"
+    if not sign and not reason.startswith("warming"):
+        sign2, reason2 = daybreak_signal(H, L, Cl)
+        if sign2:
+            sign, reason, rule = sign2, reason2, "24h breakout"
+        else:
+            reason = f"{reason}; {reason2}"
     state.setdefault("signal_status", {})[sym] = f"{now().astimezone(SGT):%H:%M} {reason}"
     if not sign:
         if reason.startswith("warming"):
@@ -594,10 +602,10 @@ def check_one_signal(ib, state, seen, sym, spec):
                     round(risk), why or "pass", ""])
     log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close}: {reason}")
     if C.AUTO_ENTRIES and not why:
-        send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} opening</b> · squeeze rule\n"
+        send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} opening</b> · {rule} rule\n"
                       f"   {reason} (15-min close {bar.close})\n"
                       f"   stop about {stop} · trail {trail} · risk about ${risk:,.0f}", html=True)
-        enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto squeeze {key}"})
+        enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto {'squeeze' if rule == 'squeeze' else 'daybreak'} {key}"})
         return
     send_telegram(f"📈 {sym} {reason} ({C.BAR_SIZE} close {bar.close}).\n{side} setup on {contract.localSymbol}: "
                   f"stop {stop}, trail {trail}, risk ${risk:,.0f} per contract.\n"
@@ -622,14 +630,16 @@ def write_snapshot(ib, state):
     (JDIR / "snapshot.json").write_text(json.dumps(snap, indent=2, default=str))
 
 
-STRATEGY = ("<b>Strategy</b>: squeeze breakout with 1h trend, 15-min bars\n"
-            "Entry = quiet market (40-bar band width in lowest 20%) + close beyond 40-bar high/low + 1h trend agrees\n"
+STRATEGY = ("<b>Strategy</b>: two entry rules, both only with the 1h trend, 15-min bars\n"
+            "1) Squeeze: quiet market (40-bar band width in lowest 20%) + close beyond 40-bar high/low\n"
+            "2) 24h breakout: close beyond the 24-hour high/low (catches trends already running)\n"
             "Exit = stop 1.5 ATR, trail 3 ATR, no target · entries on 🟡MGC 🔵MNQ 🟢MYM")
 
 
 def rule_of(tr):
     n = (tr or {}).get("note") or ""
-    return "squeeze rule" if "squeeze" in n else "old breakout rule" if "breakout" in n else "manual"
+    return ("squeeze rule" if "squeeze" in n else "24h breakout rule" if "daybreak" in n
+            else "old breakout rule" if "breakout" in n else "manual")
 
 
 def _esc(x):
@@ -671,10 +681,11 @@ def summary_text(ib, state=None):
             return None if math.isnan(v) else v
         except (TypeError, ValueError):
             return None
-    new = [r for r in rows if "squeeze" in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
-    old = [r for r in rows if "squeeze" not in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
+    isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak"))
+    new = [r for r in rows if isnew(r) and num(r.get("pnl_usd")) is not None]
+    old = [r for r in rows if not isnew(r) and num(r.get("pnl_usd")) is not None]
     out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b>", STRATEGY, "",
-           "<b>Squeeze rule</b> (live since 25 Nov 11:38 SGT), <b>closed</b> trades:"]
+           "<b>New rules</b> (squeeze since 25 Nov 11:38, 24h breakout since 26 Nov 00:45 SGT), <b>closed</b> trades:"]
     for sym in EXPECT_R:
         t = [r for r in new if r["symbol"] == sym]
         if not t:
@@ -698,14 +709,14 @@ def summary_text(ib, state=None):
                     live[it.contract.symbol] = it.unrealizedPNL
         except Exception:
             pass
-        opened = [(k, v) for k, v in state.get("open", {}).items() if "squeeze" in (v.get("note") or "")]
-        out.append("\n<b>Squeeze rule, open now:</b>" if opened else "\nSqueeze rule, open now: none")
+        opened = [(k, v) for k, v in state.get("open", {}).items() if isnew(v)]
+        out.append("\n<b>New rules, open now:</b>" if opened else "\nNew rules, open now: none")
         for k, v in opened:
             u = live.get(k)
             et = dt.datetime.fromisoformat(v["entry_time"]).astimezone(SGT)
-            out.append(f"{k} {'LONG' if v['side'] == 'BUY' else 'SHORT'} since {et:%a %H:%M} @ {v['entry_price']}"
+            out.append(f"{k} {'LONG' if v['side'] == 'BUY' else 'SHORT'} ({rule_of(v)}) since {et:%a %H:%M} @ {v['entry_price']}"
                        + (f" · {'+' if u >= 0 else '−'}${abs(u):,.0f} open" if u is not None else ""))
-        olds = [k for k, v in state.get("open", {}).items() if "squeeze" not in (v.get("note") or "")]
+        olds = [k for k, v in state.get("open", {}).items() if not isnew(v)]
         if olds:
             out.append("<i>Still open from the old rule (stops only, no new entries): " + ", ".join(olds) + "</i>")
     out.append("Expect: about 1 win in 3; profit comes from a few big winners. Judge after 30+ trades, not days.")
