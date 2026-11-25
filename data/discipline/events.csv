@@ -167,3 +167,4 @@ time_utc,type,symbol,detail
 2026-11-25T07:26:54+00:00,telegram_cmd,,/summary
 2026-11-25T07:40:03+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
 2026-11-25T07:48:59+00:00,exit,MGC,trailing_stop @ 3558.6 | P&L $-121 | -0.975R | 1.8h
+2026-11-25T07:52:16+00:00,restart,,code updated 68a8e5d -> aaa55bd; restarting
