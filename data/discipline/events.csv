@@ -100,3 +100,5 @@ time_utc,type,symbol,detail
 2026-11-24T22:17:07+00:00,connected,,DUQ138203
 2026-11-25T00:15:58+00:00,signal,M2K,SELL M2KZ6 close 2680.2 vs 20-bar low 2682.8
 2026-11-25T00:16:01+00:00,entry,M2K,SELL 1 @ 2679.4 | stop 2686.4 | trail 13.5 | risk $34
+2026-11-25T00:30:08+00:00,signal,MGC,SELL MGCG7 close 3569.4 vs 20-bar low 3573.4
+2026-11-25T00:30:16+00:00,signal,MBT,SELL MBTZ6 close 59550.0 vs 20-bar low 59565.0
