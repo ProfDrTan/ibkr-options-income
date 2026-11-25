@@ -553,6 +553,7 @@ def check_one_signal(ib, state, seen, sym, spec):
         return
     seen[sym] = key
     sign, reason = squeeze_signal([b.high for b in done], [b.low for b in done], [b.close for b in done])
+    state.setdefault("signal_status", {})[sym] = f"{now().astimezone(SGT):%H:%M} {reason}"
     if not sign:
         if reason.startswith("warming"):
             log_event("signal_info", sym, reason)
@@ -587,7 +588,7 @@ def write_snapshot(ib, state):
     """Positions, prices, P&L and stops, written each bar so Claude can read them from GitHub."""
     trades = ib.reqAllOpenOrders()
     snap = {"time_utc": now().isoformat(timespec="seconds"), "bar_size": C.BAR_SIZE,
-            "auto_entries": C.AUTO_ENTRIES, "positions": []}
+            "auto_entries": C.AUTO_ENTRIES, "signal_status": state.get("signal_status", {}), "positions": []}
     for it in ib.portfolio():
         if not it.position:
             continue
@@ -639,6 +640,9 @@ def telegram_commands(ib, state):
             if not snap["positions"]:
                 lines.append("No open positions.")
             lines.append(f"Open P&L ${total:,.0f} · realised today ${todays_realised_pnl(ib):,.0f}")
+            if state.get("signal_status"):
+                lines.append("Setups (squeeze + breakout + 1h trend):")
+                lines += [f"  {k}: {v}" for k, v in state["signal_status"].items()]
             send_telegram("\n".join(lines))
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
