@@ -600,6 +600,13 @@ def check_one_signal(ib, state, seen, sym, spec):
             sign, reason, rule = sign2, reason2, "24h breakout"
         else:
             reason = f"{reason}; {reason2}"
+    try:   # last 2 days of completed 15m bars, so every decision can be checked later
+        with (JDIR / f"bars_{sym}.csv").open("w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["time_utc", "open", "high", "low", "close", "volume"])
+            w.writerows((b.date.isoformat(), b.open, b.high, b.low, b.close, b.volume) for b in done[-192:])
+    except Exception as e:
+        log_event("bars_error", sym, repr(e)[:150])
     lo24, hi24 = min(L[-97:-1]), max(H[-97:-1])
     state.setdefault("signal_status", {})[sym] = (f"{now().astimezone(SGT):%H:%M} close {Cl[-1]:g} · 24h range "
                                                   f"{lo24:g}–{hi24:g} · {reason}")
