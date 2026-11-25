@@ -123,3 +123,6 @@ time_utc,type,symbol,detail
 2026-11-25T02:00:37+00:00,signal,MYM,SELL MYMZ6 close 49859.0 vs 20-bar low 49886.0
 2026-11-25T02:00:54+00:00,signal,M2K,SELL M2KZ6 close 2677.3 vs 20-bar low 2677.8
 2026-11-25T02:11:47+00:00,exit,MCL,trailing_stop @ 81.08 | P&L $-76 | -1.019R | 7.7h
+2026-11-25T02:15:21+00:00,signal,MNQ,SELL MNQZ6 close 26050.0 vs 20-bar low 26057.0
+2026-11-25T02:15:40+00:00,signal,MCL,SELL MCLF7 close 80.97 vs 20-bar low 81.29
+2026-11-25T02:15:44+00:00,entry,MCL,SELL 1 @ 80.92 | stop 81.19 | trail 0.54 | risk $27
