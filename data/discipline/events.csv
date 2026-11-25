@@ -118,3 +118,7 @@ time_utc,type,symbol,detail
 2026-11-25T01:37:46+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T01:45:37+00:00,signal,MBT,SELL MBTZ6 close 59435.0 vs 20-bar low 59490.0
 2026-11-25T01:54:45+00:00,exit,ZN,trailing_stop @ 106.703125 | P&L $-109 | -1.21R | 4.9h
+2026-11-25T02:00:17+00:00,signal,MNQ,SELL MNQZ6 close 26068.25 vs 20-bar low 26087.0
+2026-11-25T02:00:20+00:00,entry,MNQ,SELL 1 @ 26069.0 | stop 26179.25 | trail 220.0 | risk $220
+2026-11-25T02:00:37+00:00,signal,MYM,SELL MYMZ6 close 49859.0 vs 20-bar low 49886.0
+2026-11-25T02:00:54+00:00,signal,M2K,SELL M2KZ6 close 2677.3 vs 20-bar low 2677.8
