@@ -158,3 +158,4 @@ time_utc,type,symbol,detail
 2026-11-25T06:05:25+00:00,telegram_cmd,,/calendar
 2026-11-25T07:04:29+00:00,telegram_cmd,,/status
 2026-11-25T07:08:02+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
+2026-11-25T07:11:19+00:00,restart,,code updated 835bfca -> 74106b1; restarting
