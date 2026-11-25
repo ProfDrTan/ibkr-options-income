@@ -113,3 +113,6 @@ time_utc,type,symbol,detail
 2026-11-25T01:17:28+00:00,connected,,DUQ138203
 2026-11-25T01:17:29+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T01:37:36+00:00,restart,,code updated b015436 -> d41192b; restarting
+2026-11-25T01:37:44+00:00,start,,port 4002 | code 6f262a1 | auto entries ON
+2026-11-25T01:37:45+00:00,connected,,DUQ138203
+2026-11-25T01:37:46+00:00,calendar,,2 high-impact USD events this week
