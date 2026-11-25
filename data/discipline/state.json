@@ -28,20 +28,6 @@
       "risk_usd": 220.07,
       "note": "auto breakout 2026-11-25 01:45:00+00:00"
     },
-    "MCL": {
-      "trade_id": "edac5e9e",
-      "symbol": "MCL",
-      "side": "SELL",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-25T02:15:44+00:00",
-      "entry_price": 80.92,
-      "atr": 0.1814,
-      "initial_stop": 81.19,
-      "trail_dist": 0.54,
-      "risk_usd": 27.21,
-      "note": "auto breakout 2026-11-25 02:00:00+00:00"
-    },
     "MGC": {
       "trade_id": "d71fe07f",
       "symbol": "MGC",
@@ -73,10 +59,6 @@
       "orderId": 461,
       "trail": 220.0
     },
-    "MCL": {
-      "orderId": 487,
-      "trail": 0.54
-    },
     "MGC": {
       "orderId": 531,
       "trail": 24.8
@@ -92,9 +74,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "MCL": "2026-11-25T06:01:51+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423668,
   "calendar_fetched": "2026-11-25T04:48:39+00:00",
   "calendar": [
