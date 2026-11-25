@@ -132,3 +132,4 @@ time_utc,type,symbol,detail
 2026-11-25T02:22:53+00:00,download_started,,2-year 15-minute history download started
 2026-11-25T02:22:53+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T02:22:56+00:00,exit,MGC,trailing_stop @ 3591.7 | P&L $-91 | -0.595R | 7.6h
+2026-11-25T02:26:13+00:00,telegram_cmd,,/status
