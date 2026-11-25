@@ -205,3 +205,6 @@ time_utc,type,symbol,detail
 2026-11-25T23:02:13+00:00,connected,,DUQ138203
 2026-11-25T23:02:14+00:00,calendar,,2 high-impact USD events this week
 2026-11-25T23:17:35+00:00,restart,,code updated f9fc52b -> 03b3842; restarting
+2026-11-25T23:17:43+00:00,start,,port 4002 | code 2dd9242 | auto entries ON
+2026-11-25T23:17:44+00:00,connected,,DUQ138203
+2026-11-25T23:17:45+00:00,calendar,,2 high-impact USD events this week
