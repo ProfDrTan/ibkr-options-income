@@ -512,7 +512,11 @@ def record_exits(ib, state, force=()):
                   pnl_usd=round(pnl, 2), r_multiple=round(pnl / float(tr["risk_usd"]), 3), hours_held=round(hours, 1))
         write_trade(tr)
         log_event("exit", sym, f"{reason} @ {exit_price} | P&L ${pnl:,.0f} | {tr['r_multiple']}R | {hours:.1f}h")
-        send_telegram(f"🏁 {sym} closed ({reason}) @ {exit_price}: ${pnl:,.0f}, {tr['r_multiple']}R after {hours:.1f}h")
+        et = dt.datetime.fromisoformat(tr["entry_time"]).astimezone(SGT)
+        send_telegram(f"🏁 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} closed</b> · {rule_of(tr)}\n"
+                      f"   opened {et:%H:%M} SGT @ {tr['entry_price']} → closed @ {exit_price} ({reason.replace('_', ' ')})\n"
+                      f"   {'✅' if pnl >= 0 else '🔻'} <b>{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}</b> · {tr['r_multiple']:+.2f}R · held {hours:.1f}h",
+                      html=True)
 
 
 # ── entry signals (alerts only) ───────────────────────────────────────────────
@@ -590,7 +594,9 @@ def check_one_signal(ib, state, seen, sym, spec):
                     round(risk), why or "pass", ""])
     log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close}: {reason}")
     if C.AUTO_ENTRIES and not why:
-        send_telegram(f"🤖 {sym} {reason} ({C.BAR_SIZE} close {bar.close}). Entering {side} 1 automatically (paper).")
+        send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} opening</b> · squeeze rule\n"
+                      f"   {reason} (15-min close {bar.close})\n"
+                      f"   stop about {stop} · trail {trail} · risk about ${risk:,.0f}", html=True)
         enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto squeeze {key}"})
         return
     send_telegram(f"📈 {sym} {reason} ({C.BAR_SIZE} close {bar.close}).\n{side} setup on {contract.localSymbol}: "
@@ -621,6 +627,11 @@ STRATEGY = ("<b>Strategy</b>: squeeze breakout with 1h trend, 15-min bars\n"
             "Exit = stop 1.5 ATR, trail 3 ATR, no target · entries on 🟡MGC 🔵MNQ 🟢MYM")
 
 
+def rule_of(tr):
+    n = (tr or {}).get("note") or ""
+    return "squeeze rule" if "squeeze" in n else "old breakout rule" if "breakout" in n else "manual"
+
+
 def _esc(x):
     return str(x).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
@@ -636,7 +647,8 @@ def status_text(ib, state):
         st, u = p_["stop"], p_["unrealized_usd"] or 0
         total += u
         sym = next((k for k in COLOR if p_["contract"].startswith(k)), p_["contract"])
-        out.append(f"{'📈 LONG' if p_['qty'] > 0 else '📉 SHORT'} <b>{_esc(p_['contract'])}</b> ({NAME.get(sym, '')})\n"
+        out.append(f"{'📈 LONG' if p_['qty'] > 0 else '📉 SHORT'} <b>{_esc(p_['contract'])}</b> ({NAME.get(sym, '')}) · "
+                   f"<i>{rule_of(state['open'].get(sym))}</i>\n"
                    f"   entry {p_['avg_price']} → now {p_['last']:.2f}\n"
                    f"   {'✅' if u >= 0 else '🔻'} <b>{'+' if u >= 0 else '−'}${abs(u):,.0f}</b> · "
                    + (f"stop {st['stop_price']} (trail {st['trail']})" if st else "⚠️ NO STOP"))
@@ -651,7 +663,7 @@ def status_text(ib, state):
     return "\n".join(out)
 
 
-def summary_text(ib):
+def summary_text(ib, state=None):
     rows = list(csv.DictReader(TRADES.open())) if TRADES.exists() else []
     def num(x):
         try:
@@ -662,7 +674,7 @@ def summary_text(ib):
     new = [r for r in rows if "squeeze" in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
     old = [r for r in rows if "squeeze" not in (r.get("note") or "") and num(r.get("pnl_usd")) is not None]
     out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b>", STRATEGY, "",
-           "<b>Squeeze rule</b> (live since 25 Nov 11:38 SGT), closed trades:"]
+           "<b>Squeeze rule</b> (live since 25 Nov 11:38 SGT), <b>closed</b> trades:"]
     for sym in EXPECT_R:
         t = [r for r in new if r["symbol"] == sym]
         if not t:
@@ -676,7 +688,26 @@ def summary_text(ib):
         pnl = sum(num(r["pnl_usd"]) for r in new); rs = [num(r["r_multiple"]) or 0 for r in new]
         out.append(f"<b>Total: {len(new)} trades · {sum(1 for x in rs if x > 0)} won · "
                    f"{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f} · {sum(rs)/len(rs):+.2f}R/trade</b>")
-        big = max(rs); out.append(f"Biggest win {big:+.1f}R · losers cut at about −1R as designed")
+        if max(rs) > 0:
+            out.append(f"Biggest win {max(rs):+.1f}R · losers cut at about −1R as designed")
+    if state is not None:
+        live = {}
+        try:
+            for it in ib.portfolio():
+                if it.position:
+                    live[it.contract.symbol] = it.unrealizedPNL
+        except Exception:
+            pass
+        opened = [(k, v) for k, v in state.get("open", {}).items() if "squeeze" in (v.get("note") or "")]
+        out.append("\n<b>Squeeze rule, open now:</b>" if opened else "\nSqueeze rule, open now: none")
+        for k, v in opened:
+            u = live.get(k)
+            et = dt.datetime.fromisoformat(v["entry_time"]).astimezone(SGT)
+            out.append(f"{k} {'LONG' if v['side'] == 'BUY' else 'SHORT'} since {et:%a %H:%M} @ {v['entry_price']}"
+                       + (f" · {'+' if u >= 0 else '−'}${abs(u):,.0f} open" if u is not None else ""))
+        olds = [k for k, v in state.get("open", {}).items() if "squeeze" not in (v.get("note") or "")]
+        if olds:
+            out.append("<i>Still open from the old rule (stops only, no new entries): " + ", ".join(olds) + "</i>")
     out.append("Expect: about 1 win in 3; profit comes from a few big winners. Judge after 30+ trades, not days.")
     if old:
         pnl = sum(num(r["pnl_usd"]) for r in old)
@@ -713,7 +744,7 @@ def telegram_commands(ib, state):
         if text in ("/status", "status", "/positions", "positions"):
             send_telegram(status_text(ib, state), html=True)
         elif text in ("/summary", "summary", "/performance", "performance"):
-            send_telegram(summary_text(ib), html=True)
+            send_telegram(summary_text(ib, state), html=True)
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
         elif text in ("/help", "help", "/start"):
