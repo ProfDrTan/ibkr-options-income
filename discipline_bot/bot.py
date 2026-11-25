@@ -664,6 +664,13 @@ def process_commands(ib, state):
                 enter(ib, state, cmd)
             elif cmd["action"] == "exit":
                 flatten(ib, state, cmd["symbol"].upper(), "manual_exit")
+            elif cmd["action"] == "download_daily":
+                root = Path(__file__).resolve().parent.parent
+                (root / "data" / "history" / "daily").mkdir(parents=True, exist_ok=True)
+                log = open(root / "data" / "history" / "daily" / "download.log", "a")
+                subprocess.Popen([sys.executable, "-u", "-m", "discipline_bot.download_daily"], cwd=root,
+                                 stdout=log, stderr=subprocess.STDOUT)
+                log_event("download_started", "", "20-year daily ETF + VIX history download started")
             elif cmd["action"] == "download_history":
                 root = Path(__file__).resolve().parent.parent
                 (root / "data" / "history").mkdir(parents=True, exist_ok=True)

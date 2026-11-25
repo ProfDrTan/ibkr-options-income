@@ -28,5 +28,11 @@
     "action": "download_history",
     "note": "2 years of 15m bars, all 7 markets",
     "created_utc": "2026-11-25T02:21:47+00:00"
+  },
+  {
+    "id": "download-daily-20y",
+    "action": "download_daily",
+    "note": "ETF universe + VIX, daily, up to 20 years",
+    "created_utc": "2026-11-25T04:09:50+00:00"
   }
 ]
