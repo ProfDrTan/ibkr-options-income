@@ -126,3 +126,4 @@ time_utc,type,symbol,detail
 2026-11-25T02:15:21+00:00,signal,MNQ,SELL MNQZ6 close 26050.0 vs 20-bar low 26057.0
 2026-11-25T02:15:40+00:00,signal,MCL,SELL MCLF7 close 80.97 vs 20-bar low 81.29
 2026-11-25T02:15:44+00:00,entry,MCL,SELL 1 @ 80.92 | stop 81.19 | trail 0.54 | risk $27
+2026-11-25T02:22:43+00:00,restart,,code updated e58dc28 -> 25b0889; restarting
