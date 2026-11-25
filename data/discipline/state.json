@@ -14,20 +14,6 @@
       "risk_usd": 152.89,
       "note": "auto breakout 2026-11-24 18:30:00+00:00"
     },
-    "MCL": {
-      "trade_id": "4a6abad3",
-      "symbol": "MCL",
-      "side": "BUY",
-      "qty": 1,
-      "source": "bot",
-      "entry_time": "2026-11-24T18:31:08+00:00",
-      "entry_price": 81.84,
-      "atr": 0.4971,
-      "initial_stop": 81.08,
-      "trail_dist": 1.49,
-      "risk_usd": 74.57,
-      "note": "auto breakout 2026-11-24 18:15:00+00:00"
-    },
     "M2K": {
       "trade_id": "35c1c85a",
       "symbol": "M2K",
@@ -67,10 +53,6 @@
       "orderId": 182,
       "trail": 30.6
     },
-    "MCL": {
-      "orderId": 171,
-      "trail": 1.49
-    },
     "M2K": {
       "orderId": 436,
       "trail": 13.5
@@ -90,9 +72,7 @@
     "ZN": "2026-11-25 01:45:00+00:00",
     "MBT": "2026-11-25 01:45:00+00:00"
   },
-  "missing_since": {
-    "MCL": "2026-11-25T02:09:19+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423667,
   "calendar_fetched": "2026-11-25T01:37:46+00:00",
   "calendar": [
