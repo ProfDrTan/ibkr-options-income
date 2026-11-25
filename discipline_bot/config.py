@@ -35,12 +35,12 @@ INSTRUMENTS = {
 
 # ── EXIT RULE (do not change without re-running the backtest) ─────────────────
 ATR_PERIOD = 14
-# 25 Nov 2026: back to 1-hour bars (the backtested setting) while the regime/session research runs.
+# 25 Nov 2026: 15-minute bars at Prof's choice (1 hour tested better: 0.42-0.45R vs 0.10-0.31R per trade).
 # (15-minute bars were a demo setting on 24 Nov.)
 # The backtest favoured 1 hour (15 min: MGC +0.10R/trade over 74 trades, 19% wins; MNQ +0.31R).
 # To go back: BAR_SIZE = "1 hour" and BAR_MINUTES = 60.
-BAR_SIZE = "1 hour"
-BAR_MINUTES = 60
+BAR_SIZE = "15 mins"
+BAR_MINUTES = 15
 INITIAL_STOP_ATR = 1.5
 TRAIL_ATR = 3.0
 
