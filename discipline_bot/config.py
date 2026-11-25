@@ -35,11 +35,12 @@ INSTRUMENTS = {
 
 # ── EXIT RULE (do not change without re-running the backtest) ─────────────────
 ATR_PERIOD = 14
-# DEMO SETTING (24 Nov 2026): 15-minute bars, to see the machinery trade more often on paper.
+# 25 Nov 2026: back to 1-hour bars (the backtested setting) while the regime/session research runs.
+# (15-minute bars were a demo setting on 24 Nov.)
 # The backtest favoured 1 hour (15 min: MGC +0.10R/trade over 74 trades, 19% wins; MNQ +0.31R).
 # To go back: BAR_SIZE = "1 hour" and BAR_MINUTES = 60.
-BAR_SIZE = "15 mins"
-BAR_MINUTES = 15
+BAR_SIZE = "1 hour"
+BAR_MINUTES = 60
 INITIAL_STOP_ATR = 1.5
 TRAIL_ATR = 3.0
 
