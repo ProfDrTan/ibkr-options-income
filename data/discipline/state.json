@@ -64,11 +64,11 @@
       "trail": 0.54
     }
   },
-  "signal_checked": "202611250500",
+  "signal_checked": "202611250501",
   "signal_bar": {
-    "MNQ": "2026-11-25 04:45:00+00:00",
-    "MGC": "2026-11-25 04:45:00+00:00",
-    "MYM": "2026-11-25 04:45:00+00:00",
+    "MNQ": "2026-11-25 05:00:00+00:00",
+    "MGC": "2026-11-25 05:00:00+00:00",
+    "MYM": "2026-11-25 05:00:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -94,8 +94,8 @@
   "calendar_warned": [],
   "last_error_alert": "2026-11-24T22:15:44+00:00",
   "signal_status": {
-    "MGC": "13:00 squeeze, no breakout",
-    "MNQ": "13:00 no squeeze",
-    "MYM": "13:01 squeeze, no breakout"
+    "MGC": "13:15 squeeze, no breakout",
+    "MNQ": "13:15 no squeeze",
+    "MYM": "13:15 squeeze, no breakout"
   }
 }
