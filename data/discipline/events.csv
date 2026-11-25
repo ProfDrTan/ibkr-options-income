@@ -154,3 +154,5 @@ time_utc,type,symbol,detail
 2026-11-25T06:00:22+00:00,signal,MGC,"SELL MGCG7 close 3550.6: squeeze breakout below 40-bar low 3557.7, 1h trend down"
 2026-11-25T06:00:40+00:00,entry,MGC,SELL 1 @ 3546.5 | stop 3559.6 | trail 24.8 | risk $124
 2026-11-25T06:04:04+00:00,exit,MCL,trailing_stop @ 81.0 | P&L $-8 | -0.294R | 3.8h
+2026-11-25T06:05:09+00:00,telegram_cmd,,/status
+2026-11-25T06:05:25+00:00,telegram_cmd,,/calendar
