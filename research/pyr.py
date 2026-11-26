@@ -3,7 +3,7 @@
 Opposite signal closes all lots and reverses. Weekend flatten and contract roll close all."""
 import numpy as np, pandas as pd
 from engine import atr, SPEC
-def bt(df, sig, sym, L=4, trails=(3.0,2.5,2.0,1.5), init=1.5, reverse=True):
+def bt(df, sig, sym, L=4, trails=(3.0,2.5,2.0,1.5), init=1.5, reverse=True, epx=None):
     mult,tick=SPEC[sym]; A=atr(df).values; o,h,l,c=(df[k].values for k in "open high low close".split())
     con=df.contract.values; t=df.index; s=sig.reindex(df.index).fillna(0).values
     fri=(t.dayofweek==4)&((t.hour*60+t.minute)>=20*60+30); late=(t.dayofweek==4)&((t.hour*60+t.minute)>=18*60+30)
@@ -28,6 +28,6 @@ def bt(df, sig, sym, L=4, trails=(3.0,2.5,2.0,1.5), init=1.5, reverse=True):
                 for lot in lots: close(lot,j,c[j]-lot["side"]*tick,"reverse")
                 lots=[]
             if len(lots)<L:
-                n=len(lots); e=o[j+1]+sd*tick; a=A[j]
+                n=len(lots); e=(epx[j] if epx is not None and not np.isnan(epx[j]) else o[j+1])+sd*tick; a=A[j]
                 lots.append(dict(side=sd,e=e,ei=j+1,risk=init*a,stop=e-sd*init*a,best=e,tr=trails[min(n,len(trails)-1)]*a,n=n+1))
     return pd.DataFrame(out,columns="entry exit side ep xp pnl R why lot".split())
