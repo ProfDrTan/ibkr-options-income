@@ -95,7 +95,9 @@ def market_chart(bars_by_sym, lots_by_sym, trades_rows):
         ax.xaxis.set_major_locator(mdates.HourLocator(interval=3, tz=SGT))
         ax.tick_params(axis="x", labelsize=8, rotation=0)
         ax.grid(alpha=0.2)
-        for s in ("top", "right"):
+        ax.yaxis.tick_right(); ax.yaxis.set_label_position("right")   # prices on the right: easier on a phone
+        ax.tick_params(axis="y", labelsize=9)
+        for s in ("top", "left"):
             ax.spines[s].set_visible(False)
     fig.suptitle(f"Discipline Bot · {dt.datetime.now(SGT):%a %d %b %H:%M} SGT · 15-min bars", fontsize=11)
     fig.tight_layout()
@@ -147,7 +149,8 @@ def performance_chart(trades_rows, is_new):
         a2.axhline(0, color="#999999", lw=0.8)
         a2.set_title("P&L by market", loc="left", fontsize=11)
         for a in (a1, a2):
-            for s in ("top", "right"):
+            a.yaxis.tick_right(); a.yaxis.set_label_position("right")
+            for s in ("top", "left"):
                 a.spines[s].set_visible(False)
     fig.tight_layout()
     buf = io.BytesIO()
