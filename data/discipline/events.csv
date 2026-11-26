@@ -357,3 +357,4 @@ time_utc,type,symbol,detail
 2026-11-26T22:15:18+00:00,signal_error,MNQ,ConnectionError('Not connected')
 2026-11-26T22:15:18+00:00,signal_error,MYM,ConnectionError('Not connected')
 2026-11-26T22:15:18+00:00,error,,ConnectionError('Not connected')
+2026-11-26T22:16:22+00:00,connected,,DUQ138203
