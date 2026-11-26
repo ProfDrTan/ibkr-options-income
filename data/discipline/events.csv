@@ -258,3 +258,4 @@ time_utc,type,symbol,detail
 2026-11-26T08:15:17+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T08:18:15+00:00,telegram_cmd,,/chart
 2026-11-26T08:18:29+00:00,chart_error,,"ModuleNotFoundError(""No module named 'matplotlib'"", name='matplotlib')"
+2026-11-26T08:22:55+00:00,restart,,code updated 3c88d71 -> 250948a; restarting
