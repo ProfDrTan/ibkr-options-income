@@ -24,10 +24,10 @@
       "trail": 148.0
     }
   },
-  "signal_checked": "202611261801",
+  "signal_checked": "202611261802",
   "signal_bar": {
     "MNQ": "2026-11-26 17:30:00+00:00",
-    "MGC": "2026-11-26 18:00:00+00:00",
+    "MGC": "2026-11-26 18:15:00+00:00",
     "MYM": "2026-11-26 17:30:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
@@ -57,7 +57,7 @@
   ],
   "last_error_alert": "2026-11-25T22:15:23+00:00",
   "signal_status": {
-    "MGC": "02:15 close 3593.5 \u00b7 24h range 3492.6\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
+    "MGC": "02:30 close 3595.6 \u00b7 24h range 3520\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
     "MNQ": "01:45 close 26227.5 \u00b7 24h range 25072.5\u201326435.8 \u00b7 reversal down: rose 14 ATR to 26330, now closed below 2-hour low",
     "MYM": "01:45 close 50448 \u00b7 24h range 49253\u201350559 \u00b7 reversal down: rose 16 ATR to 50559, now closed below 2-hour low"
   },
