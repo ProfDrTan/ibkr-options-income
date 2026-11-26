@@ -264,3 +264,4 @@ time_utc,type,symbol,detail
 2026-11-26T08:23:05+00:00,charts_ready,,matplotlib available
 2026-11-26T08:23:06+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T08:25:19+00:00,telegram_cmd,,/chart
+2026-11-26T08:31:39+00:00,restart,,code updated aa75803 -> d090d8c; restarting
