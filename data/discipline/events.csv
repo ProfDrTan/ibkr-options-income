@@ -305,3 +305,4 @@ time_utc,type,symbol,detail
 2026-11-26T10:45:55+00:00,ibkr_error,MYM,162 (req 843): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-26T11:00:19+00:00,signal,MNQ,"SELL MNQZ6 close 26132.75: squeeze breakout below 40-bar low 26137.5, 1h trend down"
 2026-11-26T11:00:23+00:00,entry,MNQ,lot 1 SELL 1 @ 26137.5 | stop 26225.5 | trail 171.0 | risk $171
+2026-11-26T11:20:27+00:00,exit,MNQ,lot 1 trailing_stop @ 26225.75 | P&L $-176 | -1.033R | 0.3h
