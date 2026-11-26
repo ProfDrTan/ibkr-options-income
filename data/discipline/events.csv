@@ -312,3 +312,4 @@ time_utc,type,symbol,detail
 2026-11-26T11:47:14+00:00,connected,,DUQ138203
 2026-11-26T11:47:16+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MGC,MNQ,MYM', 'DL_CHUNK': '2 D'}"
 2026-11-26T11:47:16+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T12:45:59+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
