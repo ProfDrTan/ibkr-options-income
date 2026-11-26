@@ -308,3 +308,7 @@ time_utc,type,symbol,detail
 2026-11-26T11:20:27+00:00,exit,MNQ,lot 1 trailing_stop @ 26225.75 | P&L $-176 | -1.033R | 0.3h
 2026-11-26T11:35:56+00:00,telegram_cmd,,/summary
 2026-11-26T11:47:05+00:00,restart,,code updated d496bc2 -> c9d8076; restarting
+2026-11-26T11:47:14+00:00,start,,port 4002 | code fb06b89 | auto entries ON
+2026-11-26T11:47:14+00:00,connected,,DUQ138203
+2026-11-26T11:47:16+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MGC,MNQ,MYM', 'DL_CHUNK': '2 D'}"
+2026-11-26T11:47:16+00:00,calendar,,2 high-impact USD events this week
