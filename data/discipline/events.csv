@@ -358,3 +358,4 @@ time_utc,type,symbol,detail
 2026-11-26T22:15:18+00:00,signal_error,MYM,ConnectionError('Not connected')
 2026-11-26T22:15:18+00:00,error,,ConnectionError('Not connected')
 2026-11-26T22:16:22+00:00,connected,,DUQ138203
+2026-11-26T23:00:55+00:00,signal,MNQ,"SELL MNQZ6 close 26216.0: reversal down: rose 14 ATR to 26330, now closed below 2-hour low"
