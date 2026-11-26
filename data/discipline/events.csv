@@ -324,3 +324,7 @@ time_utc,type,symbol,detail
 2026-11-26T15:16:50+00:00,telegram_cmd,,/status
 2026-11-26T15:29:10+00:00,telegram_cmd,,/status
 2026-11-26T15:33:50+00:00,restart,,code updated e472630 -> 7cc6f0b; restarting
+2026-11-26T15:33:58+00:00,start,,port 4002 | code 396fc22 | auto entries ON
+2026-11-26T15:33:58+00:00,connected,,DUQ138203
+2026-11-26T15:34:01+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T15:34:01+00:00,telegram_cmd,,/status
