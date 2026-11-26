@@ -242,3 +242,4 @@ time_utc,type,symbol,detail
 2026-11-26T07:17:09+00:00,telegram_cmd,,/summary
 2026-11-26T07:18:20+00:00,telegram_cmd,,/status
 2026-11-26T07:22:49+00:00,exit,MYM,lot 2 trailing_stop @ 50351.0 | P&L $-28 | -0.965R | 0.1h
+2026-11-26T08:04:52+00:00,telegram_cmd,,/help
