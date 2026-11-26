@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-26T14:47:21+00:00",
+  "time_utc": "2026-11-26T14:49:41+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
@@ -12,8 +12,8 @@
       "contract": "MNQZ6",
       "qty": -1.0,
       "avg_price": 26256.92,
-      "last": 26264.8652344,
-      "unrealized_usd": -15.9,
+      "last": 26248.1542969,
+      "unrealized_usd": 17.53,
       "stop": {
         "type": "TRAIL",
         "trail": 155.25,
