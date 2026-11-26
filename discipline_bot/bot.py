@@ -97,6 +97,30 @@ def send_market_chart(ib, state):
         log_event("chart_error", "", repr(e)[:200])
 
 
+KEYBOARD = {"keyboard": [[{"text": "📊 Status"}, {"text": "🏁 Summary"}], [{"text": "📈 Chart"}, {"text": "📅 Calendar"}]],
+            "resize_keyboard": True, "is_persistent": True}
+
+
+def setup_telegram_buttons(state):
+    """Big tap buttons under the chat box + the '/' menu, so nothing has to be typed."""
+    try:
+        import requests
+        cfg = json.loads(TG_FILE.read_text())
+        base = f"https://api.telegram.org/bot{cfg['bot_token']}"
+        requests.post(f"{base}/setMyCommands", json={"commands": [
+            {"command": "status", "description": "Positions now + charts"},
+            {"command": "summary", "description": "Closed-trade scoreboard"},
+            {"command": "chart", "description": "Charts only"},
+            {"command": "calendar", "description": "This week's big US releases"}]}, timeout=15)
+        if not state.get("keyboard_v1"):
+            requests.post(f"{base}/sendMessage", json={"chat_id": cfg["chat_id"], "reply_markup": KEYBOARD,
+                          "text": "👇 Tap a button below instead of typing. (Typing the word works too, with or without /.)"},
+                          timeout=15)
+            state["keyboard_v1"] = True
+    except Exception as e:
+        log_event("telegram_error", "", f"buttons: {e!r}"[:200])
+
+
 def send_telegram(msg, html=False):
     """Send through Discipline Bot's own Telegram bot (telegram.json); fall back to the repo's alerts helper."""
     msg = colorize(msg)
@@ -885,8 +909,20 @@ def telegram_commands(ib, state):
         if str(msg.get("chat", {}).get("id")) != str(cfg["chat_id"]):
             log_event("telegram_cmd", "", f"ignored message from chat {msg.get('chat', {}).get('id')}")
             continue                                # only answer you
-        text = (msg.get("text") or "").strip().lower()
-        log_event("telegram_cmd", "", text[:40])
+        raw = (msg.get("text") or "").strip().lower()
+        if msg.get("voice") or msg.get("audio"):
+            send_telegram("🎤 I can't hear voice notes. Tap a button below, or use your keyboard's mic to say "
+                          "\"status\", \"summary\", \"chart\" or \"calendar\".")
+            continue
+        words = "".join(ch if ch.isalnum() or ch == " " else " " for ch in raw).split()
+        cmd = next((c for c, keys in (("status", ("status", "position", "positions", "now")),
+                                      ("summary", ("summary", "performance", "score", "scoreboard", "results")),
+                                      ("chart", ("chart", "charts", "graph", "picture")),
+                                      ("calendar", ("calendar", "macro", "news")),
+                                      ("help", ("help", "start", "menu")))
+                    if any(w in keys for w in words)), "")
+        log_event("telegram_cmd", "", raw[:40])
+        text = "/" + cmd if cmd else raw
         if text in ("/status", "status", "/positions", "positions"):
             send_telegram(status_text(ib, state), html=True)
             send_market_chart(ib, state)
@@ -903,7 +939,8 @@ def telegram_commands(ib, state):
             send_market_chart(ib, state)
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
-        elif text in ("/help", "help", "/start"):
+        elif text in ("/help", "help", "/start") or text:
+            setup_telegram_buttons(dict())       # re-send the buttons
             send_telegram("/status — strategy, positions, stops and setups\n/summary — performance so far vs the backtest, with a chart\n/chart — 15-min charts with levels\n"
                           "/calendar — this week's high-impact US releases (SGT)")
 
@@ -978,6 +1015,7 @@ def run():
             if ib is None or not ib.isConnected():
                 ib = connect()
                 log_event("connected", "", ",".join(ib.managedAccounts()))
+                setup_telegram_buttons(state)
                 if not state.get("charts_ready"):
                     try:
                         from discipline_bot import charts
