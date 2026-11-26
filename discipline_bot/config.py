@@ -101,3 +101,10 @@ REVERSAL_MARKETS = {"MNQ", "MYM"}
 # daily loss limit, macro blackout, pre-weekend cut-off, VIX fear guard). Stops/trailing exits stay on every trade.
 # A signal against an open position now reverses it. Set True to restore the limits.
 GUARDRAILS_ON = False
+
+# 26 Nov 2026 scale in / scale out (Prof's design): a new signal in the direction of an open position adds a lot,
+# up to MAX_LOTS. Each lot has its own trailing stop; newer lots trail tighter, so when the market turns they peel
+# off first and the first lot rides longest. 2-year test (MGC+MNQ+MYM): $70,089 vs $28,836 with one lot; every
+# market positive in both years; max drawdown about doubled (MNQ $16,107). Replay of 25-26 Nov: +$5,782.
+MAX_LOTS = 4
+LOT_TRAILS_ATR = (3.0, 2.5, 2.0, 1.5)

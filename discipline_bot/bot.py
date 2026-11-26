@@ -85,9 +85,18 @@ def sgt(t):
 
 # ── journal ───────────────────────────────────────────────────────────────────
 def load_state():
-    if STATE.exists():
-        return json.loads(STATE.read_text())
-    return {"open": {}, "processed_commands": [], "stops": {}}
+    st = json.loads(STATE.read_text()) if STATE.exists() else {"open": {}, "processed_commands": [], "stops": {}}
+    lots = st.setdefault("lots", {})
+    for sym, tr in st.get("open", {}).items():          # migrate single-position records to lots
+        if sym not in lots:
+            tr.update(stop_id=st.get("stops", {}).get(sym, {}).get("orderId"), lot=1)
+            lots[sym] = [tr]
+    st["open"] = {}
+    return st
+
+
+def lots_of(state, sym):
+    return state.setdefault("lots", {}).setdefault(sym, [])
 
 
 def save_state(s):
@@ -296,14 +305,16 @@ def weekend_flatten_time():
     return n.replace(hour=hh, minute=mm, second=0, microsecond=0) + dt.timedelta(days=(wd - n.weekday()) % 7)
 
 
-def check_entry(ib, state, sym, qty, atr):
-    """Return None if the entry may go ahead, else the reason it is blocked."""
+def check_entry(ib, state, sym, qty, atr, add=False):
+    """Return None if the entry may go ahead, else the reason it is blocked. add=True: scaling in."""
     spec = C.INSTRUMENTS.get(sym)
     if spec is None:
         return f"{sym} is not on the instrument list"
     held = {p.contract.symbol: p.position for p in ib.positions() if p.position}
-    if sym in held:
+    if sym in held and not add:
         return f"already holding {sym}"
+    if add and len(lots_of(state, sym)) >= C.MAX_LOTS:
+        return f"already {C.MAX_LOTS} lots in {sym} (fully scaled in)"
     if not C.GUARDRAILS_ON:          # 26 Nov 2026: Prof's call, no entry-blocking limits on the paper account
         return None
     if len(held) >= C.MAX_OPEN_POSITIONS:
@@ -340,18 +351,19 @@ def trail_order(action, qty, stop_price, trail_dist, parent_id=0):
 def enter(ib, state, cmd):
     sym, side, qty = cmd["symbol"].upper(), cmd["side"].upper(), int(cmd.get("qty", 1))
     spec = C.INSTRUMENTS[sym]
-    if sym in state["open"] and not any(p.position for p in ib.positions() if p.contract.symbol == sym):
-        record_exits(ib, state, force=(sym,))   # previous trade in this market closed since the last loop: journal it first
     contract = front_contract(ib, sym)
     atr, price = atr_and_last(ib, contract)
-    why = check_entry(ib, state, sym, qty, atr)
+    lots = lots_of(state, sym)
+    add = bool(lots) and lots[0]["side"] == side
+    why = check_entry(ib, state, sym, qty, atr, add=add)
     if why:
         log_event("blocked", sym, why)
         send_telegram(f"🛑 discipline_bot blocked {side} {qty} {sym}: {why}")
         return
     sign = 1 if side == "BUY" else -1
     stop = round_tick(price - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
-    trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
+    n = len(lots) + 1                              # lot number: newer lots trail tighter and peel off first
+    trail = round_tick(C.LOT_TRAILS_ATR[min(n, len(C.LOT_TRAILS_ATR)) - 1] * atr, spec["tick"])
     # IBKR only attaches a trailing stop to a LIMIT parent (error 328), so enter with a marketable limit:
     # a few ticks through the market, which fills like a market order but caps slippage.
     buffer = max(8 * spec["tick"], round_tick(0.1 * atr, spec["tick"]))
@@ -378,13 +390,15 @@ def enter(ib, state, cmd):
     fill = t_parent.orderStatus.avgFillPrice
     tid = uuid.uuid4().hex[:8]
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"] * qty
-    state["open"][sym] = dict(trade_id=tid, symbol=sym, side=side, qty=qty, source="bot",
-                              entry_time=now().isoformat(timespec="seconds"), entry_price=fill,
-                              atr=round(atr, 4), initial_stop=stop, trail_dist=trail, risk_usd=round(risk, 2),
-                              note=cmd.get("note", ""))
-    state["stops"][sym] = {"orderId": t_child.order.orderId, "trail": trail}
-    log_event("entry", sym, f"{side} {qty} @ {fill} | stop {stop} | trail {trail} | risk ${risk:,.0f}")
-    send_telegram(f"✅ {side} {qty} {sym} @ {fill}\nStop {stop} (1.5×ATR), trails {trail} (3×ATR). Risk ${risk:,.0f}.")
+    lots.append(dict(trade_id=tid, symbol=sym, side=side, qty=qty, source="bot", lot=n,
+                     entry_time=now().isoformat(timespec="seconds"), entry_price=fill,
+                     atr=round(atr, 4), initial_stop=stop, trail_dist=trail, risk_usd=round(risk, 2),
+                     note=cmd.get("note", ""), stop_id=t_child.order.orderId))
+    state["stops"].setdefault(sym, {"orderId": t_child.order.orderId, "trail": trail})
+    log_event("entry", sym, f"lot {n} {side} {qty} @ {fill} | stop {stop} | trail {trail} | risk ${risk:,.0f}")
+    send_telegram(f"✅ <b>{sym} {'LONG' if side == 'BUY' else 'SHORT'} lot {n} of {C.MAX_LOTS}</b> @ {fill}\n"
+                  f"   stop {stop} · trails {trail} ({C.LOT_TRAILS_ATR[min(n, len(C.LOT_TRAILS_ATR)) - 1]}×ATR) · risk ${risk:,.0f}",
+                  html=True)
 
 
 STOP_TYPES = ("TRAIL", "STP", "STP LMT", "TRAIL LIMIT")
@@ -420,14 +434,14 @@ def guardian(ib, state):
             send_telegram(f"⚠️ {sym} stop was widened by hand — restored. Widening a stop is loss aversion talking.")
             continue
         if t:
-            if sym not in state["open"]:          # e.g. lost after a restart: start journaling it again
-                state["open"][sym] = dict(trade_id=uuid.uuid4().hex[:8], symbol=sym, side="BUY" if p.position > 0 else "SELL",
+            if not lots_of(state, sym):          # e.g. lost after a restart: start journaling it again
+                lots_of(state, sym).append(dict(stop_id=t.order.orderId, lot=1, trade_id=uuid.uuid4().hex[:8], symbol=sym, side="BUY" if p.position > 0 else "SELL",
                                           qty=abs(p.position), source="adopted", entry_time=now().isoformat(timespec="seconds"),
                                           entry_price=round(p.avgCost / spec["multiplier"], 2), atr="", initial_stop=t.order.trailStopPrice,
                                           trail_dist=t.order.auxPrice,
-                                          risk_usd=round(abs(p.avgCost / spec["multiplier"] - (t.order.trailStopPrice or 0)) * spec["multiplier"] * abs(p.position), 2) or 1)
+                                          risk_usd=round(abs(p.avgCost / spec["multiplier"] - (t.order.trailStopPrice or 0)) * spec["multiplier"] * abs(p.position), 2) or 1))
                 state["stops"].setdefault(sym, {"orderId": t.order.orderId, "trail": t.order.auxPrice})
-                log_event("adopted", sym, f"{p.position} @ {state['open'][sym]['entry_price']} with existing {t.order.orderType} stop")
+                log_event("adopted", sym, f"{p.position} @ {lots_of(state, sym)[0]['entry_price']} with existing {t.order.orderType} stop")
             continue
         atr, price = atr_and_last(ib, contract)
         entry = p.avgCost / spec["multiplier"]
@@ -441,11 +455,12 @@ def guardian(ib, state):
         tr = ib.placeOrder(contract, o)
         reason = "override_restored" if known else "guarded_manual"
         state["stops"][sym] = {"orderId": tr.order.orderId, "trail": trail}
-        if sym not in state["open"]:
-            state["open"][sym] = dict(trade_id=uuid.uuid4().hex[:8], symbol=sym, side=side, qty=abs(p.position),
+        if not lots_of(state, sym):
+            lots_of(state, sym).append(dict(trade_id=uuid.uuid4().hex[:8], symbol=sym, side=side, qty=abs(p.position),
                                       source="manual-guarded", entry_time=now().isoformat(timespec="seconds"),
                                       entry_price=entry, atr=round(atr, 4), initial_stop=stop, trail_dist=trail,
-                                      risk_usd=round(C.INITIAL_STOP_ATR * atr * spec["multiplier"] * abs(p.position), 2))
+                                      risk_usd=round(C.INITIAL_STOP_ATR * atr * spec["multiplier"] * abs(p.position), 2),
+                                      stop_id=tr.order.orderId, lot=1))
         log_event(reason, sym, f"stop attached at {stop}, trail {trail}")
         send_telegram(f"🛡️ {sym} position had no stop — attached {stop}, trailing {trail}.")
 
@@ -477,48 +492,61 @@ def flatten(ib, state, sym, reason):
 
 
 def record_exits(ib, state, force=()):
-    held = {p.contract.symbol for p in ib.positions() if p.position}
+    """Each lot closes on its own: when its stop order is no longer working (filled, or cancelled by a flatten),
+    it is journaled with its own closing fill."""
+    open_ids = {t.order.orderId for t in ib.reqAllOpenOrders()} | {t.order.orderId for t in ib.openTrades()}
+    held = {p.contract.symbol: p.position for p in ib.positions() if p.position}
     missing = state.setdefault("missing_since", {})
-    for sym in list(state["open"]):
-        if sym in held:
-            missing.pop(sym, None)
-            continue
-        tr = state["open"][sym]
-        age = (now() - dt.datetime.fromisoformat(tr["entry_time"])).total_seconds()
-        if sym not in force:
-            if age < 180:                      # IBKR can take a moment to report a new position
+    used = set(state.setdefault("used_fills", [])[-200:])
+    for sym, lots in list(state.get("lots", {}).items()):
+        for tr in list(lots):
+            key = tr["trade_id"]
+            if tr.get("stop_id") in open_ids and sym in held:
+                missing.pop(key, None)
                 continue
-            missing.setdefault(sym, now().isoformat(timespec="seconds"))
-            if (now() - dt.datetime.fromisoformat(missing[sym])).total_seconds() < 120:
-                continue                            # must be gone for 2 minutes before we call it closed
-        entry_t = dt.datetime.fromisoformat(tr["entry_time"])
-        spec = C.INSTRUMENTS[sym]
-        fills = sorted((f for f in ib.fills() if f.contract.symbol == sym and f.time >= entry_t), key=lambda f: f.time)
-        closing = [f for f in fills if f.execution.side == ("SLD" if tr["side"] == "BUY" else "BOT")]
-        if not closing:
-            log_event("position_missing", sym, "no position and no closing fill found; dropped from journal (entry may not have filled)")
-            state["open"].pop(sym); state["stops"].pop(sym, None); missing.pop(sym, None)
-            continue
-        state["open"].pop(sym); state["stops"].pop(sym, None); missing.pop(sym, None)
-        last = closing[-1]
-        exit_price = last.execution.avgPrice
-        reason = state.get("pending_reason", {}).pop(sym, None)
-        if reason is None:
-            reason = "trailing_stop" if last and last.execution.side in ("SLD", "BOT") and \
-                any(t.order.orderType.startswith("TRAIL") for t in ib.trades()
-                    if t.order.orderId == last.execution.orderId) else "other"
-        sign = 1 if tr["side"] == "BUY" else -1
-        pnl = sign * (exit_price - float(tr["entry_price"])) * spec["multiplier"] * int(tr["qty"])
-        hours = (now() - dt.datetime.fromisoformat(tr["entry_time"])).total_seconds() / 3600
-        tr.update(exit_time=now().isoformat(timespec="seconds"), exit_price=exit_price, exit_reason=reason,
-                  pnl_usd=round(pnl, 2), r_multiple=round(pnl / float(tr["risk_usd"]), 3), hours_held=round(hours, 1))
-        write_trade(tr)
-        log_event("exit", sym, f"{reason} @ {exit_price} | P&L ${pnl:,.0f} | {tr['r_multiple']}R | {hours:.1f}h")
-        et = dt.datetime.fromisoformat(tr["entry_time"]).astimezone(SGT)
-        send_telegram(f"🏁 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} closed</b> · {rule_of(tr)}\n"
-                      f"   opened {et:%H:%M} SGT @ {tr['entry_price']} → closed @ {exit_price} ({reason.replace('_', ' ')})\n"
-                      f"   {'✅' if pnl >= 0 else '🔻'} <b>{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}</b> · {tr['r_multiple']:+.2f}R · held {hours:.1f}h",
-                      html=True)
+            age = (now() - dt.datetime.fromisoformat(tr["entry_time"])).total_seconds()
+            if sym not in force:
+                if age < 180:
+                    continue
+                missing.setdefault(key, now().isoformat(timespec="seconds"))
+                if (now() - dt.datetime.fromisoformat(missing[key])).total_seconds() < 60:
+                    continue
+            entry_t = dt.datetime.fromisoformat(tr["entry_time"])
+            spec = C.INSTRUMENTS[sym]
+            want = "SLD" if tr["side"] == "BUY" else "BOT"
+            fills = sorted((f for f in ib.fills() if f.contract.symbol == sym and f.time >= entry_t
+                            and f.execution.side == want and f.execution.execId not in used), key=lambda f: f.time)
+            own = [f for f in fills if f.execution.orderId == tr.get("stop_id")]
+            last = (own or fills or [None])[-1]
+            if last is None:
+                if sym in held and tr.get("stop_id") in open_ids:
+                    continue
+                if sym in held:          # stop vanished but position still there: guardian re-attaches; keep waiting
+                    continue
+                log_event("position_missing", sym, f"lot {tr.get('lot')}: no closing fill found; dropped from journal")
+                lots.remove(tr); missing.pop(key, None)
+                continue
+            used.add(last.execution.execId)
+            lots.remove(tr); missing.pop(key, None)
+            exit_price = last.execution.avgPrice
+            reason = state.get("pending_reason", {}).get(sym) or (
+                "trailing_stop" if last.execution.orderId == tr.get("stop_id") else "other")
+            sign = 1 if tr["side"] == "BUY" else -1
+            pnl = sign * (exit_price - float(tr["entry_price"])) * spec["multiplier"] * int(tr["qty"])
+            hours = (now() - entry_t).total_seconds() / 3600
+            tr.update(exit_time=now().isoformat(timespec="seconds"), exit_price=exit_price, exit_reason=reason,
+                      pnl_usd=round(pnl, 2), r_multiple=round(pnl / float(tr["risk_usd"]), 3), hours_held=round(hours, 1))
+            write_trade(tr)
+            log_event("exit", sym, f"lot {tr.get('lot')} {reason} @ {exit_price} | P&L ${pnl:,.0f} | {tr['r_multiple']}R | {hours:.1f}h")
+            et = entry_t.astimezone(SGT)
+            send_telegram(f"🏁 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} lot {tr.get('lot', 1)} closed</b> · {rule_of(tr)}\n"
+                          f"   opened {et:%H:%M} SGT @ {tr['entry_price']} → closed @ {exit_price} ({reason.replace('_', ' ')})\n"
+                          f"   {'✅' if pnl >= 0 else '🔻'} <b>{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}</b> · {tr['r_multiple']:+.2f}R · held {hours:.1f}h"
+                          + (f" · {len(lots)} lot(s) still on" if lots else ""), html=True)
+        if not lots:
+            state["lots"].pop(sym, None); state["stops"].pop(sym, None)
+            state.get("pending_reason", {}).pop(sym, None)
+    state["used_fills"] = list(used)[-200:]
 
 
 # ── entry signals (alerts only) ───────────────────────────────────────────────
@@ -645,7 +673,9 @@ def check_one_signal(ib, state, seen, sym, spec):
             if not any(p.position for p in ib.positions() if p.contract.symbol == sym):
                 break
         record_exits(ib, state, force=(sym,))
-    why = check_entry(ib, state, sym, 1, atr)
+    lots = lots_of(state, sym)
+    adding = bool(lots) and lots[0]["side"] == side
+    why = check_entry(ib, state, sym, 1, atr, add=adding)
     JDIR.mkdir(parents=True, exist_ok=True)
     new = not SIGNALS.exists()
     with SIGNALS.open("a", newline="") as f:
@@ -657,7 +687,7 @@ def check_one_signal(ib, state, seen, sym, spec):
                     round(risk), why or "pass", ""])
     log_event("signal", sym, f"{side} {contract.localSymbol} close {bar.close}: {reason}")
     if C.AUTO_ENTRIES and not why:
-        send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} opening</b> · {rule} rule\n"
+        send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} {'adding lot ' + str(len(lots) + 1) if adding else 'opening'}</b> · {rule} rule\n"
                       f"   {reason} (15-min close {bar.close})\n"
                       f"   stop about {stop} · trail {trail} · risk about ${risk:,.0f}", html=True)
         enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto {({'squeeze': 'squeeze', '24h breakout': 'daybreak'}).get(rule, 'reversal')} {key}"})
@@ -716,7 +746,7 @@ def status_text(ib, state):
         total += u
         sym = next((k for k in COLOR if p_["contract"].startswith(k)), p_["contract"])
         out.append(f"{'📈 LONG' if p_['qty'] > 0 else '📉 SHORT'} <b>{_esc(p_['contract'])}</b> ({NAME.get(sym, '')}) · "
-                   f"<i>{rule_of(state['open'].get(sym))}</i>\n"
+                   f"<i>{rule_of((state.get('lots', {}).get(sym) or [None])[0])} · {len(state.get('lots', {}).get(sym, []))} lot(s)</i>\n"
                    f"   entry {p_['avg_price']} → now {p_['last']:.2f}\n"
                    f"   {'✅' if u >= 0 else '🔻'} <b>{'+' if u >= 0 else '−'}${abs(u):,.0f}</b> · "
                    + (f"stop {st['stop_price']} (trail {st['trail']})" if st else "⚠️ NO STOP"))
@@ -767,14 +797,14 @@ def summary_text(ib, state=None):
                     live[it.contract.symbol] = it.unrealizedPNL
         except Exception:
             pass
-        opened = [(k, v) for k, v in state.get("open", {}).items() if isnew(v)]
+        opened = [(k, v) for k, vs in state.get("lots", {}).items() for v in vs if isnew(v)]
         out.append("\n<b>New rules, open now:</b>" if opened else "\nNew rules, open now: none")
         for k, v in opened:
             u = live.get(k)
             et = dt.datetime.fromisoformat(v["entry_time"]).astimezone(SGT)
-            out.append(f"{k} {'LONG' if v['side'] == 'BUY' else 'SHORT'} ({rule_of(v)}) since {et:%a %H:%M} @ {v['entry_price']}"
+            out.append(f"{k} lot {v.get('lot', 1)} {'LONG' if v['side'] == 'BUY' else 'SHORT'} ({rule_of(v)}) since {et:%a %H:%M} @ {v['entry_price']}"
                        + (f" · {'+' if u >= 0 else '−'}${abs(u):,.0f} open" if u is not None else ""))
-        olds = [k for k, v in state.get("open", {}).items() if not isnew(v)]
+        olds = sorted({k for k, vs in state.get("lots", {}).items() for v in vs if not isnew(v)})
         if olds:
             out.append("<i>Still open from the old rule (stops only, no new entries): " + ", ".join(olds) + "</i>")
     out.append("Expect: about 1 win in 3; profit comes from a few big winners. Judge after 30+ trades, not days.")
@@ -913,7 +943,7 @@ def run():
                 state["signal_checked"] = bar_key
                 check_signals(ib, state)
                 write_snapshot(ib, state)
-            if C.GUARD_MANUAL_POSITIONS or state["open"]:
+            if C.GUARD_MANUAL_POSITIONS or state.get("lots"):
                 guardian(ib, state)
             fl = weekend_flatten_time()
             if now() >= fl and (now() - fl).total_seconds() < 3600 and flattened_for != fl.date():
