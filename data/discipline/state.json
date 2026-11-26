@@ -18,10 +18,6 @@
     "MGC": {
       "orderId": 991,
       "trail": 16.6
-    },
-    "MYM": {
-      "orderId": 1016,
-      "trail": 148.0
     }
   },
   "signal_checked": "202611262302",
@@ -34,9 +30,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "a6728309": "2026-11-26T23:37:33+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423703,
   "calendar_fetched": "2026-11-26T22:15:17+00:00",
   "calendar": [
@@ -131,24 +125,6 @@
         "note": "auto emacross 2026-11-26 17:15:00+00:00",
         "stop_id": 991
       }
-    ],
-    "MYM": [
-      {
-        "trade_id": "a6728309",
-        "symbol": "MYM",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-26T17:45:30+00:00",
-        "entry_price": 50449.0,
-        "atr": 49.4286,
-        "initial_stop": 50521.0,
-        "trail_dist": 148.0,
-        "risk_usd": 37.07,
-        "note": "auto reversal 2026-11-26 17:30:00+00:00",
-        "stop_id": 1016
-      }
     ]
   },
   "used_fills": [
@@ -156,6 +132,7 @@
     "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0bc11d.01.01",
+    "0000e1a7.6b0c204e.01.01",
     "0000e1a7.6b0ba72e.01.01",
     "0000e1a7.6b0ba707.01.01"
   ],
