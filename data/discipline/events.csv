@@ -346,3 +346,7 @@ time_utc,type,symbol,detail
 2026-11-26T17:30:50+00:00,entry,MGC,lot 1 SELL 1 @ 3594.7 | stop 3602.9 | trail 16.6 | risk $83
 2026-11-26T17:30:52+00:00,signal,MNQ,"SELL MNQZ6 close 26241.5: reversal down: rose 14 ATR to 26335, now closed below 2-hour low"
 2026-11-26T17:30:55+00:00,entry,MNQ,lot 3 SELL 1 @ 26230.25 | stop 26292.25 | trail 83.25 | risk $125
+2026-11-26T17:45:21+00:00,signal,MNQ,"SELL MNQZ6 close 26227.5: reversal down: rose 14 ATR to 26330, now closed below 2-hour low"
+2026-11-26T17:45:25+00:00,entry,MNQ,lot 4 SELL 1 @ 26233.25 | stop 26291.75 | trail 59.75 | risk $120
+2026-11-26T17:45:26+00:00,signal,MYM,"SELL MYMZ6 close 50448.0: reversal down: rose 16 ATR to 50559, now closed below 2-hour low"
+2026-11-26T17:45:30+00:00,entry,MYM,lot 1 SELL 1 @ 50449.0 | stop 50521.0 | trail 148.0 | risk $37
