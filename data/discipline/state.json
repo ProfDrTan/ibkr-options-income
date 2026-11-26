@@ -27,9 +27,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "46686e24": "2026-11-26T07:21:42+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423679,
   "calendar_fetched": "2026-11-26T06:33:20+00:00",
   "calendar": [
@@ -107,24 +105,10 @@
         "risk_usd": 27.27,
         "note": "auto reversal 2026-11-26 06:15:00+00:00",
         "stop_id": 755
-      },
-      {
-        "trade_id": "46686e24",
-        "symbol": "MYM",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 2,
-        "entry_time": "2026-11-26T07:16:02+00:00",
-        "entry_price": 50294.0,
-        "atr": 39.3571,
-        "initial_stop": 50351.0,
-        "trail_dist": 98.0,
-        "risk_usd": 29.52,
-        "note": "auto reversal 2026-11-26 07:00:00+00:00",
-        "stop_id": 784
       }
     ]
   },
-  "used_fills": []
+  "used_fills": [
+    "0000e1a7.6b0b9935.01.01"
+  ]
 }
