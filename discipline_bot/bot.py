@@ -52,6 +52,30 @@ def colorize(msg):
     return re.sub(r"(?<![🟡🔵🟢🟣🟤⚪🟠\w])(MGC|MNQ|MYM|M2K|MCL|ZN|MBT)(?=\w*)", lambda m: COLOR[m.group(1)] + m.group(1), msg)
 
 
+def send_photo(png, caption=""):
+    try:
+        import requests
+        cfg = json.loads(TG_FILE.read_text())
+        r = requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/sendPhoto",
+                          data={"chat_id": cfg["chat_id"], "caption": colorize(caption)[:1000]},
+                          files={"photo": ("chart.png", png, "image/png")}, timeout=30)
+        if not r.ok:
+            print("telegram photo error:", r.status_code, r.text[:200])
+    except Exception as e:
+        log_event("chart_error", "", repr(e)[:200])
+
+
+def send_market_chart(ib, state):
+    try:
+        from discipline_bot import charts
+        stops = {t.order.orderId: t.order.trailStopPrice or t.order.auxPrice for t in ib.reqAllOpenOrders()}
+        lots = {k: [dict(l, stop_now=stops.get(l.get("stop_id"))) for l in v] for k, v in state.get("lots", {}).items()}
+        send_photo(charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES)),
+                   "Candles = 15 min · grey = 24h high/low · purple = Fibonacci · green/red = your entries and stops")
+    except Exception as e:
+        log_event("chart_error", "", repr(e)[:200])
+
+
 def send_telegram(msg, html=False):
     """Send through Discipline Bot's own Telegram bot (telegram.json); fall back to the repo's alerts helper."""
     msg = colorize(msg)
@@ -550,6 +574,7 @@ def record_exits(ib, state, force=()):
 
 
 # ── entry signals (alerts only) ───────────────────────────────────────────────
+BARS_BY_SYM = {}   # sym -> completed 15m bars, for the Telegram charts
 BARS = {}   # localSymbol -> list of completed+forming 15m bars, kept between loops
 
 
@@ -621,6 +646,7 @@ def check_one_signal(ib, state, seen, sym, spec):
     if seen.get(sym) == key:
         return
     seen[sym] = key
+    BARS_BY_SYM[sym] = done[-200:]
     H, L, Cl = [b.high for b in done], [b.low for b in done], [b.close for b in done]
     sign, reason = squeeze_signal(H, L, Cl)
     rule = "squeeze"
@@ -842,12 +868,21 @@ def telegram_commands(ib, state):
         log_event("telegram_cmd", "", text[:40])
         if text in ("/status", "status", "/positions", "positions"):
             send_telegram(status_text(ib, state), html=True)
+            send_market_chart(ib, state)
         elif text in ("/summary", "summary", "/performance", "performance"):
             send_telegram(summary_text(ib, state), html=True)
+            try:
+                from discipline_bot import charts
+                isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal"))
+                send_photo(charts.performance_chart(charts.read_trades(TRADES), isnew), "Results so far, new rules only")
+            except Exception as e:
+                log_event("chart_error", "", repr(e)[:200])
+        elif text in ("/chart", "chart", "/charts", "charts"):
+            send_market_chart(ib, state)
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
         elif text in ("/help", "help", "/start"):
-            send_telegram("/status — strategy, positions, stops and setups\n/summary — performance so far vs the backtest\n"
+            send_telegram("/status — strategy, positions, stops and setups\n/summary — performance so far vs the backtest, with a chart\n/chart — 15-min charts with levels\n"
                           "/calendar — this week's high-impact US releases (SGT)")
 
 
