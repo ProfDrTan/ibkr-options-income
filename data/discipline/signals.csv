@@ -29,3 +29,4 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-25 05:45:00+00:00,MGC,MGCG7,SELL,3550.6,"squeeze breakout below 40-bar low 3557.7, 1h trend down",9.4071,3564.7,28.2,141,pass,
 2026-11-25 09:15:00+00:00,MYM,MYMZ6,SELL,49673.0,"squeeze breakout below 40-bar low 49695.0, 1h trend down",88.0,49805.0,264.0,66,pass,
 2026-11-25 09:30:00+00:00,MYM,MYMZ6,SELL,49645.0,"squeeze breakout below 40-bar low 49664.0, 1h trend down",85.7143,49774.0,257.0,64,already holding MYM,
+2026-11-26 05:45:00+00:00,MNQ,MNQZ6,SELL,26319.0,"reversal down: rose 15 ATR to 26435.8, now closed below 2-hour low",50.375,26394.5,151.0,151,pass,
