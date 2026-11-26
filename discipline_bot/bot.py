@@ -304,6 +304,8 @@ def check_entry(ib, state, sym, qty, atr):
     held = {p.contract.symbol: p.position for p in ib.positions() if p.position}
     if sym in held:
         return f"already holding {sym}"
+    if not C.GUARDRAILS_ON:          # 26 Nov 2026: Prof's call, no entry-blocking limits on the paper account
+        return None
     if len(held) >= C.MAX_OPEN_POSITIONS:
         return f"already {len(held)} open positions (max {C.MAX_OPEN_POSITIONS})"
     if spec.get("index"):
@@ -632,6 +634,17 @@ def check_one_signal(ib, state, seen, sym, spec):
     stop = round_tick(bar.close - sign * C.INITIAL_STOP_ATR * atr, spec["tick"])
     trail = round_tick(C.TRAIL_ATR * atr, spec["tick"])
     risk = C.INITIAL_STOP_ATR * atr * spec["multiplier"]
+    held = sum(p.position for p in ib.positions() if p.contract.symbol == sym)
+    if held and (held > 0) != (sign > 0):
+        # signal against the open position: reverse instead of ignoring the opportunity
+        send_telegram(f"🔄 <b>{sym}: new {rule} signal against the open {'LONG' if held > 0 else 'SHORT'}</b>. "
+                      f"Closing it and reversing.", html=True)
+        flatten(ib, state, sym, f"reversed by {rule} signal")
+        for _ in range(15):
+            ib.sleep(2)
+            if not any(p.position for p in ib.positions() if p.contract.symbol == sym):
+                break
+        record_exits(ib, state, force=(sym,))
     why = check_entry(ib, state, sym, 1, atr)
     JDIR.mkdir(parents=True, exist_ok=True)
     new = not SIGNALS.exists()

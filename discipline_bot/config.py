@@ -87,7 +87,7 @@ ORDER_REF = "discipline_bot"      # tag on every order the bot places
 # 26 Nov 2026 fear guard: no stock-index (MNQ/MYM) LONG entries while yesterday's VIX close is above this.
 # 2-year test: index longs taken with VIX > 22 averaged -0.05R (MNQ, 23 trades) and -0.53R (MYM, 26 trades);
 # skipping them kept every big-move day and raised MYM to +0.27/+0.04R. Small sample: review after 3 months.
-VIX_NO_INDEX_LONGS = 22.0
+VIX_NO_INDEX_LONGS = 999.0   # 26 Nov 2026: fear guard switched OFF at Prof's instruction (was 22)
 
 # 26 Nov 2026: trend EMAs (15m bars) for the 24h-breakout rule. Faster trend turns sooner after V-reversals.
 # 2-year test vs 200/800: MGC +0.08/+0.23R, big days 13/15 (was 11); MNQ +0.41/+0.12R, big days 11/15 (was 10).
@@ -96,3 +96,8 @@ DAYBREAK_TREND = {"MGC": (100, 400), "MNQ": (100, 400), "MYM": (200, 800)}
 
 # 26 Nov 2026: reversal rule (signals.reversal_signal) runs on these markets only; gold failed year 1 (-0.02R).
 REVERSAL_MARKETS = {"MNQ", "MYM"}
+
+# 26 Nov 2026, Prof's instruction: entry-blocking guardrails OFF (max positions, index cap, max risk per trade,
+# daily loss limit, macro blackout, pre-weekend cut-off, VIX fear guard). Stops/trailing exits stay on every trade.
+# A signal against an open position now reverses it. Set True to restore the limits.
+GUARDRAILS_ON = False
