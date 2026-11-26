@@ -231,3 +231,5 @@ time_utc,type,symbol,detail
 2026-11-26T04:26:20+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
 2026-11-26T06:00:17+00:00,signal,MNQ,"SELL MNQZ6 close 26319.0: reversal down: rose 15 ATR to 26435.8, now closed below 2-hour low"
 2026-11-26T06:00:21+00:00,entry,MNQ,lot 1 SELL 1 @ 26314.25 | stop 26381.75 | trail 135.75 | risk $136
+2026-11-26T06:30:48+00:00,signal,MYM,"SELL MYMZ6 close 50321.0: reversal down: rose 18 ATR to 50494, now closed below 2-hour low"
+2026-11-26T06:31:07+00:00,entry,MYM,lot 1 SELL 1 @ 50323.0 | stop 50383.0 | trail 109.0 | risk $27
