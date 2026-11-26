@@ -265,3 +265,7 @@ time_utc,type,symbol,detail
 2026-11-26T08:23:06+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T08:25:19+00:00,telegram_cmd,,/chart
 2026-11-26T08:31:39+00:00,restart,,code updated aa75803 -> d090d8c; restarting
+2026-11-26T08:31:47+00:00,start,,port 4002 | code 392f2ab | auto entries ON
+2026-11-26T08:31:47+00:00,connected,,DUQ138203
+2026-11-26T08:31:48+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T08:31:49+00:00,telegram_cmd,,/chart
