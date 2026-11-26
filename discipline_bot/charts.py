@@ -39,72 +39,110 @@ def _plt():
     return plt, mdates
 
 
-def _label(ax, y, text, color, x):
-    ax.axhline(y, color=color, lw=1, ls="--", alpha=0.8)
-    ax.text(x, y, f" {text} · {y:,.1f}", color=color, fontsize=8, va="bottom", ha="left",
-            bbox=dict(facecolor="white", edgecolor="none", alpha=0.7, pad=0.5))
+def _tags(ax, items, lo, hi):
+    """Price tags on the right edge, pushed apart so they never overlap. items: (y, text, color, style)."""
+    span = hi - lo
+    gap = span * 0.055
+    inside = sorted([it for it in items if lo <= it[0] <= hi], key=lambda it: it[0])
+    pos = []
+    for it in inside:
+        y = it[0] if not pos or it[0] - pos[-1] >= gap else pos[-1] + gap
+        pos.append(y)
+    over = pos[-1] - hi + gap * 0.3 if pos else 0           # pushed past the top: shift the stack down
+    if over > 0:
+        pos = [p - over for p in pos]
+        for i in range(len(pos) - 2, -1, -1):
+            if pos[i + 1] - pos[i] < gap:
+                pos[i] = pos[i + 1] - gap
+    for (y, text, color, ls), yp in zip(inside, pos):
+        ax.axhline(y, color=color, lw=1.4 if ls == "-" else 1.1, ls=ls, alpha=0.9)
+        ax.annotate(f"{text}  {y:,.1f}", xy=(1.0, y), xycoords=("axes fraction", "data"), xytext=(1.01, yp),
+                    textcoords=("axes fraction", "data"), fontsize=11, color="white", va="center", ha="left",
+                    fontweight="bold", bbox=dict(boxstyle="round,pad=0.25", fc=color, ec="none"),
+                    arrowprops=dict(arrowstyle="-", color=color, lw=0.8) if abs(yp - y) > gap * 0.2 else None,
+                    annotation_clip=False)
+    above = sorted([it for it in items if it[0] > hi], key=lambda it: it[0])
+    below = sorted([it for it in items if it[0] < lo], key=lambda it: -it[0])
+    for k, (y, text, color, ls) in enumerate(above):           # off-screen levels: listed at the edge, stacked
+        ax.annotate(f"▲ {text} {y:,.1f}", xy=(0.01, 0.97 - 0.045 * k), xycoords="axes fraction", fontsize=10,
+                    color=color, va="top", bbox=dict(fc="white", ec="none", alpha=0.8, pad=0.5))
+    for k, (y, text, color, ls) in enumerate(below):
+        ax.annotate(f"▼ {text} {y:,.1f}", xy=(0.01, 0.03 + 0.045 * k), xycoords="axes fraction", fontsize=10,
+                    color=color, va="bottom", bbox=dict(fc="white", ec="none", alpha=0.8, pad=0.5))
 
 
-def market_chart(bars_by_sym, lots_by_sym, trades_rows):
-    """bars_by_sym: {sym: [bar...]} completed 15m bars (ib_async BarData). Returns PNG bytes."""
+def market_chart(bars_by_sym, lots_by_sym, trades_rows, hours=12):
+    """One PNG per market, phone-sized. Returns {sym: png bytes}."""
     plt, mdates = _plt()
-    syms = [s for s in MCOL if bars_by_sym.get(s)]
-    fig, axes = plt.subplots(len(syms), 1, figsize=(8, 4.2 * len(syms)), dpi=110)
-    axes = axes if len(syms) > 1 else [axes]
-    for ax, sym in zip(axes, syms):
-        bars = bars_by_sym[sym][-96:]
+    out = {}
+    for sym in [s for s in MCOL if bars_by_sym.get(s)]:
+        allbars = bars_by_sym[sym]
+        day = allbars[-96:]
+        bars = allbars[-hours * 4:]
         col = MCOL[sym]
+        fig, ax = plt.subplots(figsize=(7.5, 7.5), dpi=160)
         t = [b.date.astimezone(SGT) for b in bars]
         w = dt.timedelta(minutes=10)
         for b, x in zip(bars, t):
-            up = b.close >= b.open
-            c = "#2DA44E" if up else "#CF222E"
-            ax.plot([x, x], [b.low, b.high], color=c, lw=0.8)
-            ax.add_patch(plt.Rectangle((mdates.date2num(x - w / 2), min(b.open, b.close)), mdates.date2num(x + w / 2) - mdates.date2num(x - w / 2),
+            c = "#2DA44E" if b.close >= b.open else "#CF222E"
+            ax.plot([x, x], [b.low, b.high], color=c, lw=1.2)
+            ax.add_patch(plt.Rectangle((mdates.date2num(x - w / 2), min(b.open, b.close)),
+                                       mdates.date2num(x + w / 2) - mdates.date2num(x - w / 2),
                                        max(abs(b.close - b.open), 1e-9), color=c))
-        hi, lo = max(b.high for b in bars), min(b.low for b in bars)
-        xl = t[0]
-        _label(ax, hi, "24h high", "#555555", xl)
-        _label(ax, lo, "24h low", "#555555", xl)
-        up_swing = bars.index(max(bars, key=lambda b: b.high)) > bars.index(min(bars, key=lambda b: b.low))
-        for f in (0.382, 0.5, 0.618):
-            y = hi - f * (hi - lo) if up_swing else lo + f * (hi - lo)
-            _label(ax, y, f"Fib {f * 100:.1f}%", "#8250DF", t[len(t) // 3])
-        for lot in lots_by_sym.get(sym, []):
+        lo, hi = min(b.low for b in bars), max(b.high for b in bars)
+        items = []
+        lots = lots_by_sym.get(sym, [])
+        for lot in lots:
             lc = "#2DA44E" if lot["side"] == "BUY" else "#CF222E"
-            _label(ax, float(lot["entry_price"]), f"lot {lot.get('lot', 1)} {'LONG' if lot['side'] == 'BUY' else 'SHORT'} entry", lc, t[(2 * len(t)) // 3])
+            items.append((float(lot["entry_price"]), f"L{lot.get('lot', 1)} {'LONG' if lot['side'] == 'BUY' else 'SHORT'}", lc, "-"))
             if lot.get("stop_now"):
-                _label(ax, float(lot["stop_now"]), f"lot {lot.get('lot', 1)} stop", "#CF222E", t[(2 * len(t)) // 3])
+                items.append((float(lot["stop_now"]), f"L{lot.get('lot', 1)} stop", "#8B0000", ":"))
+        lo = min([lo] + [it[0] for it in items]); hi = max([hi] + [it[0] for it in items])
+        pad = (hi - lo) * 0.06
+        lo, hi = lo - pad, hi + pad
+        dh, dl = max(b.high for b in day), min(b.low for b in day)
+        items += [(dh, "24h high", "#57606A", "--"), (dl, "24h low", "#57606A", "--")]
+        upsw = day.index(max(day, key=lambda b: b.high)) > day.index(min(day, key=lambda b: b.low))
+        for f in (0.382, 0.5, 0.618):
+            items.append((dh - f * (dh - dl) if upsw else dl + f * (dh - dl), f"Fib {f * 100:.1f}%", "#8250DF", "--"))
+        last = bars[-1].close
+        items.append((last, "NOW", col, "-"))
+        ax.set_ylim(lo, hi)
+        _tags(ax, items, lo, hi)
         for r in trades_rows:
             if r.get("symbol") != sym:
                 continue
             try:
                 et = dt.datetime.fromisoformat(r["entry_time"]).astimezone(SGT)
                 xt = dt.datetime.fromisoformat(r["exit_time"]).astimezone(SGT)
+                pnl = float(r["pnl_usd"] or 0)
             except Exception:
                 continue
             if et >= t[0]:
                 ax.annotate("▲" if r["side"] == "BUY" else "▼", (et, float(r["entry_price"])), color="#1F6FEB",
-                            fontsize=12, ha="center", va="center")
+                            fontsize=16, ha="center", va="center")
             if xt >= t[0]:
-                pnl = float(r["pnl_usd"] or 0)
-                ax.annotate(f"exit {'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}", (xt, float(r["exit_price"])), fontsize=8,
-                            color="#2DA44E" if pnl >= 0 else "#CF222E", ha="center", va="bottom")
-        ax.set_title(f"{MNAME[sym]}  ·  last {bars[-1].close:,.2f}", color=col, fontsize=12, fontweight="bold", loc="left")
-        ax.xaxis.set_major_formatter(mdates.DateFormatter("%a %H:%M", tz=SGT))
-        ax.xaxis.set_major_locator(mdates.HourLocator(interval=3, tz=SGT))
-        ax.tick_params(axis="x", labelsize=8, rotation=0)
-        ax.grid(alpha=0.2)
-        ax.yaxis.tick_right(); ax.yaxis.set_label_position("right")   # prices on the right: easier on a phone
-        ax.tick_params(axis="y", labelsize=9)
-        for s in ("top", "left"):
-            ax.spines[s].set_visible(False)
-    fig.suptitle(f"Discipline Bot · {dt.datetime.now(SGT):%a %d %b %H:%M} SGT · 15-min bars", fontsize=11)
-    fig.tight_layout()
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png")
-    plt.close(fig)
-    return buf.getvalue()
+                ax.annotate(f"{'+' if pnl >= 0 else '−'}${abs(pnl):,.0f}", (xt, float(r["exit_price"])), fontsize=11,
+                            fontweight="bold", color="#2DA44E" if pnl >= 0 else "#CF222E", ha="center", va="bottom")
+        head = f"{MNAME[sym]}  {last:,.2f}"
+        if lots:
+            head += f"   ·   {len(lots)} lot{'s' if len(lots) > 1 else ''} {'LONG' if lots[0]['side'] == 'BUY' else 'SHORT'}"
+        fig.text(0.03, 0.965, head, color=col, fontsize=16, fontweight="bold", va="top")
+        fig.text(0.03, 0.925, f"{dt.datetime.now(SGT):%a %d %b %H:%M} SGT · 15-min candles · last {hours}h",
+                 fontsize=10, color="#57606A", va="top")
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=SGT))
+        ax.xaxis.set_major_locator(mdates.HourLocator(interval=2, tz=SGT))
+        ax.tick_params(axis="x", labelsize=11)
+        ax.yaxis.tick_right(); ax.tick_params(axis="y", labelsize=11, labelright=False)   # tags carry the prices
+        ax.grid(alpha=0.25)
+        for sp in ("top", "left", "right"):
+            ax.spines[sp].set_visible(False)
+        fig.subplots_adjust(left=0.03, right=0.70, top=0.88, bottom=0.07)
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png")
+        plt.close(fig)
+        out[sym] = buf.getvalue()
+    return out
 
 
 def performance_chart(trades_rows, is_new):

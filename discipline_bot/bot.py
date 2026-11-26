@@ -76,8 +76,8 @@ def send_market_chart(ib, state):
                     log_event("chart_error", sym, repr(e)[:150])
         stops = {t.order.orderId: t.order.trailStopPrice or t.order.auxPrice for t in ib.reqAllOpenOrders()}
         lots = {k: [dict(l, stop_now=stops.get(l.get("stop_id"))) for l in v] for k, v in state.get("lots", {}).items()}
-        send_photo(charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES)),
-                   "Candles = 15 min · grey = 24h high/low · purple = Fibonacci · green/red = your entries and stops")
+        for sym, png in charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES)).items():
+            send_photo(png, f"{sym} · tags on the right: NOW price, your lots (L1, L2…) and stops, 24h high/low, Fibonacci")
     except Exception as e:
         log_event("chart_error", "", repr(e)[:200])
 
