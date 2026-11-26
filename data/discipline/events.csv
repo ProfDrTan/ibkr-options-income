@@ -352,3 +352,8 @@ time_utc,type,symbol,detail
 2026-11-26T17:45:30+00:00,entry,MYM,lot 1 SELL 1 @ 50449.0 | stop 50521.0 | trail 148.0 | risk $37
 2026-11-26T19:14:11+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T20:44:02+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
+2026-11-26T22:15:17+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T22:15:18+00:00,signal_error,MGC,ConnectionError('Socket disconnect')
+2026-11-26T22:15:18+00:00,signal_error,MNQ,ConnectionError('Not connected')
+2026-11-26T22:15:18+00:00,signal_error,MYM,ConnectionError('Not connected')
+2026-11-26T22:15:18+00:00,error,,ConnectionError('Not connected')

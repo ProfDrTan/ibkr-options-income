@@ -24,7 +24,7 @@
       "trail": 148.0
     }
   },
-  "signal_checked": "202611262200",
+  "signal_checked": "202611262201",
   "signal_bar": {
     "MNQ": "2026-11-26 17:30:00+00:00",
     "MGC": "2026-11-26 19:00:00+00:00",
@@ -36,7 +36,7 @@
   },
   "missing_since": {},
   "tg_offset": 667423703,
-  "calendar_fetched": "2026-11-26T19:14:11+00:00",
+  "calendar_fetched": "2026-11-26T22:15:17+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -174,5 +174,6 @@
   ],
   "charts_ready": true,
   "keyboard_v1": true,
-  "keyboard_v2": true
+  "keyboard_v2": true,
+  "down_since": "2026-11-26T22:15:18+00:00"
 }
