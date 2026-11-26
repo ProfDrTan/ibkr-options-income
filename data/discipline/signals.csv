@@ -33,3 +33,4 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-26 06:15:00+00:00,MYM,MYMZ6,SELL,50321.0,"reversal down: rose 18 ATR to 50494, now closed below 2-hour low",37.7143,50378.0,113.0,28,pass,
 2026-11-26 07:00:00+00:00,MNQ,MNQZ6,SELL,26186.75,"reversal down: rose 15 ATR to 26435.8, now closed below 2-hour low",54.625,26268.75,164.0,164,pass,
 2026-11-26 07:00:00+00:00,MYM,MYMZ6,SELL,50286.0,"reversal down: rose 18 ATR to 50476, now closed below 2-hour low",40.4286,50347.0,121.0,30,pass,
+2026-11-26 10:45:00+00:00,MNQ,MNQZ6,SELL,26132.75,"squeeze breakout below 40-bar low 26137.5, 1h trend down",60.1786,26223.0,180.5,181,pass,
