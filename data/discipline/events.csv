@@ -315,3 +315,5 @@ time_utc,type,symbol,detail
 2026-11-26T12:45:59+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-26T14:30:27+00:00,signal,MNQ,"SELL MNQZ6 close 26239.5: reversal down: rose 15 ATR to 26344.8, now closed below 2-hour low"
 2026-11-26T14:30:31+00:00,entry,MNQ,lot 1 SELL 1 @ 26257.25 | stop 26337.0 | trail 155.25 | risk $155
+2026-11-26T14:47:11+00:00,telegram_cmd,,/status
+2026-11-26T14:47:21+00:00,telegram_cmd,,/status
