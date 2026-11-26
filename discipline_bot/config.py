@@ -93,3 +93,6 @@ VIX_NO_INDEX_LONGS = 22.0
 # 2-year test vs 200/800: MGC +0.08/+0.23R, big days 13/15 (was 11); MNQ +0.41/+0.12R, big days 11/15 (was 10).
 # MYM got worse with the faster trend (+0.12/-0.01R), so it keeps 200/800.
 DAYBREAK_TREND = {"MGC": (100, 400), "MNQ": (100, 400), "MYM": (200, 800)}
+
+# 26 Nov 2026: reversal rule (signals.reversal_signal) runs on these markets only; gold failed year 1 (-0.02R).
+REVERSAL_MARKETS = {"MNQ", "MYM"}

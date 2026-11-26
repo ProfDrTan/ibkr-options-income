@@ -97,3 +97,39 @@ def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW):
         return 0, "24h breakout against trend"
     return brk, (f"24h breakout {'above' if brk > 0 else 'below'} 24-hour {'high' if brk > 0 else 'low'} "
                  f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")
+
+
+# REVERSAL AFTER A CRASH OR SPIKE (added 26 Nov 2026, Nasdaq and Dow only):
+#   in the last 4 hours price made a low that is more than 12 "normal" ATRs below the 24-hour high (normal ATR =
+#   median 15-min ATR of the last 2 days, so the crash itself doesn't shrink the yardstick); then a bar closes above
+#   the highest high of the previous 8 bars (2 hours) -> LONG. Mirror for a spike up -> SHORT. No trend filter and
+#   no VIX guard: the point is to catch the turn. 2-year test with the other two rules: MNQ +0.26/+0.01R,
+#   MYM +0.18/+0.05R per trade; replay of 25-26 Nov: long MNQ 01:15 SGT @ 25,532. research/rev.py rev2(K=12, N=8, win=16).
+REV_K, REV_N, REV_WIN, REV_LOOK, REV_MED = 12, 8, 16, 96, 192
+
+
+def _atr_series(highs, lows, closes, n=14):
+    out, a = [], None
+    for i in range(len(closes)):
+        tr = highs[i] - lows[i] if i == 0 else max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1]))
+        a = tr if a is None else a + (tr - a) / n
+        out.append(a)
+    return out
+
+
+def reversal_signal(highs, lows, closes):
+    k = len(closes)
+    if k < REV_MED + REV_LOOK + 2:
+        return 0, "warming up"
+    atrs = _atr_series(highs, lows, closes)
+    p = k - 2                                     # conditions measured on the previous bar
+    med = sorted(atrs[p - REV_MED + 1:p + 1])
+    m = (med[REV_MED // 2 - 1] + med[REV_MED // 2]) / 2
+    hi_day, lo_day = max(highs[p - REV_LOOK + 1:p + 1]), min(lows[p - REV_LOOK + 1:p + 1])
+    lo_rec, hi_rec = min(lows[p - REV_WIN + 1:p + 1]), max(highs[p - REV_WIN + 1:p + 1])
+    c = closes[-1]
+    if (hi_day - lo_rec) / m > REV_K and c > max(highs[-REV_N - 1:-1]):
+        return 1, f"reversal up: fell {(hi_day - lo_rec) / m:.0f} ATR to {lo_rec:g}, now closed above 2-hour high"
+    if (hi_rec - lo_day) / m > REV_K and c < min(lows[-REV_N - 1:-1]):
+        return -1, f"reversal down: rose {(hi_rec - lo_day) / m:.0f} ATR to {hi_rec:g}, now closed below 2-hour low"
+    return 0, "no reversal"
