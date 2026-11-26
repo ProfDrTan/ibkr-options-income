@@ -328,3 +328,4 @@ time_utc,type,symbol,detail
 2026-11-26T15:33:58+00:00,connected,,DUQ138203
 2026-11-26T15:34:01+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T15:34:01+00:00,telegram_cmd,,/status
+2026-11-26T15:58:08+00:00,restart,,code updated ce0fb60 -> b39452e; restarting
