@@ -297,3 +297,6 @@ time_utc,type,symbol,detail
 2026-11-26T09:30:15+00:00,telegram_cmd,,/calendar
 2026-11-26T09:30:16+00:00,telegram_cmd,,/summary
 2026-11-26T10:18:01+00:00,telegram_cmd,,/status
+2026-11-26T10:30:22+00:00,ibkr_error,MGC,162 (req 833): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-26T10:30:22+00:00,ibkr_error,MNQ,162 (req 835): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-26T10:30:23+00:00,ibkr_error,MYM,162 (req 837): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
