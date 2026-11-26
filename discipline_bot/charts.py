@@ -18,8 +18,21 @@ def _plt():
     try:
         import matplotlib
     except ImportError:
-        subprocess.run([sys.executable, "-m", "pip", "install", "--user", "-q", "matplotlib"], check=False)
-        import matplotlib
+        import importlib, site
+        log = []
+        for extra in ([], ["--user"]):
+            r = subprocess.run([sys.executable, "-m", "pip", "install", "-q", *extra, "matplotlib"],
+                               capture_output=True, text=True)
+            log.append(f"pip {' '.join(extra) or 'system'} rc={r.returncode} {r.stderr[-300:]}")
+            if r.returncode == 0:
+                break
+        for d in [site.getusersitepackages()] + list(getattr(site, "getsitepackages", lambda: [])()):
+            site.addsitedir(d)                       # a fresh --user install is not on sys.path until we add it
+        importlib.invalidate_caches()
+        try:
+            import matplotlib
+        except ImportError:
+            raise ImportError("matplotlib install failed: " + " | ".join(log))
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     import matplotlib.dates as mdates
