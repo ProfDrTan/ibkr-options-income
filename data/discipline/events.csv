@@ -340,3 +340,5 @@ time_utc,type,symbol,detail
 2026-11-26T16:14:03+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T16:19:26+00:00,telegram_cmd,,/status
 2026-11-26T16:45:10+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
+2026-11-26T17:15:11+00:00,signal,MNQ,"SELL MNQZ6 close 26249.25: reversal down: rose 14 ATR to 26344.8, now closed below 2-hour low"
+2026-11-26T17:15:15+00:00,entry,MNQ,lot 2 SELL 1 @ 26250.75 | stop 26313.75 | trail 105.25 | risk $126
