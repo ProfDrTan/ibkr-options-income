@@ -46,5 +46,17 @@
       "DL_CHUNK": "2 D"
     },
     "created_utc": "2026-11-26T11:46:56+00:00"
+  },
+  {
+    "id": "download-mes-1m",
+    "action": "download_history",
+    "env": {
+      "DL_BAR": "1 min",
+      "DL_TAG": "1m",
+      "DL_YEARS": "1",
+      "DL_SYMBOLS": "MES",
+      "DL_CHUNK": "2 D"
+    },
+    "created_utc": "2026-11-26T15:57:18+00:00"
   }
 ]

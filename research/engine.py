@@ -3,7 +3,7 @@ trail 3 ATR from best price (IBKR TRAIL), weekend flatten Fri 20:30 UTC, exit on
 Intrabar: stop checked before the bar's favourable extreme updates the trail (conservative).
 Costs: 1 tick slippage each way + $0.50 round-trip commission per micro contract."""
 import numpy as np, pandas as pd, gzip
-SPEC = {"MGC":(10,0.10),"MNQ":(2,0.25),"MYM":(0.5,1.0),"M2K":(5,0.10),"MCL":(100,0.01),"ZN":(1000,0.015625),"MBT":(0.1,5.0)}
+SPEC = {"MGC":(10,0.10),"MNQ":(2,0.25),"MYM":(0.5,1.0),"M2K":(5,0.10),"MCL":(100,0.01),"ZN":(1000,0.015625),"MBT":(0.1,5.0),"MES":(5,0.25)}
 
 def load(sym, path):
     df = pd.read_csv(path, parse_dates=["time_utc"]).set_index("time_utc").sort_index()

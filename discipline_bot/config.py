@@ -30,6 +30,7 @@ INSTRUMENTS = {
     "MGC": {"exchange": "COMEX", "multiplier": 10.0,   "tick": 0.10,     "roll_days": 35, "entries": True},  # Micro gold
     "MNQ": {"exchange": "CME",   "multiplier": 2.0,    "tick": 0.25,     "roll_days": 8, "index": True, "entries": True},  # Micro Nasdaq
     "MYM": {"exchange": "CBOT",  "multiplier": 0.5,    "tick": 1.0,      "roll_days": 8, "index": True, "entries": True},  # Micro Dow
+    "MES": {"exchange": "CME",   "multiplier": 5,      "tick": 0.25,     "roll_days": 8, "index": True, "entries": False},  # Micro S&P 500 (research only for now)
     "M2K": {"exchange": "CME",   "multiplier": 5.0,    "tick": 0.10,     "roll_days": 8, "index": True, "entries": False},  # Micro Russell 2000
     "MCL": {"exchange": "NYMEX", "multiplier": 100.0,  "tick": 0.01,     "roll_days": 10, "entries": False},  # Micro WTI crude
     "ZN":  {"exchange": "CBOT",  "multiplier": 1000.0, "tick": 0.015625, "roll_days": 40, "entries": False},  # 10-year T-note (TNX proxy)
