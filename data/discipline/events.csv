@@ -361,3 +361,4 @@ time_utc,type,symbol,detail
 2026-11-26T23:00:55+00:00,signal,MNQ,"SELL MNQZ6 close 26216.0: reversal down: rose 14 ATR to 26330, now closed below 2-hour low"
 2026-11-26T23:03:12+00:00,exit,MNQ,lot 4 trailing_stop @ 26274.0 | P&L $-82 | -0.681R | 5.3h
 2026-11-26T23:38:39+00:00,exit,MYM,lot 1 trailing_stop @ 50523.0 | P&L $-37 | -0.998R | 5.9h
+2026-11-26T23:41:56+00:00,telegram_cmd,,/summary
