@@ -108,3 +108,6 @@ GUARDRAILS_ON = False
 # market positive in both years; max drawdown about doubled (MNQ $16,107). Replay of 25-26 Nov: +$5,782.
 MAX_LOTS = 4
 LOT_TRAILS_ATR = (3.0, 2.5, 2.0, 1.5)
+
+# 26 Nov 2026: EMA 8/21 cross entry (signals.ema_cross_signal) only where it improved both test years.
+EMA_CROSS_MARKETS = {"MGC"}

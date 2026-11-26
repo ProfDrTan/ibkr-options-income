@@ -683,7 +683,7 @@ def check_signals(ib, state):
 
 
 def check_one_signal(ib, state, seen, sym, spec):
-    from discipline_bot.signals import squeeze_signal, daybreak_signal, reversal_signal
+    from discipline_bot.signals import squeeze_signal, daybreak_signal, reversal_signal, ema_cross_signal
     contract = front_contract(ib, sym)
     bars = history(ib, contract)
     done = bars[:-1]                       # the last bar returned is still forming
@@ -710,6 +710,12 @@ def check_one_signal(ib, state, seen, sym, spec):
                     sign, reason, rule = sign3, reason3, "reversal"
                 else:
                     reason = f"{reason}; {reason3}"
+            if not sign and sym in C.EMA_CROSS_MARKETS:
+                sign4, reason4 = ema_cross_signal(H, L, Cl)
+                if sign4:
+                    sign, reason, rule = sign4, reason4, "EMA 8/21"
+                else:
+                    reason = f"{reason}; {reason4}"
     try:   # last 2 days of completed 15m bars, so every decision can be checked later
         with (JDIR / f"bars_{sym}.csv").open("w", newline="") as f:
             w = csv.writer(f)
@@ -764,7 +770,7 @@ def check_one_signal(ib, state, seen, sym, spec):
         send_telegram(f"🤖 <b>{sym} {'LONG' if sign > 0 else 'SHORT'} {'adding lot ' + str(len(lots) + 1) if adding else 'opening'}</b> · {rule} rule\n"
                       f"   {reason} (15-min close {bar.close})\n"
                       f"   stop about {stop} · trail {trail} · risk about ${risk:,.0f}", html=True)
-        enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto {({'squeeze': 'squeeze', '24h breakout': 'daybreak'}).get(rule, 'reversal')} {key}"})
+        enter(ib, state, {"symbol": sym, "side": side, "qty": 1, "note": f"auto {({'squeeze': 'squeeze', '24h breakout': 'daybreak', 'EMA 8/21': 'emacross'}).get(rule, 'reversal')} {key}"})
         return
     send_telegram(f"📈 {sym} {reason} ({C.BAR_SIZE} close {bar.close}).\n{side} setup on {contract.localSymbol}: "
                   f"stop {stop}, trail {trail}, risk ${risk:,.0f} per contract.\n"
@@ -793,6 +799,7 @@ STRATEGY = ("<b>Strategy</b>: two entry rules, both only with the 1h trend, 15-m
             "1) Squeeze: quiet market (40-bar band width in lowest 20%) + close beyond 40-bar high/low\n"
             "2) 24h breakout: close beyond the 24-hour high/low (catches trends already running)\n"
             "3) Reversal (Nasdaq, Dow): after a 12-ATR crash or spike, close beyond the 2-hour high/low (catches the turn)\n"
+            "4) EMA 8/21 cross with the trend (gold only)\n"
             "Fear guard: no Nasdaq/Dow longs from rules 1-2 while yesterday's VIX close is above 22\n"
             "Exit = stop 1.5 ATR, trail 3 ATR, no target · entries on 🟡MGC 🔵MNQ 🟢MYM")
 
@@ -800,7 +807,7 @@ STRATEGY = ("<b>Strategy</b>: two entry rules, both only with the 1h trend, 15-m
 def rule_of(tr):
     n = (tr or {}).get("note") or ""
     return ("squeeze rule" if "squeeze" in n else "24h breakout rule" if "daybreak" in n
-            else "reversal rule" if "reversal" in n
+            else "reversal rule" if "reversal" in n else "EMA 8/21 rule" if "emacross" in n
             else "old breakout rule" if "breakout" in n else "manual")
 
 
@@ -843,7 +850,7 @@ def summary_text(ib, state=None):
             return None if math.isnan(v) else v
         except (TypeError, ValueError):
             return None
-    isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal"))
+    isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal", "emacross"))
     new = [r for r in rows if isnew(r) and num(r.get("pnl_usd")) is not None]
     old = [r for r in rows if not isnew(r) and num(r.get("pnl_usd")) is not None]
     out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b>", STRATEGY, "",
@@ -933,7 +940,7 @@ def telegram_commands(ib, state):
             send_telegram(summary_text(ib, state), html=True)
             try:
                 from discipline_bot import charts
-                isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal"))
+                isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal", "emacross"))
                 send_photo(charts.performance_chart(charts.read_trades(TRADES), isnew),
                            "Scoreboard: CLOSED trades only (money already won or lost). Open positions are in /status.")
             except Exception as e:

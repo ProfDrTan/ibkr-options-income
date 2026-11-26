@@ -133,3 +133,21 @@ def reversal_signal(highs, lows, closes):
     if (hi_rec - lo_day) / m > REV_K and c < min(lows[-REV_N - 1:-1]):
         return -1, f"reversal down: rose {(hi_rec - lo_day) / m:.0f} ATR to {hi_rec:g}, now closed below 2-hour low"
     return 0, "no reversal"
+
+
+# EMA 8/21 CROSS WITH TREND (added 26 Nov 2026, gold only): the 15-min EMA 8 crosses the EMA 21, in the direction
+# of the trend (EMA 100 vs 400). 2-year test as an extra entry: gold $2,282 -> $7,277 (year 1), $23,973 -> $25,097
+# (year 2), big days 14/15 (was 13). Nasdaq and Dow got worse in one or both years, so they don't use it.
+def ema_cross_signal(highs, lows, closes, fast=8, slow=21, tf=100, ts=400):
+    k = len(closes)
+    if k < MIN_BARS:
+        return 0, "warming up"
+    f, s = _ema(closes, fast), _ema(closes, slow)
+    now_, before = (f[-1] > s[-1]) - (f[-1] < s[-1]), (f[-2] > s[-2]) - (f[-2] < s[-2])
+    if now_ == before or now_ == 0 or before == 0:
+        return 0, "no 8/21 cross"
+    tr = _ema(closes, tf)[-1] - _ema(closes, ts)[-1]
+    trend = (tr > 0) - (tr < 0)
+    if now_ != trend:
+        return 0, "8/21 cross against trend"
+    return now_, f"EMA 8 crossed {'above' if now_ > 0 else 'below'} EMA 21, trend {'up' if trend > 0 else 'down'}"
