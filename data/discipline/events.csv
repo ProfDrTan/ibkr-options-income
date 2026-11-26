@@ -228,3 +228,4 @@ time_utc,type,symbol,detail
 2026-11-26T02:00:43+00:00,ibkr_error,MNQ,162 (req 634): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-26T02:00:44+00:00,ibkr_error,MYM,162 (req 636): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-26T03:32:22+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T04:26:20+00:00,telegram_error,,"getUpdates failed: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'api.telegram.org\', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates"
