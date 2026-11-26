@@ -11,10 +11,6 @@
     "MNQ": {
       "orderId": 736,
       "trail": 135.75
-    },
-    "MYM": {
-      "orderId": 755,
-      "trail": 109.0
     }
   },
   "signal_checked": "202611260802",
@@ -27,9 +23,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "2d822611": "2026-11-26T08:39:24+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423684,
   "calendar_fetched": "2026-11-26T08:37:09+00:00",
   "calendar": [
@@ -90,27 +84,10 @@
         "note": "auto reversal 2026-11-26 07:00:00+00:00",
         "stop_id": 777
       }
-    ],
-    "MYM": [
-      {
-        "trade_id": "2d822611",
-        "symbol": "MYM",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-26T06:31:07+00:00",
-        "entry_price": 50323.0,
-        "atr": 36.3571,
-        "initial_stop": 50383.0,
-        "trail_dist": 109.0,
-        "risk_usd": 27.27,
-        "note": "auto reversal 2026-11-26 06:15:00+00:00",
-        "stop_id": 755
-      }
     ]
   },
   "used_fills": [
+    "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0b9935.01.01"
   ],
   "charts_ready": true
