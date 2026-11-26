@@ -342,3 +342,7 @@ time_utc,type,symbol,detail
 2026-11-26T16:45:10+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-26T17:15:11+00:00,signal,MNQ,"SELL MNQZ6 close 26249.25: reversal down: rose 14 ATR to 26344.8, now closed below 2-hour low"
 2026-11-26T17:15:15+00:00,entry,MNQ,lot 2 SELL 1 @ 26250.75 | stop 26313.75 | trail 105.25 | risk $126
+2026-11-26T17:30:47+00:00,signal,MGC,"SELL MGCG7 close 3595.1: EMA 8 crossed below EMA 21, trend down"
+2026-11-26T17:30:50+00:00,entry,MGC,lot 1 SELL 1 @ 3594.7 | stop 3602.9 | trail 16.6 | risk $83
+2026-11-26T17:30:52+00:00,signal,MNQ,"SELL MNQZ6 close 26241.5: reversal down: rose 14 ATR to 26335, now closed below 2-hour low"
+2026-11-26T17:30:55+00:00,entry,MNQ,lot 3 SELL 1 @ 26230.25 | stop 26292.25 | trail 83.25 | risk $125

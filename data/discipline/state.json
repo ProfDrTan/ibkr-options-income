@@ -14,13 +14,17 @@
     "MNQ": {
       "orderId": 932,
       "trail": 155.25
+    },
+    "MGC": {
+      "orderId": 991,
+      "trail": 16.6
     }
   },
-  "signal_checked": "202611261701",
+  "signal_checked": "202611261702",
   "signal_bar": {
-    "MNQ": "2026-11-26 17:00:00+00:00",
-    "MGC": "2026-11-26 17:00:00+00:00",
-    "MYM": "2026-11-26 17:00:00+00:00",
+    "MNQ": "2026-11-26 17:15:00+00:00",
+    "MGC": "2026-11-26 17:15:00+00:00",
+    "MYM": "2026-11-26 17:15:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -49,9 +53,9 @@
   ],
   "last_error_alert": "2026-11-25T22:15:23+00:00",
   "signal_status": {
-    "MGC": "01:15 close 3597.4 \u00b7 24h range 3470.8\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
-    "MNQ": "01:15 close 26249.2 \u00b7 24h range 25062.5\u201326435.8 \u00b7 reversal down: rose 14 ATR to 26344.8, now closed below 2-hour low",
-    "MYM": "01:15 close 50492 \u00b7 24h range 49243\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
+    "MGC": "01:30 close 3595.1 \u00b7 24h range 3473.4\u20133634.6 \u00b7 EMA 8 crossed below EMA 21, trend down",
+    "MNQ": "01:30 close 26241.5 \u00b7 24h range 25062.5\u201326435.8 \u00b7 reversal down: rose 14 ATR to 26335, now closed below 2-hour low",
+    "MYM": "01:30 close 50463 \u00b7 24h range 49243\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
   },
   "lots": {
     "MNQ": [
@@ -86,6 +90,40 @@
         "risk_usd": 126.43,
         "note": "auto reversal 2026-11-26 17:00:00+00:00",
         "stop_id": 982
+      },
+      {
+        "trade_id": "4fc2477a",
+        "symbol": "MNQ",
+        "side": "SELL",
+        "qty": 1,
+        "source": "bot",
+        "lot": 3,
+        "entry_time": "2026-11-26T17:30:55+00:00",
+        "entry_price": 26230.25,
+        "atr": 41.6607,
+        "initial_stop": 26292.25,
+        "trail_dist": 83.25,
+        "risk_usd": 124.98,
+        "note": "auto reversal 2026-11-26 17:15:00+00:00",
+        "stop_id": 998
+      }
+    ],
+    "MGC": [
+      {
+        "trade_id": "003a24fa",
+        "symbol": "MGC",
+        "side": "SELL",
+        "qty": 1,
+        "source": "bot",
+        "lot": 1,
+        "entry_time": "2026-11-26T17:30:50+00:00",
+        "entry_price": 3594.7,
+        "atr": 5.5357,
+        "initial_stop": 3602.9,
+        "trail_dist": 16.6,
+        "risk_usd": 83.04,
+        "note": "auto emacross 2026-11-26 17:15:00+00:00",
+        "stop_id": 991
       }
     ]
   },
