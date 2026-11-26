@@ -8,11 +8,11 @@
     "download-daily-20y"
   ],
   "stops": {},
-  "signal_checked": "202611260003",
+  "signal_checked": "202611260100",
   "signal_bar": {
-    "MNQ": "2026-11-26 00:30:00+00:00",
-    "MGC": "2026-11-26 00:30:00+00:00",
-    "MYM": "2026-11-26 00:30:00+00:00",
+    "MNQ": "2026-11-26 00:45:00+00:00",
+    "MGC": "2026-11-26 00:45:00+00:00",
+    "MYM": "2026-11-26 00:45:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -41,9 +41,9 @@
   ],
   "last_error_alert": "2026-11-25T22:15:23+00:00",
   "signal_status": {
-    "MGC": "08:45 close 3600.3 \u00b7 24h range 3453.6\u20133619.3 \u00b7 no squeeze; no 24h breakout",
-    "MNQ": "08:45 close 26223.5 \u00b7 24h range 25027\u201326263.8 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "08:46 close 50478 \u00b7 24h range 48942\u201350458 \u00b7 no squeeze; 24h breakout against trend; no reversal"
+    "MGC": "09:00 close 3590.7 \u00b7 24h range 3453.6\u20133619.3 \u00b7 no squeeze; no 24h breakout",
+    "MNQ": "09:00 close 26209.5 \u00b7 24h range 25027\u201326256.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "09:00 close 50489 \u00b7 24h range 48942\u201350483 \u00b7 no squeeze; 24h breakout against trend; no reversal"
   },
   "lots": {},
   "used_fills": []
