@@ -977,9 +977,10 @@ def process_commands(ib, state):
                 root = Path(__file__).resolve().parent.parent
                 (root / "data" / "history").mkdir(parents=True, exist_ok=True)
                 log = open(root / "data" / "history" / "download.log", "a")
+                env = dict(os.environ, **{k: str(v) for k, v in (cmd.get("env") or {}).items()})
                 subprocess.Popen([sys.executable, "-u", "-m", "discipline_bot.download"], cwd=root,
-                                 stdout=log, stderr=subprocess.STDOUT)
-                log_event("download_started", "", "2-year 15-minute history download started")
+                                 stdout=log, stderr=subprocess.STDOUT, env=env)
+                log_event("download_started", "", f"history download started {cmd.get('env') or ''}")
             else:
                 log_event("blocked", cmd.get("symbol", ""), f"unknown action {cmd['action']}")
         except Exception as e:

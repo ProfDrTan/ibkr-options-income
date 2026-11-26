@@ -34,5 +34,17 @@
     "action": "download_daily",
     "note": "ETF universe + VIX, daily, up to 20 years",
     "created_utc": "2026-11-25T04:09:50+00:00"
+  },
+  {
+    "id": "download-1m-1y",
+    "action": "download_history",
+    "env": {
+      "DL_BAR": "1 min",
+      "DL_TAG": "1m",
+      "DL_YEARS": "1",
+      "DL_SYMBOLS": "MGC,MNQ,MYM",
+      "DL_CHUNK": "2 D"
+    },
+    "created_utc": "2026-11-26T11:46:56+00:00"
   }
 ]

@@ -19,8 +19,12 @@ from discipline_bot import config as C
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "history"
-YEARS = 2
-CHUNK = "10 D"          # per request; IBKR pacing allows ~60 historical requests per 10 minutes
+import os
+YEARS = float(os.environ.get("DL_YEARS", "2"))
+BAR = os.environ.get("DL_BAR", "15 mins")          # e.g. "1 min"
+TAG = os.environ.get("DL_TAG", "15m")              # file suffix
+ONLY = [x for x in os.environ.get("DL_SYMBOLS", "").split(",") if x]
+CHUNK = os.environ.get("DL_CHUNK", "10 D")          # per request; IBKR pacing allows ~60 historical requests per 10 minutes
 PAUSE = 11              # seconds between requests to stay under that limit
 ACTIVE_MONTHS = {"MGC": {2, 4, 6, 8, 10, 12}}   # gold: only the liquid even months
 
@@ -46,7 +50,7 @@ def contracts(ib, sym, spec):
 
 
 def download_symbol(ib, sym, spec):
-    start = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=365 * YEARS)
+    start = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=int(365 * YEARS))
     now = dt.datetime.now(dt.timezone.utc)
     rows, prev_end = [], None
     for c in contracts(ib, sym, spec):
@@ -62,7 +66,7 @@ def download_symbol(ib, sym, spec):
         cursor = end
         while cursor > begin:
             bars = ib.reqHistoricalData(c, endDateTime=cursor.strftime("%Y%m%d-%H:%M:%S"), durationStr=CHUNK,
-                                        barSizeSetting="15 mins", whatToShow="TRADES", useRTH=False, formatDate=2)
+                                        barSizeSetting=BAR, whatToShow="TRADES", useRTH=False, formatDate=2)
             time.sleep(PAUSE)
             if not bars:
                 break
@@ -79,7 +83,7 @@ def download_symbol(ib, sym, spec):
             cursor = first - dt.timedelta(seconds=1)
         progress(**{sym: f"{c.localSymbol} done, {len(rows)} bars so far"})
     rows = sorted(set(rows))
-    with gzip.open(OUT / f"{sym}_15m.csv.gz", "wt", newline="") as f:
+    with gzip.open(OUT / f"{sym}_{TAG}.csv.gz", "wt", newline="") as f:
         w = csv.writer(f)
         w.writerow(["time_utc", "open", "high", "low", "close", "volume", "contract"])
         w.writerows(rows)
@@ -93,6 +97,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     summary = {}
     for sym, spec in C.INSTRUMENTS.items():
+        if ONLY and sym not in ONLY:
+            continue
         try:
             n = download_symbol(ib, sym, spec)
             summary[sym] = n
@@ -102,7 +108,7 @@ def main():
             progress(**{sym: summary[sym]})
     ib.disconnect()
     progress(finished=True)
-    send_telegram("📥 History download finished: " + ", ".join(f"{k} {v}" for k, v in summary.items()))
+    send_telegram(f"📥 {BAR} history download finished: " + ", ".join(f"{k} {v}" for k, v in summary.items()))
 
 
 if __name__ == "__main__":
