@@ -962,6 +962,14 @@ def run():
             if ib is None or not ib.isConnected():
                 ib = connect()
                 log_event("connected", "", ",".join(ib.managedAccounts()))
+                if not state.get("charts_ready"):
+                    try:
+                        from discipline_bot import charts
+                        charts._plt()
+                        state["charts_ready"] = True
+                        log_event("charts_ready", "", "matplotlib available")
+                    except Exception as e:
+                        log_event("chart_error", "", repr(e)[:400])
                 if state.pop("outage_alerted", None):
                     send_telegram("✅ Connection back. Bot is trading again.")
                 state.pop("down_since", None)
