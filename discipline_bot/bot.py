@@ -387,7 +387,10 @@ def check_entry(ib, state, sym, qty, atr, add=False):
         return f"already holding {sym}"
     if add and len(lots_of(state, sym)) >= C.MAX_LOTS:
         return f"already {C.MAX_LOTS} lots in {sym} (fully scaled in)"
-    if not C.GUARDRAILS_ON:          # 26 Nov 2026: Prof's call, no entry-blocking limits on the paper account
+    pnl = todays_realised_pnl(ib)    # hard daily loss limit: always on (Prof, 27 Nov 2026)
+    if pnl <= -C.DAILY_LOSS_LIMIT_USD:
+        return f"daily loss limit hit (${pnl:,.0f} today, limit ${C.DAILY_LOSS_LIMIT_USD:,})"
+    if not C.GUARDRAILS_ON:          # 26 Nov 2026: Prof's call, no other entry-blocking limits on the paper account
         return None
     if len(held) >= C.MAX_OPEN_POSITIONS:
         return f"already {len(held)} open positions (max {C.MAX_OPEN_POSITIONS})"

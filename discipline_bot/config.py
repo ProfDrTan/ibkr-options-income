@@ -53,7 +53,9 @@ MAX_CONTRACTS_PER_SYMBOL = 1
 MAX_OPEN_POSITIONS = 4
 MAX_INDEX_POSITIONS = 2           # at most 2 US stock-index futures (MNQ, MYM, M2K) at once — they move together
 MAX_RISK_PER_TRADE_USD = 1500     # 1.5 x ATR x multiplier x contracts must be below this, or the entry is blocked
-DAILY_LOSS_LIMIT_USD = 2000       # realised loss today (UTC) beyond this blocks new entries until tomorrow
+DAILY_LOSS_LIMIT_USD = 1000       # realised loss today (SGT) beyond this blocks new entries until tomorrow. ALWAYS ON.
+# 27 Nov 2026 test (2 years, all rules, scaling in): no limit $76,207, worst day -$4,577, max drawdown $19,103;
+# $1,000 limit $88,815 (y1 $41,159, y2 $47,656), worst day -$2,647, max drawdown $12,969. $500 and $2,000 were worse.
 BLACKOUT_MINUTES = 30
 # Weekly economic calendar (public JSON feed of the Forex Factory calendar; times include a UTC offset).
 # Only USD, high-impact events are used: heads-up 60 min before + entry blackout. No news headlines.
