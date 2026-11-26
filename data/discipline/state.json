@@ -20,7 +20,7 @@
   },
   "missing_since": {},
   "tg_offset": 667423677,
-  "calendar_fetched": "2026-11-26T00:24:22+00:00",
+  "calendar_fetched": "2026-11-26T00:32:07+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -44,5 +44,7 @@
     "MGC": "08:30 close 3598.8 \u00b7 24h range 3453.6\u20133619.3 \u00b7 no squeeze; no 24h breakout",
     "MNQ": "08:30 close 26214.5 \u00b7 24h range 25027\u201326301 \u00b7 no squeeze; no 24h breakout; no reversal",
     "MYM": "08:30 close 50443 \u00b7 24h range 48942\u201350437 \u00b7 no squeeze; 24h breakout against trend; no reversal"
-  }
+  },
+  "lots": {},
+  "used_fills": []
 }
