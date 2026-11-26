@@ -20,7 +20,7 @@
   },
   "missing_since": {},
   "tg_offset": 667423686,
-  "calendar_fetched": "2026-11-26T08:37:09+00:00",
+  "calendar_fetched": "2026-11-26T09:13:50+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -47,9 +47,9 @@
   },
   "lots": {},
   "used_fills": [
+    "0000e1a7.6b0ba707.01.01",
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0ba72e.01.01",
-    "0000e1a7.6b0ba707.01.01",
     "0000e1a7.6b0b9935.01.01"
   ],
   "charts_ready": true

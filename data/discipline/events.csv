@@ -279,3 +279,6 @@ time_utc,type,symbol,detail
 2026-11-26T08:50:16+00:00,exit,MNQ,lot 1 trailing_stop @ 26291.5 | P&L $46 | 0.335R | 2.8h
 2026-11-26T09:10:12+00:00,telegram_cmd,,/status
 2026-11-26T09:13:41+00:00,restart,,code updated 562eaff -> ac7b237; restarting
+2026-11-26T09:13:49+00:00,start,,port 4002 | code f7e447f | auto entries ON
+2026-11-26T09:13:49+00:00,connected,,DUQ138203
+2026-11-26T09:13:50+00:00,calendar,,2 high-impact USD events this week
