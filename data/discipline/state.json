@@ -34,9 +34,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "f99694af": "2026-11-26T23:02:05+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423703,
   "calendar_fetched": "2026-11-26T22:15:17+00:00",
   "calendar": [
@@ -112,22 +110,6 @@
         "risk_usd": 124.98,
         "note": "auto reversal 2026-11-26 17:15:00+00:00",
         "stop_id": 998
-      },
-      {
-        "trade_id": "f99694af",
-        "symbol": "MNQ",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 4,
-        "entry_time": "2026-11-26T17:45:25+00:00",
-        "entry_price": 26233.25,
-        "atr": 39.875,
-        "initial_stop": 26291.75,
-        "trail_dist": 59.75,
-        "risk_usd": 119.62,
-        "note": "auto reversal 2026-11-26 17:30:00+00:00",
-        "stop_id": 1009
       }
     ],
     "MGC": [
@@ -168,6 +150,7 @@
     ]
   },
   "used_fills": [
+    "0000e1a7.6b0c1ad9.01.01",
     "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0bc11d.01.01",
