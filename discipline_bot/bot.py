@@ -76,8 +76,23 @@ def send_market_chart(ib, state):
                     log_event("chart_error", sym, repr(e)[:150])
         stops = {t.order.orderId: t.order.trailStopPrice or t.order.auxPrice for t in ib.reqAllOpenOrders()}
         lots = {k: [dict(l, stop_now=stops.get(l.get("stop_id"))) for l in v] for k, v in state.get("lots", {}).items()}
-        for sym, png in charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES)).items():
-            send_photo(png, f"{sym} · tags on the right: NOW price, your lots (L1, L2…) and stops, 24h high/low, Fibonacci")
+        upnl = {}
+        try:
+            for it in ib.portfolio():
+                if it.position:
+                    upnl[it.contract.symbol] = upnl.get(it.contract.symbol, 0) + (it.unrealizedPNL or 0)
+        except Exception:
+            pass
+        for sym, png in charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES), open_pnl=upnl).items():
+            L_ = lots.get(sym, [])
+            if L_:
+                u = upnl.get(sym)
+                cap = (f"{sym}: OPEN, {len(L_)} lot(s) {'LONG' if L_[0]['side'] == 'BUY' else 'SHORT'}"
+                       + (f", open P&L {'+' if u >= 0 else '−'}${abs(u):,.0f}" if u is not None else "")
+                       + ". Green/red tags = your entries (L1, L2…), dark red = their stops.")
+            else:
+                cap = f"{sym}: no open position. NOW tag = current price; grey = 24h high/low; purple = Fibonacci."
+            send_photo(png, cap)
     except Exception as e:
         log_event("chart_error", "", repr(e)[:200])
 
@@ -880,7 +895,8 @@ def telegram_commands(ib, state):
             try:
                 from discipline_bot import charts
                 isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal"))
-                send_photo(charts.performance_chart(charts.read_trades(TRADES), isnew), "Results so far, new rules only")
+                send_photo(charts.performance_chart(charts.read_trades(TRADES), isnew),
+                           "Scoreboard: CLOSED trades only (money already won or lost). Open positions are in /status.")
             except Exception as e:
                 log_event("chart_error", "", repr(e)[:200])
         elif text in ("/chart", "chart", "/charts", "charts"):

@@ -71,7 +71,7 @@ def _tags(ax, items, lo, hi):
                     color=color, va="bottom", bbox=dict(fc="white", ec="none", alpha=0.8, pad=0.5))
 
 
-def market_chart(bars_by_sym, lots_by_sym, trades_rows, hours=12):
+def market_chart(bars_by_sym, lots_by_sym, trades_rows, hours=12, open_pnl=None):
     """One PNG per market, phone-sized. Returns {sym: png bytes}."""
     plt, mdates = _plt()
     out = {}
@@ -126,9 +126,17 @@ def market_chart(bars_by_sym, lots_by_sym, trades_rows, hours=12):
                             fontweight="bold", color="#2DA44E" if pnl >= 0 else "#CF222E", ha="center", va="bottom")
         head = f"{MNAME[sym]}  {last:,.2f}"
         if lots:
-            head += f"   ·   {len(lots)} lot{'s' if len(lots) > 1 else ''} {'LONG' if lots[0]['side'] == 'BUY' else 'SHORT'}"
-        fig.text(0.03, 0.965, head, color=col, fontsize=16, fontweight="bold", va="top")
-        fig.text(0.03, 0.925, f"{dt.datetime.now(SGT):%a %d %b %H:%M} SGT · 15-min candles · last {hours}h",
+            u = (open_pnl or {}).get(sym)
+            banner = (f"OPEN POSITION: {len(lots)} lot{'s' if len(lots) > 1 else ''} "
+                      f"{'LONG' if lots[0]['side'] == 'BUY' else 'SHORT'}"
+                      + (f"  ·  open P&L {'+' if u >= 0 else '−'}${abs(u):,.0f}" if u is not None else ""))
+            bcol = "#2DA44E" if (u or 0) >= 0 else "#CF222E"
+        else:
+            banner, bcol = "NO OPEN POSITION  ·  watching for a signal", "#57606A"
+        fig.text(0.97, 0.965, banner, color="white", fontsize=12, fontweight="bold", ha="right", va="top",
+                 bbox=dict(boxstyle="round,pad=0.4", fc=bcol, ec="none"))
+        fig.text(0.03, 0.905, head, color=col, fontsize=16, fontweight="bold", va="top")
+        fig.text(0.03, 0.87, f"{dt.datetime.now(SGT):%a %d %b %H:%M} SGT · 15-min candles · last {hours}h",
                  fontsize=10, color="#57606A", va="top")
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M", tz=SGT))
         ax.xaxis.set_major_locator(mdates.HourLocator(interval=2, tz=SGT))
@@ -137,7 +145,7 @@ def market_chart(bars_by_sym, lots_by_sym, trades_rows, hours=12):
         ax.grid(alpha=0.25)
         for sp in ("top", "left", "right"):
             ax.spines[sp].set_visible(False)
-        fig.subplots_adjust(left=0.03, right=0.70, top=0.88, bottom=0.07)
+        fig.subplots_adjust(left=0.03, right=0.70, top=0.83, bottom=0.07)
         buf = io.BytesIO()
         fig.savefig(buf, format="png")
         plt.close(fig)
@@ -150,7 +158,7 @@ def performance_chart(trades_rows, is_new):
     rows = [r for r in trades_rows if is_new(r) and r.get("pnl_usd") not in ("", "nan", None)]
     fig, (a1, a2) = plt.subplots(2, 1, figsize=(8, 8), dpi=110, gridspec_kw={"height_ratios": [2, 1]})
     if not rows:
-        a1.text(0.5, 0.5, "No closed trades yet under the new rules", ha="center", va="center", fontsize=13)
+        a1.text(0.5, 0.5, "No closed trades yet under the new rules\n(open positions: see /status)", ha="center", va="center", fontsize=13)
         a1.axis("off"); a2.axis("off")
     else:
         rows.sort(key=lambda r: r["exit_time"])
@@ -168,7 +176,7 @@ def performance_chart(trades_rows, is_new):
                 a1.text(px[-1], py[-1], f" {sym} {'+' if py[-1] >= 0 else '−'}${abs(py[-1]):,.0f}", color=col, fontsize=9, va="center")
         a1.text(xs[-1], ys[-1], f" Total {'+' if ys[-1] >= 0 else '−'}${abs(ys[-1]):,.0f}", fontsize=10, fontweight="bold", va="bottom")
         a1.axhline(0, color="#999999", lw=0.8)
-        a1.set_title("Closed-trade P&L, cumulative (new rules, 1 contract per lot)", loc="left", fontsize=11)
+        a1.set_title("CLOSED TRADES ONLY: running total of realised profit/loss\n(open positions are not in here; see /status)", loc="left", fontsize=12, fontweight="bold")
         a1.xaxis.set_major_formatter(mdates.DateFormatter("%d %b %H:%M", tz=SGT))
         a1.tick_params(axis="x", labelsize=8)
         a1.grid(alpha=0.2)
@@ -185,7 +193,7 @@ def performance_chart(trades_rows, is_new):
         lo_, hi_ = min(vals + [0]), max(vals + [0]); pad = (hi_ - lo_ or 100) * 0.35
         a2.set_ylim(lo_ - pad, hi_ + pad)
         a2.axhline(0, color="#999999", lw=0.8)
-        a2.set_title("P&L by market", loc="left", fontsize=11)
+        a2.set_title("Realised profit/loss by market (closed trades)", loc="left", fontsize=12, fontweight="bold")
         for a in (a1, a2):
             a.yaxis.tick_right(); a.yaxis.set_label_position("right")
             for s in ("top", "left"):
