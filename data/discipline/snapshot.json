@@ -1,19 +1,19 @@
 {
-  "time_utc": "2026-11-26T16:30:44+00:00",
+  "time_utc": "2026-11-26T16:45:13+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
-    "MGC": "00:30 close 3598.6 \u00b7 24h range 3453.6\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
-    "MNQ": "00:30 close 26270.5 \u00b7 24h range 25062.5\u201326435.8 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
-    "MYM": "00:30 close 50473 \u00b7 24h range 49140\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
+    "MGC": "00:45 close 3601.1 \u00b7 24h range 3459.2\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
+    "MNQ": "00:45 close 26281 \u00b7 24h range 25062.5\u201326435.8 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
+    "MYM": "00:45 close 50524 \u00b7 24h range 49189\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
   },
   "positions": [
     {
       "contract": "MNQZ6",
       "qty": -1.0,
       "avg_price": 26256.92,
-      "last": 26271.8496094,
-      "unrealized_usd": -29.86,
+      "last": 26279.58984375,
+      "unrealized_usd": -45.34,
       "stop": {
         "type": "TRAIL",
         "trail": 155.25,
