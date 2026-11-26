@@ -112,11 +112,14 @@ def setup_telegram_buttons(state):
             {"command": "summary", "description": "Closed-trade scoreboard"},
             {"command": "chart", "description": "Charts only"},
             {"command": "calendar", "description": "This week's big US releases"}]}, timeout=15)
-        if not state.get("keyboard_v1"):
-            requests.post(f"{base}/sendMessage", json={"chat_id": cfg["chat_id"], "reply_markup": KEYBOARD,
-                          "text": "👇 Tap a button below instead of typing. (Typing the word works too, with or without /.)"},
+        # 'Menu' button on the LEFT of the message box (no buttons taking up screen space)
+        requests.post(f"{base}/setChatMenuButton", json={"chat_id": cfg["chat_id"],
+                      "menu_button": {"type": "commands"}}, timeout=15)
+        if not state.get("keyboard_v2"):
+            requests.post(f"{base}/sendMessage", json={"chat_id": cfg["chat_id"], "reply_markup": {"remove_keyboard": True},
+                          "text": "Buttons moved: tap ☰ Menu on the LEFT of the message box for Status, Summary, Chart, Calendar."},
                           timeout=15)
-            state["keyboard_v1"] = True
+            state["keyboard_v2"] = True
     except Exception as e:
         log_event("telegram_error", "", f"buttons: {e!r}"[:200])
 
@@ -940,7 +943,7 @@ def telegram_commands(ib, state):
         elif text in ("/calendar", "calendar", "/macro", "macro"):
             send_telegram(calendar_text())
         elif text in ("/help", "help", "/start") or text:
-            setup_telegram_buttons(dict())       # re-send the buttons
+            setup_telegram_buttons(state)
             send_telegram("/status — strategy, positions, stops and setups\n/summary — performance so far vs the backtest, with a chart\n/chart — 15-min charts with levels\n"
                           "/calendar — this week's high-impact US releases (SGT)")
 
