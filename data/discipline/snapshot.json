@@ -1,11 +1,11 @@
 {
-  "time_utc": "2026-11-26T04:30:49+00:00",
+  "time_utc": "2026-11-26T04:45:28+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
-    "MGC": "12:30 close 3617.7 \u00b7 24h range 3453.6\u20133634.6 \u00b7 no squeeze; no 24h breakout",
-    "MNQ": "12:30 close 26387.2 \u00b7 24h range 25027\u201326386 \u00b7 no squeeze; 24h breakout against trend; no reversal",
-    "MYM": "12:30 close 50414 \u00b7 24h range 48942\u201350509 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MGC": "12:45 close 3626.5 \u00b7 24h range 3453.6\u20133634.6 \u00b7 no squeeze; no 24h breakout",
+    "MNQ": "12:45 close 26401.5 \u00b7 24h range 25027\u201326410.8 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "12:45 close 50427 \u00b7 24h range 48942\u201350509 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "positions": []
 }
