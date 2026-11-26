@@ -864,13 +864,15 @@ def run():
     ib, flattened_for = None, None
     code_rev = git_out("rev-parse", "HEAD")
     log_event("start", "", f"port {C.IB_PORT} | code {code_rev[:7]} | auto entries {'ON' if C.AUTO_ENTRIES else 'OFF'}")
-    send_telegram(f"✅ Discipline Bot online (paper). Bars: {C.BAR_SIZE}. Auto entries: {'ON' if C.AUTO_ENTRIES else 'OFF'}. "
-                  f"I'll message you here about entries, exits, blocked trades and errors.")
+    # No "online" message: Telegram is for trades only. Restarts are silent; outages over 15 min are reported.
     while True:
         try:
             if ib is None or not ib.isConnected():
                 ib = connect()
                 log_event("connected", "", ",".join(ib.managedAccounts()))
+                if state.pop("outage_alerted", None):
+                    send_telegram("✅ Connection back. Bot is trading again.")
+                state.pop("down_since", None)
             git("pull", "-q", "--rebase", "--autostash")
             new_rev = git_out("rev-parse", "HEAD")
             if code_rev and new_rev != code_rev and git_out("diff", "--name-only", code_rev, new_rev, "--", "discipline_bot/*.py"):
@@ -906,10 +908,10 @@ def run():
             raise
         except Exception as e:
             log_event("error", "", repr(e))
-            last_alert = state.get("last_error_alert")
-            if not last_alert or (now() - dt.datetime.fromisoformat(last_alert)).total_seconds() > 1800:
-                state["last_error_alert"] = now().isoformat(timespec="seconds")   # at most one alert per 30 min
-                send_telegram(f"⚠️ discipline_bot error (is IB Gateway logged in?): {e!r}"[:300])
+            down = state.setdefault("down_since", now().isoformat(timespec="seconds"))
+            if not state.get("outage_alerted") and (now() - dt.datetime.fromisoformat(down)).total_seconds() > 900:
+                state["outage_alerted"] = True    # only real outages (>15 min); the 06:15 Gateway restart stays silent
+                send_telegram(f"⚠️ Bot can't reach IB Gateway for 15+ minutes. Check the Lenovo. ({e!r})"[:300])
             try:
                 if ib:
                     ib.disconnect()
