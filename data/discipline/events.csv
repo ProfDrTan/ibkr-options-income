@@ -335,3 +335,6 @@ time_utc,type,symbol,detail
 2026-11-26T15:58:19+00:00,calendar,,2 high-impact USD events this week
 2026-11-26T16:11:38+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MBT', 'DL_CHUNK': '2 D'}"
 2026-11-26T16:13:51+00:00,restart,,code updated 6a5343b -> 5690ffc; restarting
+2026-11-26T16:14:00+00:00,start,,port 4002 | code cc555e4 | auto entries ON
+2026-11-26T16:14:01+00:00,connected,,DUQ138203
+2026-11-26T16:14:03+00:00,calendar,,2 high-impact USD events this week
