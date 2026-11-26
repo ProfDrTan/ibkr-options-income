@@ -233,3 +233,4 @@ time_utc,type,symbol,detail
 2026-11-26T06:00:21+00:00,entry,MNQ,lot 1 SELL 1 @ 26314.25 | stop 26381.75 | trail 135.75 | risk $136
 2026-11-26T06:30:48+00:00,signal,MYM,"SELL MYMZ6 close 50321.0: reversal down: rose 18 ATR to 50494, now closed below 2-hour low"
 2026-11-26T06:31:07+00:00,entry,MYM,lot 1 SELL 1 @ 50323.0 | stop 50383.0 | trail 109.0 | risk $27
+2026-11-26T06:33:20+00:00,calendar,,2 high-impact USD events this week
