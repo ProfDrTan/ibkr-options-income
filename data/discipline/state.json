@@ -19,7 +19,7 @@
     "MBT": "2026-11-25 03:15:00+00:00"
   },
   "missing_since": {},
-  "tg_offset": 667423688,
+  "tg_offset": 667423689,
   "calendar_fetched": "2026-11-26T09:18:03+00:00",
   "calendar": [
     {
@@ -47,10 +47,10 @@
   },
   "lots": {},
   "used_fills": [
+    "0000e1a7.6b0ba707.01.01",
     "0000e1a7.6b0ba563.01.01",
-    "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0ba72e.01.01",
-    "0000e1a7.6b0ba707.01.01"
+    "0000e1a7.6b0b9935.01.01"
   ],
   "charts_ready": true,
   "keyboard_v1": true
