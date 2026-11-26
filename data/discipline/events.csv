@@ -247,3 +247,4 @@ time_utc,type,symbol,detail
 2026-11-26T08:09:25+00:00,start,,port 4002 | code e10f34c | auto entries ON
 2026-11-26T08:09:26+00:00,connected,,DUQ138203
 2026-11-26T08:09:26+00:00,calendar,,2 high-impact USD events this week
+2026-11-26T08:10:33+00:00,restart,,code updated e10f34c -> 6ef7a10; restarting
