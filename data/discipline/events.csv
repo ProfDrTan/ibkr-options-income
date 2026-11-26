@@ -307,3 +307,4 @@ time_utc,type,symbol,detail
 2026-11-26T11:00:23+00:00,entry,MNQ,lot 1 SELL 1 @ 26137.5 | stop 26225.5 | trail 171.0 | risk $171
 2026-11-26T11:20:27+00:00,exit,MNQ,lot 1 trailing_stop @ 26225.75 | P&L $-176 | -1.033R | 0.3h
 2026-11-26T11:35:56+00:00,telegram_cmd,,/summary
+2026-11-26T11:47:05+00:00,restart,,code updated d496bc2 -> c9d8076; restarting
