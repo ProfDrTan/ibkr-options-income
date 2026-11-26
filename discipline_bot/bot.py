@@ -68,6 +68,9 @@ def send_photo(png, caption=""):
 def send_market_chart(ib, state):
     try:
         from discipline_bot import charts
+        if not BARS_BY_SYM:
+            send_telegram("📊 Chart data loads at the next 15-minute bar after a restart; try /chart again in a few minutes.")
+            return
         stops = {t.order.orderId: t.order.trailStopPrice or t.order.auxPrice for t in ib.reqAllOpenOrders()}
         lots = {k: [dict(l, stop_now=stops.get(l.get("stop_id"))) for l in v] for k, v in state.get("lots", {}).items()}
         send_photo(charts.market_chart(BARS_BY_SYM, lots, charts.read_trades(TRADES)),
