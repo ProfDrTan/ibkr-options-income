@@ -1,6 +1,6 @@
 {
   "MGC": "complete: 354480 bars",
-  "updated_utc": "2026-11-26T16:20:22+00:00",
+  "updated_utc": "2026-11-26T16:26:03+00:00",
   "MNQ": "complete: 354825 bars",
   "MYM": "complete: 354825 bars",
   "M2K": "complete: 44039 bars",
@@ -8,5 +8,5 @@
   "ZN": "complete: 47237 bars",
   "MBT": "complete: 52491 bars",
   "finished": true,
-  "MES": "MESU6 done, 278026 bars so far"
+  "MES": "complete: 354825 bars"
 }
