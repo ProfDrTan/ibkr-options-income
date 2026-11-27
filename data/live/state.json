@@ -74,16 +74,16 @@
   "missing_since": {},
   "used_fills": [],
   "tg_offset": 667423716,
-  "signal_checked": "202611270701",
+  "signal_checked": "202611270702",
   "signal_bar": {
     "MGC": "2026-11-27 07:00:00+00:00",
-    "MNQ": "2026-11-27 07:00:00+00:00",
-    "MYM": "2026-11-27 07:00:00+00:00"
+    "MNQ": "2026-11-27 07:15:00+00:00",
+    "MYM": "2026-11-27 07:15:00+00:00"
   },
   "signal_status": {
     "MGC": "15:16 close 3687.8 \u00b7 24h range 3579\u20133694 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "15:16 close 26722.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "15:16 close 50672 \u00b7 24h range 50266\u201350779 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MNQ": "15:30 close 26717.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "15:31 close 50722 \u00b7 24h range 50266\u201350779 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00"
 }
