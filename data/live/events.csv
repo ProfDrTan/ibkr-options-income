@@ -181,3 +181,4 @@ time_utc,type,symbol,detail
 2026-11-27T15:33:24+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T15:45:05+00:00,start,,port 4001 | code 9181d5a | auto entries ON
 2026-11-27T15:45:07+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
+2026-11-27T15:46:12+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
