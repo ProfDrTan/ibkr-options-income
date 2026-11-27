@@ -142,3 +142,5 @@ time_utc,type,symbol,detail
 2026-11-27T14:23:30+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-27T14:30:22+00:00,signal,MNQ,"SELL MNQZ6 close 26579.5: squeeze breakout below 40-bar low 26582.75, 1h trend down"
 2026-11-27T14:30:24+00:00,signal,MYM,"SELL MYMZ6 close 50761.0: reversal down: rose 12 ATR to 50980, now closed below 2-hour low"
+2026-11-27T14:45:11+00:00,signal,MNQ,"SELL MNQZ6 close 26347.5: squeeze breakout below 40-bar low 26576.75, 1h trend down"
+2026-11-27T14:45:13+00:00,signal,MYM,"SELL MYMZ6 close 50605.0: reversal down: rose 13 ATR to 50980, now closed below 2-hour low"
