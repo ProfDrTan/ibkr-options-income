@@ -1,5 +1,10 @@
 # START HERE — instructions for ChatGPT / Codex (read fully before doing anything)
 
+> **CRITICAL: you run in the cloud, NOT on the owner's PC.** Checking ports, processes or IB Gateway from your own sandbox
+> tells you nothing (there is no Gateway there). You can never test the PC directly. Everything on the PC is done by the bot,
+> and you talk to the bot ONLY by committing to the repo (§2). Never tell the owner to stop `run_bot.bat`; it must keep running,
+> because the bot is what executes your commands.
+
 You now run this project for the owner, Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). He wants minimal back-and-forth:
 do the work, then report in a few lines with links. You work ONLY through the GitHub repository; you cannot reach his PC directly.
 
@@ -36,7 +41,8 @@ It needs the **owner** to do this once on the PC (only he can log in; tell him e
 2. In that Gateway: Configure → Settings → API → Settings: set **Socket port 4001**, tick "Allow connections from localhost only", and leave
    "Read-Only API" ticked for the test. Keep the paper Gateway (port 4002) running as it is.
 3. Do not log in to the live account on the phone/TWS at the same time (one live session at a time; it would kick the Gateway).
-Then you queue `{"id":"live-check-<date>","action":"live_check"}`, wait 2 minutes, read `data/discipline/live_check.json`
+Then you (not the owner) append `{"id":"live-check-<date-time>","action":"live_check"}` to `discipline_bot/commands/queue.json`,
+commit and push, wait 2-3 minutes, `git pull`, and read `data/discipline/live_check.json` (also look for `live_check_started` in events.csv)
 (`ok: true` = connected and futures visible) and tell him the result. If `ok` is false, read `error` and tell him the one step to fix.
 
 ## 5. Current setup (27 Nov 2026)
