@@ -99,6 +99,8 @@ def due(st):
 
 
 def rebalance(ib, log_event, send_telegram, force=False):
+    if not all(a.startswith("DU") for a in ib.managedAccounts()):
+        return            # 27 Nov 2026: the $100k ETF quant book stays on PAPER only, even when the futures bot goes live
     st = load_state()
     ok, week = due(st)
     if not ok and not force:
