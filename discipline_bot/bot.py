@@ -989,6 +989,10 @@ def process_commands(ib, state):
                 enter(ib, state, cmd)
             elif cmd["action"] == "exit":
                 flatten(ib, state, cmd["symbol"].upper(), "manual_exit")
+            elif cmd["action"] == "live_check":       # read-only test of the LIVE Gateway (port 4001); no orders
+                root = Path(__file__).resolve().parent.parent
+                subprocess.Popen([sys.executable, "-u", "-m", "discipline_bot.live_check"], cwd=root)
+                log_event("live_check_started", "", "read-only live connection test")
             elif cmd["action"] == "download_daily":
                 root = Path(__file__).resolve().parent.parent
                 (root / "data" / "history" / "daily").mkdir(parents=True, exist_ok=True)
