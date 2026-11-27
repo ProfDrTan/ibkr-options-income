@@ -70,3 +70,4 @@ time_utc,type,symbol,detail
 2026-11-27T07:59:01+00:00,connected,,U10500387
 2026-11-27T07:59:03+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T07:59:06+00:00,exit,MNQ,lot 1 other @ 26697.5 | P&L $285 | 1.887R | 1.4h
+2026-11-27T08:04:25+00:00,restart,,code updated 6920364 -> 114bb7b; restarting
