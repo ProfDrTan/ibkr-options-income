@@ -1,14 +1,14 @@
 {
   "open": {},
   "processed_commands": [
-    "ping-1934",
     "test-mnq-2220",
-    "test-mnq-2226",
-    "download-2y",
-    "download-daily-20y",
     "download-1m-1y",
-    "download-mes-1m",
+    "download-daily-20y",
     "download-mbt-1m",
+    "download-mes-1m",
+    "download-2y",
+    "ping-1934",
+    "test-mnq-2226",
     "live-check-20261127-1420"
   ],
   "stops": {
@@ -55,7 +55,7 @@
   },
   "keyboard_v2": true,
   "charts_ready": true,
-  "calendar_fetched": "2026-11-27T07:12:32+00:00",
+  "calendar_fetched": "2026-11-27T07:25:21+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -84,5 +84,6 @@
     "MGC": "15:16 close 3687.8 \u00b7 24h range 3579\u20133694 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
     "MNQ": "15:16 close 26722.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
     "MYM": "15:16 close 50672 \u00b7 24h range 50266\u201350779 \u00b7 no squeeze; no 24h breakout; no reversal"
-  }
+  },
+  "queue_baseline": "2026-11-27T07:25:21+00:00"
 }

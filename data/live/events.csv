@@ -34,3 +34,6 @@ time_utc,type,symbol,detail
 2026-11-27T07:15:17+00:00,telegram_cmd,,/status
 2026-11-27T07:19:39+00:00,telegram_cmd,,/status
 2026-11-27T07:25:09+00:00,restart,,code updated 1f34e19 -> a7eceef; restarting
+2026-11-27T07:25:18+00:00,start,,port 4001 | code 1610610 | auto entries ON
+2026-11-27T07:25:18+00:00,connected,,U10500387
+2026-11-27T07:25:21+00:00,calendar,,2 high-impact USD events this week
