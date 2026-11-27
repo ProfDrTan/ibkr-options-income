@@ -111,7 +111,8 @@ def setup_telegram_buttons(state):
             {"command": "status", "description": "Positions now + charts"},
             {"command": "summary", "description": "Closed-trade scoreboard"},
             {"command": "chart", "description": "Charts only"},
-            {"command": "calendar", "description": "This week's big US releases"}]}, timeout=15)
+            {"command": "calendar", "description": "This week's big US releases"},
+            {"command": "quant", "description": "Quant book (ETF trend): holdings and value"}]}, timeout=15)
         # 'Menu' button on the LEFT of the message box (no buttons taking up screen space)
         requests.post(f"{base}/setChatMenuButton", json={"chat_id": cfg["chat_id"],
                       "menu_button": {"type": "commands"}}, timeout=15)
@@ -246,7 +247,7 @@ def git_out(*args):
 
 
 def git_push_journal():
-    git("add", C.JOURNAL_DIR, C.COMMAND_FILE, *(["data/history"] if (ROOT / "data" / "history").exists() else []))
+    git("add", C.JOURNAL_DIR, C.COMMAND_FILE, *[d for d in ("data/history", "data/quant") if (ROOT / d).exists()])
     git("commit", "-q", "-m", "discipline_bot journal update")
     git("push", "-q")
 
@@ -932,6 +933,7 @@ def telegram_commands(ib, state):
                                       ("summary", ("summary", "performance", "score", "scoreboard", "results")),
                                       ("chart", ("chart", "charts", "graph", "picture")),
                                       ("calendar", ("calendar", "macro", "news")),
+                                      ("quant", ("quant", "etf", "etfs")),
                                       ("help", ("help", "start", "menu")))
                     if any(w in keys for w in words)), "")
         log_event("telegram_cmd", "", raw[:40])
@@ -948,6 +950,17 @@ def telegram_commands(ib, state):
                            "Scoreboard: CLOSED trades only (money already won or lost). Open positions are in /status.")
             except Exception as e:
                 log_event("chart_error", "", repr(e)[:200])
+        elif text in ("/quant", "quant"):
+            try:
+                from discipline_bot import quant
+                qs, qpx, qv = quant.mark(ib)
+                rows = [f"{k}: {n} sh @ {qpx.get(k, 0):.2f} = ${n * qpx.get(k, 0):,.0f}" for k, n in sorted(qs['shares'].items())]
+                send_telegram(f"📐 <b>Quant book (ETF trend)</b>\nValue <b>${qv:,.0f}</b> "
+                              f"({'+' if qv >= quant.QUANT_CAPITAL else '−'}${abs(qv - quant.QUANT_CAPITAL):,.0f} since start) · "
+                              f"cash ${qs['cash']:,.0f}\n" + ("\n".join(rows) or "No holdings yet (first rebalance runs "
+                              "in the US session 10:00-12:30 New York)") + f"\nLast rebalance week: {qs.get('last_week') or 'none yet'}", html=True)
+            except Exception as e:
+                send_telegram(f"Quant book error: {e!r}"[:200])
         elif text in ("/chart", "chart", "/charts", "charts"):
             send_market_chart(ib, state)
         elif text in ("/calendar", "calendar", "/macro", "macro"):
@@ -1051,6 +1064,11 @@ def run():
                 return                                  # run_bot.bat starts the new code within 5 seconds
             code_rev = new_rev or code_rev
             process_commands(ib, state)
+            try:
+                from discipline_bot import quant
+                quant.rebalance(ib, log_event, send_telegram)
+            except Exception as e:
+                log_event("quant_error", "", repr(e)[:300])
             refresh_calendar(state)
             calendar_alerts(state)
             telegram_commands(ib, state)
