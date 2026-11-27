@@ -373,3 +373,4 @@ time_utc,type,symbol,detail
 2026-11-27T01:00:26+00:00,ibkr_error,MGC,162 (req 1041): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-27T01:00:27+00:00,ibkr_error,MNQ,162 (req 1043): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-27T01:00:27+00:00,ibkr_error,MYM,162 (req 1045): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T01:02:43+00:00,exit,MNQ,lot 2 trailing_stop @ 26315.0 | P&L $-128 | -1.016R | 7.8h
