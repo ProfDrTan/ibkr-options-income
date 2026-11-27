@@ -11,11 +11,11 @@
     "download-mbt-1m"
   ],
   "stops": {},
-  "signal_checked": "202611270102",
+  "signal_checked": "202611270103",
   "signal_bar": {
-    "MNQ": "2026-11-27 01:15:00+00:00",
-    "MGC": "2026-11-27 01:15:00+00:00",
-    "MYM": "2026-11-27 01:15:00+00:00",
+    "MNQ": "2026-11-27 01:30:00+00:00",
+    "MGC": "2026-11-27 01:30:00+00:00",
+    "MYM": "2026-11-27 01:30:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -44,23 +44,23 @@
   ],
   "last_error_alert": "2026-11-25T22:15:23+00:00",
   "signal_status": {
-    "MGC": "09:30 close 3603.2 \u00b7 24h range 3578.9\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; 8/21 cross against trend",
-    "MNQ": "09:30 close 26440.8 \u00b7 24h range 25900.8\u201326435.8 \u00b7 breakout against 1h trend; 24h breakout against trend; no reversal",
-    "MYM": "09:30 close 50552 \u00b7 24h range 50137\u201350577 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
+    "MGC": "09:45 close 3599.1 \u00b7 24h range 3578.9\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
+    "MNQ": "09:45 close 26457 \u00b7 24h range 25900.8\u201326449.8 \u00b7 breakout against 1h trend; 24h breakout against trend; no reversal",
+    "MYM": "09:45 close 50562 \u00b7 24h range 50137\u201350577 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
   },
   "lots": {},
   "used_fills": [
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0c3023.01.01",
-    "0000e1a7.6b0ba72e.01.01",
     "0000e1a7.6b0ba707.01.01",
+    "0000e1a7.6b0ba72e.01.01",
     "0000e1a7.6b0c204e.01.01",
     "0000e1a7.6b0c250c.01.01",
     "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0c31e6.01.01",
-    "0000e1a7.6b0c1ad9.01.01",
+    "0000e1a7.6b0c32e3.01.01",
     "0000e1a7.6b0bc11d.01.01",
-    "0000e1a7.6b0c32e3.01.01"
+    "0000e1a7.6b0c1ad9.01.01"
   ],
   "charts_ready": true,
   "keyboard_v1": true,
