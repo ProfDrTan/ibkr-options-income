@@ -1,6 +1,6 @@
 {
   "SPY": "5025 bars (20 Y)",
-  "updated_utc": "2026-11-27T06:44:17+00:00",
+  "updated_utc": "2026-11-27T06:47:11+00:00",
   "QQQ": "4939 bars (20 Y)",
   "IWM": "5026 bars (20 Y)",
   "DIA": "4213 bars (20 Y)",
@@ -25,9 +25,9 @@
   "XLY": "5025 bars (20 Y)",
   "XLP": "5025 bars (20 Y)",
   "XLU": "5025 bars (20 Y)",
-  "XLB": "5026 bars (20 Y)",
-  "XLRE": "2799 bars (20 Y)",
-  "XLC": "2121 bars (20 Y)",
+  "XLB": "5025 bars (20 Y)",
+  "XLRE": "2800 bars (20 Y)",
+  "XLC": "2122 bars (20 Y)",
   "VIX": "5026 bars (20 Y)",
   "finished": true
 }
