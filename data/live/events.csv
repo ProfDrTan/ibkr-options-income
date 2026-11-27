@@ -54,3 +54,4 @@ time_utc,type,symbol,detail
 2026-11-27T07:40:14+00:00,scale_out,MNQ,closing lot 2 at market (manual)
 2026-11-27T07:40:15+00:00,ibkr_error,,10349 (req 18): Order TIF was set to DAY based on order preset.
 2026-11-27T07:41:25+00:00,exit,MNQ,lot 2 other @ 26678.5 | P&L $325 | 2.151R | 1.1h
+2026-11-27T07:49:32+00:00,restart,,code updated eaee1ef -> 1df20ec; restarting
