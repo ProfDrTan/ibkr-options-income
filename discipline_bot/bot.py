@@ -1142,7 +1142,17 @@ def run():
                 git_push_journal()
             except Exception:
                 pass
-        time.sleep(C.LOOP_SECONDS)
+        # between full loops, answer Telegram every 5 seconds (close/pause/status feel instant)
+        until = time.time() + C.LOOP_SECONDS
+        while time.time() < until:
+            if ib is not None and ib.isConnected():
+                try:
+                    telegram_commands(ib, state)
+                except Exception as e:
+                    log_event("telegram_error", "", repr(e)[:200])
+                ib.sleep(5)
+            else:
+                time.sleep(5)
 
 
 def queue_entry(sym, side, qty, note=""):
