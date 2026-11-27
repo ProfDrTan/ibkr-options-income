@@ -89,16 +89,16 @@
     "000100b6.6b08d5fd.01.01"
   ],
   "tg_offset": 667423734,
-  "signal_checked": "202611271200",
+  "signal_checked": "202611271201",
   "signal_bar": {
-    "MGC": "2026-11-27 11:45:00+00:00",
-    "MNQ": "2026-11-27 11:45:00+00:00",
-    "MYM": "2026-11-27 11:45:00+00:00"
+    "MGC": "2026-11-27 12:00:00+00:00",
+    "MNQ": "2026-11-27 12:00:00+00:00",
+    "MYM": "2026-11-27 12:00:00+00:00"
   },
   "signal_status": {
-    "MGC": "20:01 close 3701.1 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "20:01 close 26641 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
-    "MYM": "20:01 close 50811 \u00b7 24h range 50266\u201350980 \u00b7 reversal down: rose 12 ATR to 50980, now closed below 2-hour low"
+    "MGC": "20:16 close 3697.9 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
+    "MNQ": "20:16 close 26638 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
+    "MYM": "20:16 close 50855 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {}
