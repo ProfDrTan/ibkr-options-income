@@ -89,6 +89,9 @@ Entry rules, in priority order (pure Python in `signals.py`):
 - **Protections (checked every 5 s)**: shock exit: price moves > `SHOCK_ATR` (1.5) × ATR against a position within 5 minutes → all its
   stops tighten to 1 ATR (once per market per hour). Pre-release: 15 minutes before a high-impact US event, stops tighten to
   `PRE_RELEASE_ATR` (1.5 ATR). Stops only ever tighten.
+- **Profit lock (owner's rule, 27 Nov)**: once a lot is 0.5 ATR in profit, its TRAIL is replaced by a bot-managed STP that
+  guarantees profit: stop = entry + max(0.2 ATR, peak − 1 ATR, ½ of peak profit), ratcheted every 5 s, never back
+  (`lock_profits`, `LOCK_*` in config). Telegram 🔒 alert on the first lock. The guardian's "widened stop" check applies to TRAILs only.
 - Weekend flatten Fri 20:30 UTC. **Hard daily loss limit $1,000** realised per SGT day, always on (owner sets the amount).
   Other guardrails OFF (`GUARDRAILS_ON=False`, VIX guard 999), owner's call.
 - Research-only markets (entries False): M2K, MCL, ZN, MBT, MES.
@@ -107,6 +110,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 - 27 Nov: guardrails off except the daily loss limit ($1,000, adjustable by him). Went LIVE 14:33 SGT.
 - 27 Nov: every close from Telegram must ask "Are you sure?" with Yes/No. Shock exit and pre-release tightening approved.
 - 27 Nov: wants a one-tap Telegram switch between paper and live.
+- 27 Nov 21:54: "The moment there is a profit, I want you to start locking it in. Don't give it up and incur big losses...
+  take profit and trail it up. I don't care if I make $100 profit... at least it's still a small profit." No excuses in reports.
 - Communication: short, result first, clickable link to whatever changed; never cite a number without a traceable source;
   don't pile tasks on him; give exact taps when something needs him; no "this is not financial advice" disclaimers;
   visual: charts with the price axis on the right and labelled levels.
@@ -122,6 +127,9 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 4. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 22:05 SGT · Claude** — Profit lock (§5). Context: after the MNQ shorts, all 7 automatic trades lost (−$444, trades.csv);
+  several had been in profit first. Open: the owner has not answered the 3 proposals (override off on live, add lots only when the first
+  is 1 ATR up, no holiday entries).
 - **2026-11-27 16:40 SGT · Codex** — Queued the owner's read-only Gateway diagnostic. Result pending.
 - **2026-11-27 16:15 SGT · Claude** — ChatGPT read the handoff correctly but its GitHub write was refused (403). AGENTS.md rules 5–6:
   on 403 open a PR and send the owner the link; don't re-run checks the journal already answers.

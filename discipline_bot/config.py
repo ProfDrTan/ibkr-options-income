@@ -125,3 +125,11 @@ EMA_CROSS_MARKETS = {"MGC"}
 # 27 Nov 2026 protections (owner approved): shock exit and pre-release tightening, checked every 5 seconds.
 SHOCK_ATR = 1.5          # price moves this many 15-min ATRs against an open position within 5 minutes -> stops to 1 ATR
 PRE_RELEASE_ATR = 1.5    # 15 minutes before a high-impact US release, trailing stops tighten to this (never loosen)
+
+# 27 Nov 2026 OWNER'S RULE: "The moment there is a profit, start locking it in... take profit and trail the goddamn thing up.
+# I don't care if I make $100 profit... at least it's still a small profit." A lot that reaches LOCK_TRIGGER_ATR of profit
+# gets a stop that guarantees a profit and ratchets up every 5 s (see lock_profits in bot.py).
+LOCK_TRIGGER_ATR = 0.5       # lock as soon as the lot is half an ATR in profit
+LOCK_FLOOR_ATR = 0.2         # the locked stop guarantees at least 0.2 ATR (min 4 ticks) of profit
+LOCK_TRAIL_ATR = 1.0         # then trails 1 ATR behind the best price
+LOCK_KEEP_FRACTION = 0.5     # and never gives back more than half of the best open profit

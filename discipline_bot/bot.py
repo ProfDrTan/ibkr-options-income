@@ -514,7 +514,7 @@ def guardian(ib, state):
             contract.exchange = spec["exchange"]
         t = protective_stop(ib, contract, all_trades)
         known = state["stops"].get(sym)
-        if t and known and t.order.auxPrice and t.order.auxPrice > known["trail"] * 1.001:
+        if t and known and t.order.orderType == "TRAIL" and t.order.auxPrice and t.order.auxPrice > known["trail"] * 1.001:
             t.order.auxPrice = known["trail"]
             ib.placeOrder(contract, t.order)
             log_event("override_restored", sym, f"trail widened to {t.order.auxPrice}; restored to {known['trail']}")
@@ -576,6 +576,55 @@ def tighten_all(ib, state, sym, k):
     return done
 
 
+def lock_profits(ib, state, sym, px):
+    """Owner's rule (27 Nov 2026): the moment a lot is in profit, lock it in and trail it up; a winner must never turn
+    into a loser. Once a lot is LOCK_TRIGGER_ATR in profit its IBKR TRAIL stop is replaced by a plain STP that the bot
+    ratchets every 5 s: stop = entry + max(floor, peak - LOCK_TRAIL_ATR x ATR, LOCK_KEEP_FRACTION x peak). Never moves back."""
+    spec = C.INSTRUMENTS[sym]
+    tick = spec["tick"]
+    orders = None
+    for lot in lots_of(state, sym):
+        try:
+            atr, entry = float(lot["atr"]), float(lot["entry_price"])
+        except (TypeError, ValueError, KeyError):
+            continue
+        sign = 1 if lot["side"] == "BUY" else -1
+        gain = sign * (px - entry)
+        peak = max(float(lot.get("peak_gain") or 0), gain)
+        lot["peak_gain"] = peak
+        if peak < C.LOCK_TRIGGER_ATR * atr:
+            continue
+        keep = max(C.LOCK_FLOOR_ATR * atr, 4 * tick, peak - C.LOCK_TRAIL_ATR * atr, C.LOCK_KEEP_FRACTION * peak)
+        new_stop = round_tick(entry + sign * keep, tick)
+        if sign * (px - new_stop) < 2 * tick:            # never place the stop through the market
+            new_stop = round_tick(px - sign * 2 * tick, tick)
+        old = lot.get("lock_stop")
+        if old is not None and sign * (new_stop - float(old)) < max(tick, 0.1 * atr):
+            continue                                     # only ratchet forward, in steps of >= 0.1 ATR
+        if orders is None:
+            orders = {t.order.orderId: t for t in ib.reqAllOpenOrders()}
+        t = orders.get(lot.get("stop_id"))
+        if not t or t.orderStatus.status in ("Filled", "Cancelled", "ApiCancelled", "Inactive"):
+            continue
+        if t.order.orderType == "STP":
+            if sign * (new_stop - float(t.order.auxPrice)) <= 0:
+                continue
+            t.order.auxPrice = new_stop
+            ib.placeOrder(t.contract, t.order)
+        else:                                            # first lock: TRAIL -> bot-managed STP
+            ib.cancelOrder(t.order)
+            o = Order(action="SELL" if sign > 0 else "BUY", totalQuantity=int(lot.get("qty") or 1), orderType="STP",
+                      auxPrice=new_stop, tif="GTC", outsideRth=True, orderRef=C.ORDER_REF)
+            nt = ib.placeOrder(front_contract(ib, sym), o)
+            lot["stop_id"] = nt.order.orderId
+            locked_usd = keep * spec["multiplier"] * int(lot.get("qty") or 1)
+            log_event("profit_lock", sym, f"lot {lot.get('lot', 1)} up {gain:g}: stop {new_stop} locks ~${locked_usd:,.0f}")
+            send_telegram(f"🔒 {sym} lot {lot.get('lot', 1)} is in profit. Stop moved to {new_stop}: this lot can no longer "
+                          f"lose (locks about ${locked_usd:,.0f}). It now follows price.")
+        lot["lock_stop"] = new_stop
+        lot["trail_dist"] = round(abs(px - new_stop), 4)
+
+
 def protect(ib, state):
     """Every 5 s: (1) shock exit: price moves > SHOCK_ATR x ATR against an open position within 5 minutes ->
     tighten all its stops to 1 ATR; (2) 15 min before a high-impact US release -> tighten to PRE_RELEASE_ATR."""
@@ -588,6 +637,10 @@ def protect(ib, state):
         px = tk.last if tk.last == tk.last and tk.last else tk.marketPrice()
         if not px or px != px:
             continue
+        try:
+            lock_profits(ib, state, sym, px)
+        except Exception as e:
+            log_event("lock_error", sym, repr(e)[:200])
         hist = PRICES.setdefault(sym, [])
         hist.append((now(), px))
         PRICES[sym] = hist = [(t, p) for t, p in hist if (now() - t).total_seconds() <= 300]
@@ -892,7 +945,7 @@ def write_snapshot(ib, state):
             "contract": it.contract.localSymbol, "qty": it.position, "avg_price": round(it.averageCost / mult, 2),
             "last": it.marketPrice, "unrealized_usd": round(it.unrealizedPNL, 2),
             "stop": None if not t else {"type": t.order.orderType, "trail": t.order.auxPrice,
-                                        "stop_price": t.order.trailStopPrice, "status": t.orderStatus.status}})
+                                        "stop_price": t.order.auxPrice if t.order.orderType == "STP" else t.order.trailStopPrice, "status": t.orderStatus.status}})
     (JDIR / "snapshot.json").write_text(json.dumps(snap, indent=2, default=str))
 
 
