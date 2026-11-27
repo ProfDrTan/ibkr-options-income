@@ -117,6 +117,9 @@ def setup_telegram_buttons(state):
             {"command": "close_mnq", "description": "Close Nasdaq (MNQ) now + pause"},
             {"command": "close_mgc", "description": "Close gold (MGC) now + pause"},
             {"command": "close_mym", "description": "Close Dow (MYM) now + pause"},
+            {"command": "close1_mnq", "description": "Close ONE Nasdaq lot (newest), keep the rest"},
+            {"command": "close1_mgc", "description": "Close ONE gold lot (newest), keep the rest"},
+            {"command": "close1_mym", "description": "Close ONE Dow lot (newest), keep the rest"},
             {"command": "pause", "description": "Pause new entries (stops stay on)"},
             {"command": "resume", "description": "Resume new entries"}]}, timeout=15)
         # 'Menu' button on the LEFT of the message box (no buttons taking up screen space)
@@ -547,6 +550,26 @@ def guardian(ib, state):
         send_telegram(f"🛡️ {sym} position had no stop — attached {stop}, trailing {trail}.")
 
 
+def close_one_lot(ib, state, sym):
+    """Scale out: close only the NEWEST lot (cancel its own stop, 1 contract at market). The other lots keep running."""
+    lots = lots_of(state, sym)
+    if not lots:
+        send_telegram(f"{sym}: no bot position to scale out of.")
+        return
+    lot = lots[-1]
+    for t in ib.reqAllOpenOrders():
+        if t.order.orderId == lot.get("stop_id"):
+            ib.cancelOrder(t.order)
+    ib.sleep(1)
+    o = MarketOrder("SELL" if lot["side"] == "BUY" else "BUY", 1)
+    o.orderRef = C.ORDER_REF
+    o.outsideRth = True
+    ib.placeOrder(front_contract(ib, sym), o)
+    log_event("scale_out", sym, f"closing lot {lot.get('lot')} at market (manual)")
+    send_telegram(f"✂️ {sym}: closing lot {lot.get('lot')} of {len(lots)} at market. "
+                  f"{len(lots) - 1} lot(s) keep running with their stops.")
+
+
 def flatten(ib, state, sym, reason):
     """Close a position the bot protects. A position whose stop was placed elsewhere (TWS, mobile) is NOT
     market-closed: this client can't cancel that stop, and closing would leave it live to open a new
@@ -947,6 +970,10 @@ def telegram_commands(ib, state):
         log_event("telegram_cmd", "", raw[:40])
         # manual override: "close MNQ" / "close all" / "pause" / "resume"
         syms = [w.upper() for w in words if w.upper() in C.INSTRUMENTS]
+        if ("close1" in words or ("close" in words and ("one" in words or "1" in words))) and syms:
+            for sy in syms:
+                close_one_lot(ib, state, sy)
+            continue
         if any(w in ("close", "exit", "flat", "flatten", "sell", "cover") for w in words) and (syms or "all" in words):
             targets = syms or [p.contract.symbol for p in ib.positions() if p.position and p.contract.symbol in C.INSTRUMENTS]
             for sy in targets:
