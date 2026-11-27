@@ -410,3 +410,7 @@ time_utc,type,symbol,detail
 2026-11-27T06:33:39+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T06:34:46+00:00,telegram_cmd,,/summary
 2026-11-27T06:37:02+00:00,restart,,code updated ab87dea -> c4f4b03; restarting
+2026-11-27T15:24:47+00:00,start,,port 4002 | code 4a0c054 | auto entries ON
+2026-11-27T15:24:47+00:00,connected,,DU…203
+2026-11-27T15:25:34+00:00,quant_rebalance,,"2026-W48: HYG 25%, UUP 25%, VNQ 10%, EFA 8%, SPY 7%, IWM 7%, QQQ 4%, EEM 4%, USO 4%"
+2026-11-27T15:25:35+00:00,calendar,,2 high-impact USD events this week

@@ -1,15 +1,16 @@
 {
   "open": {},
   "processed_commands": [
+    "download-daily-20y",
+    "live-check-codex-20261127084039",
+    "download-mes-1m",
+    "download-2y",
+    "test-mnq-2226",
+    "live-check-20261127-1420",
+    "download-1m-1y",
     "ping-1934",
     "test-mnq-2220",
-    "test-mnq-2226",
-    "download-2y",
-    "download-daily-20y",
-    "download-1m-1y",
-    "download-mes-1m",
-    "download-mbt-1m",
-    "live-check-20261127-1420"
+    "download-mbt-1m"
   ],
   "stops": {},
   "signal_checked": "202611270602",
@@ -23,8 +24,8 @@
     "MBT": "2026-11-25 03:15:00+00:00"
   },
   "missing_since": {},
-  "tg_offset": 667423707,
-  "calendar_fetched": "2026-11-27T06:33:39+00:00",
+  "tg_offset": 667423742,
+  "calendar_fetched": "2026-11-27T15:25:35+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -51,19 +52,20 @@
   },
   "lots": {},
   "used_fills": [
-    "0000e1a7.6b0bc11d.01.01",
+    "0000e1a7.6b0c250c.01.01",
+    "0000e1a7.6b0c32e3.01.01",
+    "0000e1a7.6b0ba72e.01.01",
+    "0000e1a7.6b0ba563.01.01",
+    "0000e1a7.6b0c1ad9.01.01",
+    "0000e1a7.6b0c204e.01.01",
     "0000e1a7.6b0c31e6.01.01",
     "0000e1a7.6b0b9935.01.01",
-    "0000e1a7.6b0c204e.01.01",
-    "0000e1a7.6b0c32e3.01.01",
-    "0000e1a7.6b0c250c.01.01",
     "0000e1a7.6b0c3023.01.01",
-    "0000e1a7.6b0ba563.01.01",
-    "0000e1a7.6b0ba707.01.01",
-    "0000e1a7.6b0ba72e.01.01",
-    "0000e1a7.6b0c1ad9.01.01"
+    "0000e1a7.6b0bc11d.01.01",
+    "0000e1a7.6b0ba707.01.01"
   ],
   "charts_ready": true,
   "keyboard_v1": true,
-  "keyboard_v2": true
+  "keyboard_v2": true,
+  "queue_baseline": "2026-11-27T15:24:50+00:00"
 }
