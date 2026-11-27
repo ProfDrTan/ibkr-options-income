@@ -12,33 +12,8 @@
     "live-check-20261127-1420",
     "live-check-codex-20261127084039"
   ],
-  "stops": {
-    "MYM": {
-      "orderId": 255,
-      "trail": 252.0
-    }
-  },
-  "lots": {
-    "MYM": [
-      {
-        "trade_id": "f12c4767",
-        "symbol": "MYM",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-27T15:00:56+00:00",
-        "entry_price": 50493.0,
-        "atr": 83.9286,
-        "initial_stop": 50610.0,
-        "trail_dist": 252.0,
-        "risk_usd": 62.95,
-        "note": "auto reversal 2026-11-27 14:45:00+00:00",
-        "stop_id": 255,
-        "peak_gain": 25.0
-      }
-    ]
-  },
+  "stops": {},
+  "lots": {},
   "keyboard_v2": true,
   "charts_ready": true,
   "calendar_fetched": "2026-11-27T15:18:46+00:00",
@@ -57,11 +32,10 @@
     }
   ],
   "calendar_warned": [],
-  "missing_since": {
-    "f12c4767": "2026-11-27T15:18:48+00:00"
-  },
+  "missing_since": {},
   "used_fills": [
     "0001012a.6b0c935c.01.01",
+    "0000dbc9.6b08bef9.01.01",
     "0000dbc9.6b08ba15.01.01",
     "0000dbc9.6b08ba32.01.01",
     "000100b6.6b08d5fd.01.01",
