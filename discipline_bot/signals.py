@@ -91,9 +91,16 @@ def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW):
     brk = 1 if c > hi else -1 if c < lo else 0
     if not brk:
         return 0, "no 24h breakout"
-    f, s = _ema(closes, fast)[-1], _ema(closes, slow)[-1]
+    fl = _ema(closes, fast)
+    f, s = fl[-1], _ema(closes, slow)[-1]
     trend = 1 if f > s else -1 if f < s else 0
     if brk != trend:
+        # 27 Nov 2026 override (paper experiment): take the breakout anyway when price is beyond BOTH trend
+        # averages and the fast one has turned in the breakout's direction over the last 8 bars (V-shaped recoveries)
+        turned = (fl[-1] > fl[-9]) - (fl[-1] < fl[-9])
+        if brk > 0 and c > f and c > s and turned > 0 or brk < 0 and c < f and c < s and turned < 0:
+            return brk, (f"24h breakout {'above' if brk > 0 else 'below'} {hi if brk > 0 else lo} against the slow trend, "
+                         f"but price is past both averages and the fast one has turned (override)")
         return 0, "24h breakout against trend"
     return brk, (f"24h breakout {'above' if brk > 0 else 'below'} 24-hour {'high' if brk > 0 else 'low'} "
                  f"{hi if brk > 0 else lo}, 1h trend {'up' if trend > 0 else 'down'}")
