@@ -134,3 +134,6 @@ time_utc,type,symbol,detail
 2026-11-27T13:56:46+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T14:03:46+00:00,telegram_error,,"getUpdates failed: ConnectTimeout(MaxRetryError(""HTTPSConnectionPool(host='api.telegram.org', port=443): Max retries exceeded with url: /bot9064301393:AAFDJrIUAdMZOzpfi7GzP6lNNhPNxq4zmp4/getUpdates?of"
 2026-11-27T14:04:26+00:00,restart,,code updated 9e4e6d3 -> 7337e7f; restarting
+2026-11-27T14:04:34+00:00,start,,port 4001 | code da8d56c | auto entries ON
+2026-11-27T14:04:34+00:00,connected,,U1…387
+2026-11-27T14:04:37+00:00,calendar,,2 high-impact USD events this week

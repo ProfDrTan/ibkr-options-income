@@ -16,7 +16,7 @@
   "lots": {},
   "keyboard_v2": true,
   "charts_ready": true,
-  "calendar_fetched": "2026-11-27T13:56:46+00:00",
+  "calendar_fetched": "2026-11-27T14:04:37+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -34,15 +34,15 @@
   "calendar_warned": [],
   "missing_since": {},
   "used_fills": [
-    "000100b6.6b08d8da.01.01",
+    "000100b6.6b08d5fd.01.01",
     "0001012a.6b0c0fa4.01.01",
+    "000100b6.6b08d8da.01.01",
     "0000dbc9.6b08ba99.01.01",
-    "0001012a.6b0c1282.01.01",
+    "0000dbc9.6b08ba2a.01.01",
     "0000dbc9.6b08ba15.01.01",
     "0000dbc9.6b08ba38.01.01",
     "0000dbc9.6b08ba32.01.01",
-    "000100b6.6b08d5fd.01.01",
-    "0000dbc9.6b08ba2a.01.01"
+    "0001012a.6b0c1282.01.01"
   ],
   "tg_offset": 667423735,
   "signal_checked": "202611271400",
