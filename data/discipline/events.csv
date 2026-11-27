@@ -382,3 +382,6 @@ time_utc,type,symbol,detail
 2026-11-27T04:50:17+00:00,start,,port 4002 | code 49fb391 | auto entries ON
 2026-11-27T04:50:17+00:00,connected,,DUQ138203
 2026-11-27T04:50:20+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T05:15:23+00:00,ibkr_error,MGC,162 (req 1035): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T05:15:24+00:00,ibkr_error,MNQ,162 (req 1037): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T05:15:25+00:00,ibkr_error,MYM,162 (req 1039): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
