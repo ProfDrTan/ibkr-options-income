@@ -1,6 +1,6 @@
 # HANDOFF — read this first (for any AI assistant or developer picking up this repo)
 
-Owner: Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). Branch: `discipline-bot`. Paper account only (IBKR DUQ138203).
+Owner: Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). Branch: `discipline-bot`. Paper account (IBKR DUQ138203) now; live trading when the owner explicitly decides (see CHATGPT_START.md rule 1).
 Public journal of the project: "The Quant Journey" (Claude doc, owner shares the link).
 
 ## What runs, and where
@@ -26,7 +26,7 @@ Entry rules in priority order (all pure Python in `signals.py`, verified bar-for
 3. Reversal (MNQ, MYM): after a >12 "normal ATR" fall/rise within 4h, close beyond the 2-hour high/low.
 4. EMA 8/21 cross with trend (MGC only).
 Same-direction signals add lots (max 4). Opposite signal reverses. Each lot: initial stop 1.5 ATR, own TRAIL order 3.0/2.5/2.0/1.5 ATR.
-No profit targets (owner's rule). Weekend flatten Fri 20:30 UTC. Hard daily loss limit $1,000 realised per SGT day (always on).
+No profit targets (owner's rule). Weekend flatten Fri 20:30 UTC. Hard daily loss limit, now $1,000 realised per SGT day (always on; the owner sets the amount).
 Other guardrails are OFF (owner's call, paper). Journal: `data/discipline/` (events.csv, trades.csv, signals.csv, state.json, snapshot.json, bars_*.csv).
 
 ## Quant book #1 (discipline_bot/quant.py): ETF time-series momentum, $100,000 paper sleeve

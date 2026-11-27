@@ -1,6 +1,6 @@
 # START HERE — brief for ChatGPT / Codex taking over this project
 
-You are taking over an automated futures and ETF trading system that runs on an IBKR **paper** account.
+You are taking over an automated futures and ETF trading system that runs on an IBKR **paper** account today, and is meant to go live once it earns it.
 Owner: Professor Dr. Tan Teik Kheong (Singapore; times are SGT = UTC+8). Work autonomously; report back briefly.
 
 ## 1. Where everything is
@@ -18,10 +18,14 @@ Owner: Professor Dr. Tan Teik Kheong (Singapore; times are SGT = UTC+8). Work au
 - The owner watches everything in Telegram ("Discipline Bot": /status, /summary, /chart, /quant).
 
 ## 3. Non-negotiable rules
-1. Paper account only. **Never** set `ALLOW_LIVE = True` or point anything at a live account.
-2. **No backtests.** The owner's standing order: try ideas directly on paper and judge them by the real trades. It is paper money; experiment boldly.
+1. **Paper now, live when the owner says so.** The goal is to trade live once conditions are right. Going live is the owner's decision:
+   only switch (`ALLOW_LIVE = True`, Gateway on the live login, port 4001) when he explicitly tells you to in chat. Help him decide with
+   facts: suggested readiness checks are at least 30 closed paper trades per rule, results in line with expectations, no unexplained
+   errors in events.csv for 2 weeks, and a first live phase at 1 contract per lot with a smaller daily loss limit. He sets the terms.
+2. **No backtests.** The owner's standing order: try ideas directly on paper and judge them by the real trades. Experiment boldly on paper; that is what it is for.
 3. **No profit targets.** Winners run on trailing stops. Keep every trade's stop.
-4. Keep the $1,000 daily loss limit (`DAILY_LOSS_LIMIT_USD`) on.
+4. Keep a daily loss limit on at all times (`DAILY_LOSS_LIMIT_USD`, now $1,000). The owner may raise or lower it; change it when he asks,
+   and suggest a lower figure for the first live weeks.
 5. Before every change: `git pull --rebase` (the bot commits constantly). After editing: `python -m py_compile discipline_bot/*.py`
    must pass before you commit. Push directly to `discipline-bot`, or open a PR and tell the owner to merge it.
 6. Add a dated comment in `config.py` / code explaining every change and why.
