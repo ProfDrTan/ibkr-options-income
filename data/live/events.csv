@@ -170,3 +170,5 @@ time_utc,type,symbol,detail
 2026-11-27T15:18:46+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T15:19:56+00:00,exit,MYM,lot 1 trailing_stop @ 50607.0 | P&L $-57 | -0.905R | 0.3h
 2026-11-27T15:24:14+00:00,telegram_cmd,,/mode_paper
+2026-11-27T15:24:39+00:00,manual_confirmed,4002,mode
+2026-11-27T15:24:39+00:00,mode_switch,,LIVE -> PAPER
