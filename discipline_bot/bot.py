@@ -1485,6 +1485,13 @@ def run():
                 except Exception as e:
                     log_event("telegram_error", "", repr(e)[:200])
                 if state.pop("restart_now", None):
+                    try:   # tell Telegram the Yes tap was handled; otherwise the other mode's journal replays it ("expired")
+                        import requests
+                        cfg = json.loads(TG_FILE.read_text())
+                        requests.get(f"https://api.telegram.org/bot{cfg['bot_token']}/getUpdates",
+                                     params={"offset": state.get("tg_offset", 0), "timeout": 0}, timeout=15)
+                    except Exception as e:
+                        log_event("telegram_error", "", f"ack before mode switch failed: {e!r}"[:200])
                     save_state(state)
                     git_push_journal()
                     ib.disconnect()

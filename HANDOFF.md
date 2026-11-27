@@ -139,6 +139,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 23:35 SGT · Claude** — Fix: after a /mode switch, the other mode's journal re-read the owner's Yes tap from Telegram and
+  answered "That request expired". The bot now acknowledges the tap to Telegram before restarting.
 - **2026-11-27 23:20 SGT · Claude** — No-chase rule on LIVE (§5), owner's explicit "live" at 23:16. Trigger: the 23:00 MNQ short (26,228,
   −$250) and MYM short (50,493) were taken after ~500/~440-point falls. Open MYM short untouched. Next idea (not built): act intrabar
   instead of on 15-min closes, only after no-chase proves itself.
