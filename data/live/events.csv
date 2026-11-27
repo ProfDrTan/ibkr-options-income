@@ -101,3 +101,5 @@ time_utc,type,symbol,detail
 2026-11-27T10:45:42+00:00,signal,MYM,"BUY MYMZ6 close 50954.0: 24h breakout above 50948.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
 2026-11-27T10:45:46+00:00,entry,MYM,lot 4 BUY 1 @ 50961.0 | stop 50883.0 | trail 77.0 | risk $38
 2026-11-27T10:51:31+00:00,telegram_cmd,,/status
+2026-11-27T11:04:05+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
+2026-11-27T11:05:03+00:00,calendar,,2 high-impact USD events this week
