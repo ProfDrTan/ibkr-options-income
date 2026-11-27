@@ -76,3 +76,5 @@ time_utc,type,symbol,detail
 2026-11-27T08:04:36+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T08:07:14+00:00,telegram_cmd,,/summary
 2026-11-27T08:07:33+00:00,telegram_cmd,,/status
+2026-11-27T08:30:56+00:00,signal,MGC,"BUY MGCG7 close 3702.7: 24h breakout above 3698.4 against the slow trend, but price is past both averages and the fast one has turned (override)"
+2026-11-27T08:30:59+00:00,entry,MGC,lot 1 BUY 1 @ 3700.9 | stop 3684.8 | trail 33.4 | risk $167

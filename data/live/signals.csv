@@ -1,0 +1,2 @@
+bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guardrails,taken
+2026-11-27 08:15:00+00:00,MGC,MGCG7,BUY,3702.7,"24h breakout above 3698.4 against the slow trend, but price is past both averages and the fast one has turned (override)",11.5786,3685.3,34.7,174,pass,

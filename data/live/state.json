@@ -11,8 +11,32 @@
     "test-mnq-2226",
     "live-check-20261127-1420"
   ],
-  "stops": {},
-  "lots": {},
+  "stops": {
+    "MGC": {
+      "orderId": 54,
+      "trail": 33.4
+    }
+  },
+  "lots": {
+    "MGC": [
+      {
+        "trade_id": "a1e162b8",
+        "symbol": "MGC",
+        "side": "BUY",
+        "qty": 1,
+        "source": "bot",
+        "lot": 1,
+        "entry_time": "2026-11-27T08:30:59+00:00",
+        "entry_price": 3700.9,
+        "atr": 11.1286,
+        "initial_stop": 3684.8,
+        "trail_dist": 33.4,
+        "risk_usd": 166.93,
+        "note": "auto daybreak 2026-11-27 08:15:00+00:00",
+        "stop_id": 54
+      }
+    ]
+  },
   "keyboard_v2": true,
   "charts_ready": true,
   "calendar_fetched": "2026-11-27T08:04:36+00:00",
@@ -37,16 +61,16 @@
     "0001012a.6b0c0fa4.01.01"
   ],
   "tg_offset": 667423725,
-  "signal_checked": "202611270801",
+  "signal_checked": "202611270802",
   "signal_bar": {
-    "MGC": "2026-11-27 07:45:00+00:00",
-    "MNQ": "2026-11-27 07:45:00+00:00",
-    "MYM": "2026-11-27 07:45:00+00:00"
+    "MGC": "2026-11-27 08:15:00+00:00",
+    "MNQ": "2026-11-27 08:15:00+00:00",
+    "MYM": "2026-11-27 08:15:00+00:00"
   },
   "signal_status": {
-    "MGC": "16:00 close 3685.9 \u00b7 24h range 3579\u20133694 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "16:00 close 26693.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "16:01 close 50741 \u00b7 24h range 50266\u201350779 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MGC": "16:30 close 3702.7 \u00b7 24h range 3579\u20133698.4 \u00b7 24h breakout above 3698.4 against the slow trend, but price is past both averages and the fast one has turned (override)",
+    "MNQ": "16:31 close 26783.8 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "16:31 close 50806 \u00b7 24h range 50266\u201350813 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {}
