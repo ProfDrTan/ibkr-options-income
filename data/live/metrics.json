@@ -1,0 +1,15 @@
+{
+  "updated_utc": "2026-11-27T07:41:25+00:00",
+  "closed_trades": 1,
+  "win_rate": 1.0,
+  "avg_win_R": 2.151,
+  "avg_loss_R": null,
+  "expectancy_R": 2.151,
+  "avg_hours_winners": 1.1,
+  "avg_hours_losers": null,
+  "winners_closed_by_hand": 0,
+  "losses_beyond_planned_stop": 0,
+  "stop_overrides": 0,
+  "blocked_entries": 1,
+  "note": "R = P&L / planned risk (1.5 x ATR). The backtest's Rule D averaged ~-1.27R per loss and won 37-42% of trades."
+}

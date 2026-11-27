@@ -34,22 +34,6 @@
         "risk_usd": 151.07,
         "note": "test order to diagnose failed MNQ entry",
         "stop_id": 7
-      },
-      {
-        "trade_id": "b50ee288",
-        "symbol": "MNQ",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 2,
-        "entry_time": "2026-11-27T06:37:24+00:00",
-        "entry_price": 26841.0,
-        "atr": 50.3571,
-        "initial_stop": 26912.0,
-        "trail_dist": 126.0,
-        "risk_usd": 151.07,
-        "note": "test 2: limit parent + trailing stop",
-        "stop_id": 12
       }
     ]
   },
@@ -71,10 +55,10 @@
     }
   ],
   "calendar_warned": [],
-  "missing_since": {
-    "b50ee288": "2026-11-27T07:40:17+00:00"
-  },
-  "used_fills": [],
+  "missing_since": {},
+  "used_fills": [
+    "0001012a.6b0c0fa4.01.01"
+  ],
   "tg_offset": 667423719,
   "signal_checked": "202611270702",
   "signal_bar": {

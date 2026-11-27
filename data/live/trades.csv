@@ -1,0 +1,2 @@
+trade_id,symbol,side,qty,source,entry_time,entry_price,atr,initial_stop,trail_dist,risk_usd,exit_time,exit_price,exit_reason,pnl_usd,r_multiple,hours_held,note
+b50ee288,MNQ,SELL,1,bot,2026-11-27T06:37:24+00:00,26841.0,50.3571,26912.0,126.0,151.07,2026-11-27T07:41:25+00:00,26678.5,other,325.0,2.151,1.1,test 2: limit parent + trailing stop
