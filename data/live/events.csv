@@ -129,3 +129,6 @@ time_utc,type,symbol,detail
 2026-11-27T13:45:04+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-27T13:51:25+00:00,telegram_cmd,,/summary
 2026-11-27T13:56:34+00:00,restart,,code updated 9c87861 -> 9555954; restarting
+2026-11-27T13:56:43+00:00,start,,port 4001 | code e07e5b0 | auto entries ON
+2026-11-27T13:56:43+00:00,connected,,U1…387
+2026-11-27T13:56:46+00:00,calendar,,2 high-impact USD events this week
