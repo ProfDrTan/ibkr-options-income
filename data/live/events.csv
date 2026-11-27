@@ -22,3 +22,4 @@ time_utc,type,symbol,detail
 2026-11-27T07:05:19+00:00,start,,port 4001 | code 3c2aa09 | auto entries ON
 2026-11-27T07:05:20+00:00,connected,,U10500387
 2026-11-27T07:05:22+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T07:06:28+00:00,restart,,code updated 3c2aa09 -> 49970c7; restarting
