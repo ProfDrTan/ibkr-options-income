@@ -112,6 +112,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
   visual: charts with the price axis on the right and labelled levels.
 
 ## 8. Open tasks (in priority order; move to §9 when done)
+
+- Verify the result of read-only diagnostic `live-check-codex-20261127084039` in `data/discipline/live_check.json`.
 1. **Failed-high / failed-low entry** (proposed 27 Nov, waiting for the owner's yes): after a new 24h high, a 15-min close back below the
    previous bar's low and EMA21 → short (mirror for longs). Would have caught the 27 Nov MNQ roll-over (26,869 → 26,650), which no rule
    caught. Owner wants new rules tried on paper first.
@@ -120,6 +122,7 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 4. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 16:40 SGT · Codex** — Queued the owner's read-only Gateway diagnostic. Result pending.
 - **2026-11-27 16:15 SGT · Claude** — ChatGPT read the handoff correctly but its GitHub write was refused (403). AGENTS.md rules 5–6:
   on 403 open a PR and send the owner the link; don't re-run checks the journal already answers.
 - **2026-11-27 16:05 SGT · Claude** — Made this file the single source of truth (merged CHATGPT_START.md into it); added `AGENTS.md`
