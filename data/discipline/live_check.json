@@ -1,0 +1,23 @@
+{
+  "time_utc": "2026-11-27T06:19:58+00:00",
+  "port": 4001,
+  "positions": 4,
+  "futures": {
+    "MNQ": {
+      "contract": "MNQZ6",
+      "price": 26857.5
+    },
+    "MGC": {
+      "contract": "MGCG7",
+      "price": 3670.4
+    },
+    "MYM": {
+      "contract": "MYMZ6",
+      "price": 50650.0
+    }
+  },
+  "ok": true,
+  "account_masked": [
+    "U1\u2026387"
+  ]
+}
