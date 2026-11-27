@@ -105,6 +105,22 @@
         "risk_usd": 39.16,
         "note": "auto daybreak 2026-11-27 10:15:00+00:00",
         "stop_id": 164
+      },
+      {
+        "trade_id": "458741f4",
+        "symbol": "MYM",
+        "side": "BUY",
+        "qty": 1,
+        "source": "bot",
+        "lot": 4,
+        "entry_time": "2026-11-27T10:45:46+00:00",
+        "entry_price": 50961.0,
+        "atr": 51.1429,
+        "initial_stop": 50883.0,
+        "trail_dist": 77.0,
+        "risk_usd": 38.36,
+        "note": "auto daybreak 2026-11-27 10:30:00+00:00",
+        "stop_id": 181
       }
     ]
   },
@@ -132,16 +148,16 @@
     "0001012a.6b0c0fa4.01.01"
   ],
   "tg_offset": 667423731,
-  "signal_checked": "202611271002",
+  "signal_checked": "202611271003",
   "signal_bar": {
-    "MGC": "2026-11-27 10:15:00+00:00",
-    "MNQ": "2026-11-27 10:15:00+00:00",
-    "MYM": "2026-11-27 10:15:00+00:00"
+    "MGC": "2026-11-27 10:30:00+00:00",
+    "MNQ": "2026-11-27 10:30:00+00:00",
+    "MYM": "2026-11-27 10:30:00+00:00"
   },
   "signal_status": {
-    "MGC": "18:30 close 3699.3 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "18:30 close 26763.8 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "18:30 close 50946 \u00b7 24h range 50266\u201350915 \u00b7 24h breakout above 50915.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
+    "MGC": "18:45 close 3703.5 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
+    "MNQ": "18:45 close 26781.5 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "18:45 close 50954 \u00b7 24h range 50266\u201350948 \u00b7 24h breakout above 50948.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {}
