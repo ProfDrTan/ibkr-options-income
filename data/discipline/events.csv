@@ -376,3 +376,4 @@ time_utc,type,symbol,detail
 2026-11-27T01:02:43+00:00,exit,MNQ,lot 2 trailing_stop @ 26315.0 | P&L $-128 | -1.016R | 7.8h
 2026-11-27T01:08:15+00:00,exit,MGC,lot 1 trailing_stop @ 3600.7 | P&L $-60 | -0.723R | 7.6h
 2026-11-27T01:12:42+00:00,exit,MNQ,lot 1 trailing_stop @ 26338.0 | P&L $-162 | -1.041R | 10.7h
+2026-11-27T02:20:19+00:00,telegram_cmd,,/status
