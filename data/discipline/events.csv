@@ -397,3 +397,4 @@ time_utc,type,symbol,detail
 2026-11-27T06:13:41+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T06:19:58+00:00,live_check_started,,read-only live connection test
 2026-11-27T06:25:32+00:00,telegram_cmd,,/status
+2026-11-27T06:27:56+00:00,restart,,code updated abba894 -> 74a8870; restarting
