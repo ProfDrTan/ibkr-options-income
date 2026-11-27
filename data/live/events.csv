@@ -41,3 +41,4 @@ time_utc,type,symbol,detail
 2026-11-27T07:26:38+00:00,start,,port 4001 | code 2d1be83 | auto entries ON
 2026-11-27T07:26:38+00:00,connected,,U10500387
 2026-11-27T07:26:41+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T07:37:27+00:00,telegram_cmd,,/status
