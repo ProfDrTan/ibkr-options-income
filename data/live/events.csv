@@ -95,3 +95,5 @@ time_utc,type,symbol,detail
 2026-11-27T10:06:32+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-27T10:08:09+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-27T10:10:02+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
+2026-11-27T10:30:54+00:00,signal,MYM,"BUY MYMZ6 close 50946.0: 24h breakout above 50915.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
+2026-11-27T10:30:57+00:00,entry,MYM,lot 3 BUY 1 @ 50943.0 | stop 50866.0 | trail 104.0 | risk $39
