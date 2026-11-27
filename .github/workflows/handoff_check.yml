@@ -1,0 +1,17 @@
+name: handoff_check
+# Fails when bot code changes without HANDOFF.md changing in the same push, so the next assistant is never out of date.
+on:
+  push:
+    branches: [discipline-bot]
+    paths: ["discipline_bot/**.py"]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - run: |
+          BEFORE="${{ github.event.before }}"
+          if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then exit 0; fi
+          if git diff --name-only "$BEFORE" "${{ github.sha }}" | grep -qx HANDOFF.md; then echo "HANDOFF.md updated"; else
+            echo "::error::discipline_bot code changed but HANDOFF.md was not updated (see HANDOFF.md section 0)"; exit 1; fi

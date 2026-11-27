@@ -1262,7 +1262,7 @@ def run():
                     ib = connect()
                 except ModeSwitch:
                     return                              # run_bot.bat restarts on the previous mode
-                log_event("connected", "", ",".join(ib.managedAccounts()))
+                log_event("connected", "", ",".join(a[:2] + "…" + a[-3:] for a in ib.managedAccounts()))
                 m = read_mode()
                 if m.pop("just_switched", None):
                     C.MODE_FILE.write_text(json.dumps(m))
