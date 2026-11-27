@@ -88,3 +88,5 @@ time_utc,type,symbol,detail
 2026-11-27T08:52:33+00:00,telegram_cmd,,/status
 2026-11-27T09:00:48+00:00,signal,MYM,"BUY MYMZ6 close 50889.0: 24h breakout above 50865.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
 2026-11-27T09:00:51+00:00,entry,MYM,lot 2 BUY 1 @ 50905.0 | stop 50819.0 | trail 139.0 | risk $42
+2026-11-27T09:15:39+00:00,signal,MGC,"BUY MGCG7 close 3709.1: 24h breakout above 24-hour high 3708.8, 1h trend up"
+2026-11-27T09:15:42+00:00,entry,MGC,lot 2 BUY 1 @ 3709.1 | stop 3695.4 | trail 22.1 | risk $132

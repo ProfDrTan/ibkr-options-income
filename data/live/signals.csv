@@ -2,3 +2,4 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-27 08:15:00+00:00,MGC,MGCG7,BUY,3702.7,"24h breakout above 3698.4 against the slow trend, but price is past both averages and the fast one has turned (override)",11.5786,3685.3,34.7,174,pass,
 2026-11-27 08:30:00+00:00,MYM,MYMZ6,BUY,50833.0,"24h breakout above 50819.0 against the slow trend, but price is past both averages and the fast one has turned (override)",56.3571,50748.0,169.0,42,pass,
 2026-11-27 08:45:00+00:00,MYM,MYMZ6,BUY,50889.0,"24h breakout above 50865.0 against the slow trend, but price is past both averages and the fast one has turned (override)",57.2143,50803.0,172.0,43,pass,
+2026-11-27 09:00:00+00:00,MGC,MGCG7,BUY,3709.1,"24h breakout above 24-hour high 3708.8, 1h trend up",9.7929,3694.4,29.4,147,pass,
