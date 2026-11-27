@@ -1,0 +1,14 @@
+time_utc,type,symbol,detail
+2026-11-27T06:37:11+00:00,start,,port 4001 | code caf7ce9 | auto entries ON
+2026-11-27T06:37:11+00:00,connected,,U10500387
+2026-11-27T06:37:15+00:00,charts_ready,,matplotlib available
+2026-11-27T06:37:16+00:00,blocked,,unknown action ping
+2026-11-27T06:37:21+00:00,entry,MNQ,lot 1 SELL 1 @ 26840.0 | stop 26909.5 | trail 151.0 | risk $151
+2026-11-27T06:37:24+00:00,entry,MNQ,lot 2 SELL 1 @ 26841.0 | stop 26912.0 | trail 126.0 | risk $151
+2026-11-27T06:37:25+00:00,download_started,,history download started 
+2026-11-27T06:37:25+00:00,download_started,,20-year daily ETF + VIX history download started
+2026-11-27T06:37:25+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MGC,MNQ,MYM', 'DL_CHUNK': '2 D'}"
+2026-11-27T06:37:25+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MES', 'DL_CHUNK': '2 D'}"
+2026-11-27T06:37:25+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MBT', 'DL_CHUNK': '2 D'}"
+2026-11-27T06:37:25+00:00,live_check_started,,read-only live connection test
+2026-11-27T06:37:25+00:00,calendar,,2 high-impact USD events this week

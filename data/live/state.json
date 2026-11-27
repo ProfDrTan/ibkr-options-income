@@ -1,0 +1,76 @@
+{
+  "open": {},
+  "processed_commands": [
+    "ping-1934",
+    "test-mnq-2220",
+    "test-mnq-2226",
+    "download-2y",
+    "download-daily-20y",
+    "download-1m-1y",
+    "download-mes-1m",
+    "download-mbt-1m",
+    "live-check-20261127-1420"
+  ],
+  "stops": {
+    "MNQ": {
+      "orderId": 7,
+      "trail": 151.0
+    }
+  },
+  "lots": {
+    "MNQ": [
+      {
+        "trade_id": "0717f73f",
+        "symbol": "MNQ",
+        "side": "SELL",
+        "qty": 1,
+        "source": "bot",
+        "lot": 1,
+        "entry_time": "2026-11-27T06:37:21+00:00",
+        "entry_price": 26840.0,
+        "atr": 50.3571,
+        "initial_stop": 26909.5,
+        "trail_dist": 151.0,
+        "risk_usd": 151.07,
+        "note": "test order to diagnose failed MNQ entry",
+        "stop_id": 7
+      },
+      {
+        "trade_id": "b50ee288",
+        "symbol": "MNQ",
+        "side": "SELL",
+        "qty": 1,
+        "source": "bot",
+        "lot": 2,
+        "entry_time": "2026-11-27T06:37:24+00:00",
+        "entry_price": 26841.0,
+        "atr": 50.3571,
+        "initial_stop": 26912.0,
+        "trail_dist": 126.0,
+        "risk_usd": 151.07,
+        "note": "test 2: limit parent + trailing stop",
+        "stop_id": 12
+      }
+    ]
+  },
+  "keyboard_v2": true,
+  "charts_ready": true,
+  "calendar_fetched": "2026-11-27T06:37:25+00:00",
+  "calendar": [
+    {
+      "time_utc": "2026-11-25T13:30:00+00:00",
+      "name": "Core PCE Price Index m/m",
+      "forecast": "0.3%",
+      "previous": "0.3%"
+    },
+    {
+      "time_utc": "2026-11-25T13:30:00+00:00",
+      "name": "Prelim GDP q/q",
+      "forecast": "3.5%",
+      "previous": "3.4%"
+    }
+  ],
+  "calendar_warned": [],
+  "missing_since": {},
+  "used_fills": []
+}
