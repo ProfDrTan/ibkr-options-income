@@ -889,7 +889,7 @@ def check_signals(ib, state):
 
 
 def check_one_signal(ib, state, seen, sym, spec):
-    from discipline_bot.signals import squeeze_signal, daybreak_signal, reversal_signal, ema_cross_signal
+    from discipline_bot.signals import squeeze_signal, daybreak_signal, reversal_signal, ema_cross_signal, _ema
     contract = front_contract(ib, sym)
     bars = history(ib, contract)
     done = bars[:-1]                       # the last bar returned is still forming
@@ -932,6 +932,43 @@ def check_one_signal(ib, state, seen, sym, spec):
     lo24, hi24 = min(L[-97:-1]), max(H[-97:-1])
     state.setdefault("signal_status", {})[sym] = (f"{now().astimezone(SGT):%H:%M} close {Cl[-1]:g} · 24h range "
                                                   f"{lo24:g}–{hi24:g} · {reason}")
+    # ── no-chase (owner, 27 Nov 2026 23:10): never enter after the move has already run. If price is more than
+    # NO_CHASE_ATR from its 21-bar average, wait for the first bounce of >= CHASE_BOUNCE_ATR against the move, then enter
+    # when a 15-min bar closes back in the signal's direction (beyond the previous bar). Give up after 16 bars or if price
+    # crosses back over the average (the move is over).
+    trs0 = [max(b.high - b.low, abs(b.high - p.close), abs(b.low - p.close)) for p, b in zip(done[:-1], done[1:])]
+    atr0 = sum(trs0[-C.ATR_PERIOD:]) / C.ATR_PERIOD
+    ema21 = _ema(Cl, 21)[-1]
+    waits = state.setdefault("chase_wait", {})
+    bounce_entry = False
+    if sign and C.NO_CHASE_ATR and sign * (bar.close - ema21) > C.NO_CHASE_ATR * atr0:
+        stretch = sign * (bar.close - ema21) / atr0
+        if waits.get(sym, {}).get("side") != ("BUY" if sign > 0 else "SELL"):
+            waits[sym] = {"side": "BUY" if sign > 0 else "SELL", "rule": rule, "since": key}
+            log_event("no_chase", sym, f"{rule} signal not taken: {stretch:.1f} ATR past the 21-bar average; waiting for a bounce")
+            send_telegram(f"⏸️ {sym} {rule} {'LONG' if sign > 0 else 'SHORT'} signal NOT taken: price is already {stretch:.1f} ATR "
+                          f"past its 21-bar average, that would be chasing. Waiting for the first bounce.")
+        return
+    w8 = waits.get(sym)
+    if w8 and not sign:
+        s8 = 1 if w8["side"] == "BUY" else -1
+        idx = next((i for i, b in enumerate(done) if str(b.date) == w8["since"]), None)
+        seg = done[idx:] if idx is not None else []
+        if not seg or len(seg) > 17 or s8 * (bar.close - ema21) < 0:
+            waits.pop(sym, None)
+            log_event("no_chase_expired", sym, f"{w8['rule']} {w8['side']}: no clean bounce entry; dropped")
+        else:
+            ext_i = min(range(len(seg)), key=lambda i: s8 * (seg[i].low if s8 > 0 else -seg[i].high)) if False else                 (max(range(len(seg)), key=lambda i: seg[i].high) if s8 > 0 else min(range(len(seg)), key=lambda i: seg[i].low))
+            ext = seg[ext_i].high if s8 > 0 else seg[ext_i].low
+            after = seg[ext_i + 1:]
+            counter = (ext - min(b.low for b in after)) if (after and s8 > 0) else ((max(b.high for b in after) - ext) if after else 0)
+            prev = done[-2]
+            turned = bar.close > prev.high if s8 > 0 else bar.close < prev.low
+            if counter >= C.CHASE_BOUNCE_ATR * atr0 and turned:
+                sign, rule = s8, w8["rule"]
+                reason = f"{w8['rule']} {'long' if s8 > 0 else 'short'} after a {counter:g}-point bounce (no-chase entry)"
+                waits.pop(sym, None)
+                bounce_entry = True
     if not sign:
         if reason.startswith("warming"):
             log_event("signal_info", sym, reason)

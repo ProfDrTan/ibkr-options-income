@@ -139,3 +139,9 @@ DAYBREAK_OVERRIDE = IB_PORT != 4001   # the V-recovery override (buying breakout
 ADD_ONLY_WHEN_PREV_LOT_UP_ATR = 1.0   # a new lot is added only when the previous lot is at least 1 ATR in profit
 # No new entries on NYSE holidays and early-close days (New York date); see us_holiday_or_half_day in bot.py.
 HOLIDAY_NO_ENTRIES = False          # 27 Nov 2026 22:44: owner turned the holiday block OFF ("Now I can't even execute any trade")
+
+# 27 Nov 2026 23:10 OWNER: "the short is initiated after 3 or 4 big down candles... it's already down so much and yet we're
+# shorting it." No-chase: a signal more than NO_CHASE_ATR past the 21-bar average is not taken; the bot waits for the first
+# bounce of CHASE_BOUNCE_ATR against the move and enters when a 15-min bar turns back (check_one_signal). LIVE immediately.
+NO_CHASE_ATR = 3.0
+CHASE_BOUNCE_ATR = 1.0
