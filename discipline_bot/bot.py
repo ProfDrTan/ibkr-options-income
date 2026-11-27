@@ -1018,10 +1018,19 @@ def process_commands(ib, state):
 BENIGN = {1100, 1101, 1102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2119, 2157, 2158, 10167}
 
 
+_LAST_BLIND = dt.datetime(2000, 1, 1, tzinfo=dt.timezone.utc)
+
+
 def on_error(reqId, code, msg, contract):
     """Record IBKR errors (order rejections etc.) in the journal so they are visible remotely."""
     if code not in BENIGN:
         log_event("ibkr_error", getattr(contract, "symbol", "") if contract else "", f"{code} (req {reqId}): {msg}"[:300])
+    if code == 162 and "different IP" in msg:      # account logged in elsewhere: the bot is blind, say so at once
+        global _LAST_BLIND
+        if (now() - _LAST_BLIND).total_seconds() > 600:
+            _LAST_BLIND = now()
+            send_telegram("🚫 Bot is BLIND: the trading account is logged in on another device (phone/TWS/web), so IBKR "
+                          "is blocking the bot's prices. Signals cannot fire until you log out there.")
 
 
 def connect():
