@@ -16,7 +16,7 @@
   "lots": {},
   "keyboard_v2": true,
   "charts_ready": true,
-  "calendar_fetched": "2026-11-27T15:18:46+00:00",
+  "calendar_fetched": "2026-11-27T15:31:20+00:00",
   "calendar": [
     {
       "time_utc": "2026-11-25T13:30:00+00:00",
@@ -34,32 +34,33 @@
   "calendar_warned": [],
   "missing_since": {},
   "used_fills": [
-    "0001012a.6b0c935c.01.01",
-    "0000dbc9.6b08bef9.01.01",
-    "0000dbc9.6b08ba15.01.01",
-    "0000dbc9.6b08ba32.01.01",
-    "000100b6.6b08d5fd.01.01",
+    "0001012a.6b0c1282.01.01",
     "000100b6.6b08d8da.01.01",
+    "0001012a.6b0c935c.01.01",
+    "0000dbc9.6b08ba15.01.01",
     "0000dbc9.6b08ba38.01.01",
+    "0000dbc9.6b08bef9.01.01",
+    "000100b6.6b08d5fd.01.01",
     "0000dbc9.6b08ba99.01.01",
     "0001012a.6b0c0fa4.01.01",
-    "0000dbc9.6b08ba2a.01.01",
-    "0001012a.6b0c1282.01.01"
+    "0000dbc9.6b08ba32.01.01",
+    "0000dbc9.6b08ba2a.01.01"
   ],
-  "tg_offset": 667423742,
-  "signal_checked": "202611271501",
+  "tg_offset": 667423744,
+  "signal_checked": "202611271502",
   "signal_bar": {
-    "MGC": "2026-11-27 15:00:00+00:00",
-    "MNQ": "2026-11-27 15:00:00+00:00",
-    "MYM": "2026-11-27 15:00:00+00:00"
+    "MGC": "2026-11-27 15:15:00+00:00",
+    "MNQ": "2026-11-27 15:15:00+00:00",
+    "MYM": "2026-11-27 15:15:00+00:00"
   },
   "signal_status": {
-    "MGC": "23:16 close 3658 \u00b7 24h range 3583.9\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "23:16 close 26378.8 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
-    "MYM": "23:16 close 50558 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MGC": "23:31 close 3655.6 \u00b7 24h range 3583.9\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
+    "MNQ": "23:31 close 26409.5 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
+    "MYM": "23:32 close 50607 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {
     "MNQ": "2026-11-27T15:09:02+00:00"
-  }
+  },
+  "chase_wait": {}
 }
