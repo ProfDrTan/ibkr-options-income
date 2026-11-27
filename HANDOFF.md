@@ -92,6 +92,9 @@ Entry rules, in priority order (pure Python in `signals.py`):
 - **Profit lock (owner's rule, 27 Nov)**: once a lot is 0.5 ATR in profit, its TRAIL is replaced by a bot-managed STP that
   guarantees profit: stop = entry + max(0.2 ATR, peak − 1 ATR, ½ of peak profit), ratcheted every 5 s, never back
   (`lock_profits`, `LOCK_*` in config). Telegram 🔒 alert on the first lock. The guardian's "widened stop" check applies to TRAILs only.
+- **Live-money filters (owner approved 27 Nov 22:02)**: the 24h-breakout V-recovery override runs on PAPER only
+  (`DAYBREAK_OVERRIDE`); a lot is added only when the previous lot is ≥ 1 ATR in profit (`ADD_ONLY_WHEN_PREV_LOT_UP_ATR`);
+  no new entries on NYSE holidays and early-close days, New York date (`us_holiday_or_half_day`). Open positions keep being managed.
 - Weekend flatten Fri 20:30 UTC. **Hard daily loss limit $1,000** realised per SGT day, always on (owner sets the amount).
   Other guardrails OFF (`GUARDRAILS_ON=False`, VIX guard 999), owner's call.
 - Research-only markets (entries False): M2K, MCL, ZN, MBT, MES.
@@ -122,14 +125,16 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 1. **Failed-high / failed-low entry** (proposed 27 Nov, waiting for the owner's yes): after a new 24h high, a 15-min close back below the
    previous bar's low and EMA21 → short (mirror for longs). Would have caught the 27 Nov MNQ roll-over (26,869 → 26,650), which no rule
    caught. Owner wants new rules tried on paper first.
-2. Find out why the reversal rule did not fire on 27 Nov (MNQ rallied ~800 points then fell ~215).
-3. Second IBKR username (§3): when approved, owner logs the bot's Gateway in with it.
-4. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
+2. Judge the profit lock and the 3 filters on the next week of live trades (trades.csv).
+3. Find out why the reversal rule did not fire on 27 Nov (MNQ rallied ~800 points then fell ~215).
+4. Second IBKR username (§3): when approved, owner logs the bot's Gateway in with it.
+5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 22:10 SGT · Claude** — Owner approved the 3 filters (§5): override paper-only, add a lot only when the previous one is
+  1 ATR up (stricter than "the first lot", so lots don't stack near the top), no entries on US holidays/half-days.
 - **2026-11-27 22:05 SGT · Claude** — Profit lock (§5). Context: after the MNQ shorts, all 7 automatic trades lost (−$444, trades.csv);
-  several had been in profit first. Open: the owner has not answered the 3 proposals (override off on live, add lots only when the first
-  is 1 ATR up, no holiday entries).
+  several had been in profit first.
 - **2026-11-27 16:40 SGT · Codex** — Queued the owner's read-only Gateway diagnostic. Result pending.
 - **2026-11-27 16:15 SGT · Claude** — ChatGPT read the handoff correctly but its GitHub write was refused (403). AGENTS.md rules 5–6:
   on 403 open a PR and send the owner the link; don't re-run checks the journal already answers.

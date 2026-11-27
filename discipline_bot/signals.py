@@ -81,7 +81,7 @@ def squeeze_signal(highs, lows, closes):
 DAY = 96
 
 
-def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW):
+def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW, allow_override=True):
     """fast/slow: trend EMAs. MGC and MNQ use the faster 100/400 (about 1h EMA 25/100), MYM keeps 200/800."""
     k = len(closes)
     if k < MIN_BARS:
@@ -94,6 +94,8 @@ def daybreak_signal(highs, lows, closes, fast=FAST, slow=SLOW):
     fl = _ema(closes, fast)
     f, s = fl[-1], _ema(closes, slow)[-1]
     trend = 1 if f > s else -1 if f < s else 0
+    if brk != trend and not allow_override:
+        return 0, "24h breakout against trend (override off on LIVE)"
     if brk != trend:
         # 27 Nov 2026 override (paper experiment): take the breakout anyway when price is beyond BOTH trend
         # averages and the fast one has turned in the breakout's direction over the last 8 bars (V-shaped recoveries)

@@ -133,3 +133,8 @@ LOCK_TRIGGER_ATR = 0.5       # lock as soon as the lot is half an ATR in profit
 LOCK_FLOOR_ATR = 0.2         # the locked stop guarantees at least 0.2 ATR (min 4 ticks) of profit
 LOCK_TRAIL_ATR = 1.0         # then trails 1 ATR behind the best price
 LOCK_KEEP_FRACTION = 0.5     # and never gives back more than half of the best open profit
+
+# 27 Nov 2026, owner approved after 7 losing automatic trades on the first live day:
+DAYBREAK_OVERRIDE = IB_PORT != 4001   # the V-recovery override (buying breakouts against the slow trend) runs on PAPER only
+ADD_ONLY_WHEN_PREV_LOT_UP_ATR = 1.0   # a new lot is added only when the previous lot is at least 1 ATR in profit
+# No new entries on NYSE holidays and early-close days (New York date); see us_holiday_or_half_day in bot.py.

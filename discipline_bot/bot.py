@@ -389,7 +389,50 @@ def weekend_flatten_time():
     return n.replace(hour=hh, minute=mm, second=0, microsecond=0) + dt.timedelta(days=(wd - n.weekday()) % 7)
 
 
-def check_entry(ib, state, sym, qty, atr, add=False):
+def _easter(y):
+    a, b, c = y % 19, y // 100, y % 100
+    d, e = b // 4, b % 4
+    g = (8 * b + 13) // 25
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = c // 4, c % 4
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    month = (h + l - 7 * m + 114) // 31
+    return dt.date(y, month, (h + l - 7 * m + 114) % 31 + 1)
+
+
+def us_holiday_or_half_day(t):
+    """NYSE holiday or early-close day (New York date), from the exchange's standing rules. Returns its name or None."""
+    from zoneinfo import ZoneInfo
+    d = t.astimezone(ZoneInfo("America/New_York")).date()
+    y = d.year
+
+    def nth(month, weekday, n):          # n-th weekday of a month; n = -1 means the last one
+        if n > 0:
+            first = dt.date(y, month, 1)
+            return first + dt.timedelta(days=(weekday - first.weekday()) % 7 + 7 * (n - 1))
+        last = dt.date(y, month + 1, 1) - dt.timedelta(days=1) if month < 12 else dt.date(y, 12, 31)
+        return last - dt.timedelta(days=(last.weekday() - weekday) % 7)
+
+    def observed(day):                   # Saturday -> Friday, Sunday -> Monday
+        return day - dt.timedelta(days=1) if day.weekday() == 5 else day + dt.timedelta(days=1) if day.weekday() == 6 else day
+
+    thanks = nth(11, 3, 4)
+    hols = {observed(dt.date(y, 1, 1)): "New Year holiday", nth(1, 0, 3): "Martin Luther King Day holiday",
+            nth(2, 0, 3): "Presidents Day holiday", _easter(y) - dt.timedelta(days=2): "Good Friday holiday",
+            nth(5, 0, -1): "Memorial Day holiday", observed(dt.date(y, 6, 19)): "Juneteenth holiday",
+            observed(dt.date(y, 7, 4)): "Independence Day holiday", nth(9, 0, 1): "Labor Day holiday",
+            thanks: "Thanksgiving holiday", observed(dt.date(y, 12, 25)): "Christmas holiday"}
+    if d in hols:
+        return hols[d]
+    halves = {thanks + dt.timedelta(days=1): "half-day after Thanksgiving", dt.date(y, 12, 24): "Christmas Eve half-day",
+              dt.date(y, 7, 3): "half-day before Independence Day"}
+    if d in halves and d.weekday() < 5:
+        return halves[d]
+    return None
+
+
+def check_entry(ib, state, sym, qty, atr, add=False, price=None):
     """Return None if the entry may go ahead, else the reason it is blocked. add=True: scaling in."""
     spec = C.INSTRUMENTS.get(sym)
     if spec is None:
@@ -402,6 +445,15 @@ def check_entry(ib, state, sym, qty, atr, add=False):
     pnl = todays_realised_pnl(ib)    # hard daily loss limit: always on (Prof, 27 Nov 2026)
     if pnl <= -C.DAILY_LOSS_LIMIT_USD:
         return f"daily loss limit hit (${pnl:,.0f} today, limit ${C.DAILY_LOSS_LIMIT_USD:,})"
+    hol = us_holiday_or_half_day(now())   # 27 Nov 2026 owner approved: no new entries on thin US holiday sessions
+    if hol:
+        return f"no new entries today: US {hol}"
+    if add and C.ADD_ONLY_WHEN_PREV_LOT_UP_ATR:   # 27 Nov 2026 owner approved: don't stack lots near the top
+        prev = lots_of(state, sym)[-1]
+        sign = 1 if prev["side"] == "BUY" else -1
+        if price is None or sign * (price - float(prev["entry_price"])) < C.ADD_ONLY_WHEN_PREV_LOT_UP_ATR * float(prev["atr"]):
+            return (f"not adding a lot: the previous lot ({prev['entry_price']}) is not yet "
+                    f"{C.ADD_ONLY_WHEN_PREV_LOT_UP_ATR} ATR in profit")
     if not C.GUARDRAILS_ON:          # 26 Nov 2026: Prof's call, no other entry-blocking limits on the paper account
         return None
     if len(held) >= C.MAX_OPEN_POSITIONS:
@@ -442,7 +494,7 @@ def enter(ib, state, cmd):
     atr, price = atr_and_last(ib, contract)
     lots = lots_of(state, sym)
     add = bool(lots) and lots[0]["side"] == side
-    why = check_entry(ib, state, sym, qty, atr, add=add)
+    why = check_entry(ib, state, sym, qty, atr, add=add, price=price)
     if why:
         log_event("blocked", sym, why)
         send_telegram(f"🛑 discipline_bot blocked {side} {qty} {sym}: {why}")
@@ -853,7 +905,7 @@ def check_one_signal(ib, state, seen, sym, spec):
     sign, reason = squeeze_signal(H, L, Cl)
     rule = "squeeze"
     if not sign and not reason.startswith("warming"):
-        sign2, reason2 = daybreak_signal(H, L, Cl, *C.DAYBREAK_TREND.get(sym, (200, 800)))
+        sign2, reason2 = daybreak_signal(H, L, Cl, *C.DAYBREAK_TREND.get(sym, (200, 800)), allow_override=C.DAYBREAK_OVERRIDE)
         if sign2:
             sign, reason, rule = sign2, reason2, "24h breakout"
         else:
