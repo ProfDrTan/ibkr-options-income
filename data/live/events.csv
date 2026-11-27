@@ -153,3 +153,4 @@ time_utc,type,symbol,detail
 2026-11-27T15:00:53+00:00,signal,MYM,"SELL MYMZ6 close 50426.0: reversal down: rose 13 ATR to 50980, now closed below 2-hour low"
 2026-11-27T15:00:56+00:00,entry,MYM,lot 1 SELL 1 @ 50493.0 | stop 50610.0 | trail 252.0 | risk $63
 2026-11-27T15:03:47+00:00,telegram_cmd,,/status
+2026-11-27T15:06:34+00:00,telegram_cmd,,/status
