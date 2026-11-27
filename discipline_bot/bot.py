@@ -112,7 +112,13 @@ def setup_telegram_buttons(state):
             {"command": "summary", "description": "Closed-trade scoreboard"},
             {"command": "chart", "description": "Charts only"},
             {"command": "calendar", "description": "This week's big US releases"},
-            {"command": "quant", "description": "Quant book (ETF trend): holdings and value"}]}, timeout=15)
+            {"command": "quant", "description": "Quant book (ETF trend): holdings and value"},
+            {"command": "close_all", "description": "CLOSE all bot positions now + pause"},
+            {"command": "close_mnq", "description": "Close Nasdaq (MNQ) now + pause"},
+            {"command": "close_mgc", "description": "Close gold (MGC) now + pause"},
+            {"command": "close_mym", "description": "Close Dow (MYM) now + pause"},
+            {"command": "pause", "description": "Pause new entries (stops stay on)"},
+            {"command": "resume", "description": "Resume new entries"}]}, timeout=15)
         # 'Menu' button on the LEFT of the message box (no buttons taking up screen space)
         requests.post(f"{base}/setChatMenuButton", json={"chat_id": cfg["chat_id"],
                       "menu_button": {"type": "commands"}}, timeout=15)
