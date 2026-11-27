@@ -12,3 +12,4 @@ time_utc,type,symbol,detail
 2026-11-27T06:37:25+00:00,download_started,,"history download started {'DL_BAR': '1 min', 'DL_TAG': '1m', 'DL_YEARS': '1', 'DL_SYMBOLS': 'MBT', 'DL_CHUNK': '2 D'}"
 2026-11-27T06:37:25+00:00,live_check_started,,read-only live connection test
 2026-11-27T06:37:25+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T06:38:34+00:00,telegram_cmd,,/status
