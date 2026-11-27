@@ -12,32 +12,8 @@
     "live-check-20261127-1420",
     "live-check-codex-20261127084039"
   ],
-  "stops": {
-    "MGC": {
-      "orderId": 54,
-      "trail": 33.4
-    }
-  },
-  "lots": {
-    "MGC": [
-      {
-        "trade_id": "a1e162b8",
-        "symbol": "MGC",
-        "side": "BUY",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-27T08:30:59+00:00",
-        "entry_price": 3700.9,
-        "atr": 11.1286,
-        "initial_stop": 3684.8,
-        "trail_dist": 33.4,
-        "risk_usd": 166.93,
-        "note": "auto daybreak 2026-11-27 08:15:00+00:00",
-        "stop_id": 54
-      }
-    ]
-  },
+  "stops": {},
+  "lots": {},
   "keyboard_v2": true,
   "charts_ready": true,
   "calendar_fetched": "2026-11-27T11:05:03+00:00",
@@ -56,9 +32,7 @@
     }
   ],
   "calendar_warned": [],
-  "missing_since": {
-    "a1e162b8": "2026-11-27T13:15:29+00:00"
-  },
+  "missing_since": {},
   "used_fills": [
     "0001012a.6b0c0fa4.01.01",
     "0000dbc9.6b08ba15.01.01",
@@ -67,6 +41,7 @@
     "0000dbc9.6b08ba32.01.01",
     "0000dbc9.6b08ba38.01.01",
     "0000dbc9.6b08ba99.01.01",
+    "000100b6.6b08d8da.01.01",
     "000100b6.6b08d5fd.01.01"
   ],
   "tg_offset": 667423734,
