@@ -15,7 +15,7 @@
   "stops": {
     "MNQ": {
       "orderId": 245,
-      "trail": 240.0
+      "trail": 80.0
     },
     "MYM": {
       "orderId": 255,
@@ -35,7 +35,7 @@
         "entry_price": 26228.25,
         "atr": 79.9643,
         "initial_stop": 26354.5,
-        "trail_dist": 240.0,
+        "trail_dist": 80.0,
         "risk_usd": 239.89,
         "note": "auto squeeze 2026-11-27 14:45:00+00:00",
         "stop_id": 245,
@@ -83,13 +83,13 @@
   "missing_since": {},
   "used_fills": [
     "0000dbc9.6b08ba15.01.01",
-    "0000dbc9.6b08ba2a.01.01",
-    "000100b6.6b08d5fd.01.01",
     "0001012a.6b0c1282.01.01",
+    "000100b6.6b08d5fd.01.01",
     "0001012a.6b0c0fa4.01.01",
+    "0000dbc9.6b08ba99.01.01",
     "0000dbc9.6b08ba38.01.01",
     "0000dbc9.6b08ba32.01.01",
-    "0000dbc9.6b08ba99.01.01",
+    "0000dbc9.6b08ba2a.01.01",
     "000100b6.6b08d8da.01.01"
   ],
   "tg_offset": 667423737,
@@ -105,5 +105,7 @@
     "MYM": "23:00 close 50426 \u00b7 24h range 50266\u201350980 \u00b7 reversal down: rose 13 ATR to 50980, now closed below 2-hour low"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
-  "shock_at": {}
+  "shock_at": {
+    "MNQ": "2026-11-27T15:09:02+00:00"
+  }
 }
