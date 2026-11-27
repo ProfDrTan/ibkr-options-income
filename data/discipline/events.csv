@@ -363,3 +363,4 @@ time_utc,type,symbol,detail
 2026-11-26T23:38:39+00:00,exit,MYM,lot 1 trailing_stop @ 50523.0 | P&L $-37 | -0.998R | 5.9h
 2026-11-26T23:41:56+00:00,telegram_cmd,,/summary
 2026-11-27T00:03:05+00:00,exit,MNQ,lot 3 trailing_stop @ 26292.0 | P&L $-124 | -0.988R | 6.5h
+2026-11-27T00:20:47+00:00,restart,,code updated 6297e86 -> 8dd885d; restarting
