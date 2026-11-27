@@ -176,3 +176,6 @@ time_utc,type,symbol,detail
 2026-11-27T15:31:16+00:00,connected,,U1…387
 2026-11-27T15:31:20+00:00,calendar,,2 high-impact USD events this week
 2026-11-27T15:33:12+00:00,restart,,code updated 955cffa -> ccacd3b; restarting
+2026-11-27T15:33:21+00:00,start,,port 4001 | code 3aa7722 | auto entries ON
+2026-11-27T15:33:21+00:00,connected,,U1…387
+2026-11-27T15:33:24+00:00,calendar,,2 high-impact USD events this week
