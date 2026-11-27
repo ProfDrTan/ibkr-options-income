@@ -1,19 +1,19 @@
 {
-  "time_utc": "2026-11-27T10:51:31+00:00",
+  "time_utc": "2026-11-27T11:00:30+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
-    "MGC": "18:45 close 3703.5 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "18:45 close 26781.5 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "18:45 close 50954 \u00b7 24h range 50266\u201350948 \u00b7 24h breakout above 50948.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
+    "MGC": "19:00 close 3707.3 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
+    "MNQ": "19:00 close 26786 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "19:00 close 50967 \u00b7 24h range 50266\u201350968 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "positions": [
     {
       "contract": "MGCG7",
       "qty": 2.0,
       "avg_price": 3705.1,
-      "last": 3706.0,
-      "unrealized_usd": 17.91,
+      "last": 3707.60009765,
+      "unrealized_usd": 49.91,
       "stop": {
         "type": "TRAIL",
         "trail": 22.1,
@@ -25,8 +25,8 @@
       "contract": "MYMZ6",
       "qty": 4.0,
       "avg_price": 50911.33,
-      "last": 50964.078125,
-      "unrealized_usd": 105.5,
+      "last": 50975.1640625,
+      "unrealized_usd": 127.67,
       "stop": {
         "type": "TRAIL",
         "trail": 104.0,
