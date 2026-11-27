@@ -74,3 +74,5 @@ time_utc,type,symbol,detail
 2026-11-27T08:04:33+00:00,start,,port 4001 | code 11bbc61 | auto entries ON
 2026-11-27T08:04:33+00:00,connected,,U1…387
 2026-11-27T08:04:36+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T08:07:14+00:00,telegram_cmd,,/summary
+2026-11-27T08:07:33+00:00,telegram_cmd,,/status
