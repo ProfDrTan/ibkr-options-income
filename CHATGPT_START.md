@@ -1,54 +1,56 @@
-# START HERE — brief for ChatGPT / Codex taking over this project
+# START HERE — instructions for ChatGPT / Codex (read fully before doing anything)
 
-You are taking over an automated futures and ETF trading system that runs on an IBKR **paper** account today, and is meant to go live once it earns it.
-Owner: Professor Dr. Tan Teik Kheong (Singapore; times are SGT = UTC+8). Work autonomously; report back briefly.
+You now run this project for the owner, Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). He wants minimal back-and-forth:
+do the work, then report in a few lines with links. You work ONLY through the GitHub repository; you cannot reach his PC directly.
 
-## 1. Where everything is
-- Repository: **github.com/ProfDrTan/ibkr-options-income**, branch **`discipline-bot`** (work only on this branch; the live bot runs from it).
-- Read next: `HANDOFF.md` (architecture and rules), then `discipline_bot/config.py`, `discipline_bot/signals.py`, `discipline_bot/bot.py`, `discipline_bot/quant.py`.
+## 1. Your workspace
+- Repo **github.com/ProfDrTan/ibkr-options-income**, branch **`discipline-bot`**. Use the GitHub connector / Codex on this repo and branch.
+- Read in this order: this file → `HANDOFF.md` → `discipline_bot/config.py` → `discipline_bot/signals.py` → `discipline_bot/bot.py`.
 
-## 2. How the system runs (you do not need access to the machine)
-- A Windows PC at the owner's home runs IB Gateway (paper account DUQ138203, port 4002) and the bot (`discipline_bot/run_bot.bat`).
-- Every minute the bot does `git pull` on `discipline-bot`. If any `discipline_bot/*.py` file changed, it **restarts itself with your code**.
-  So: **a merged commit is live within ~1 minute. A syntax error stops trading.**
-- The bot pushes its journal back to the repo every minute: `data/discipline/` (events.csv, trades.csv, signals.csv, state.json,
-  snapshot.json, bars_MGC/MNQ/MYM.csv = last 2 days of 15-min bars) and `data/quant/` (ETF book).
-- To send the bot a one-off action, append a JSON object with a new unique `id` to `discipline_bot/commands/queue.json`
-  (examples in HANDOFF.md: enter, exit, download_history, download_daily).
-- The owner watches everything in Telegram ("Discipline Bot": /status, /summary, /chart, /quant).
+## 2. How you control the trading bot (this is the ONLY way)
+The bot runs on a Windows PC at the owner's home, connected to IB Gateway. It does `git pull` on `discipline-bot` every minute.
+- **Change code** → commit to `discipline-bot` (pull --rebase first; the bot commits every minute). Any change to
+  `discipline_bot/*.py` makes the bot restart with it within ~1 minute. Run `python -m py_compile discipline_bot/*.py` first:
+  a syntax error stops all trading.
+- **Run an action** → append an object with a NEW unique `id` to `discipline_bot/commands/queue.json` and commit. Actions:
+  `{"id":"…","action":"live_check"}` (read-only test of the live account connection, see §4),
+  `{"id":"…","action":"enter","symbol":"MNQ","side":"BUY","qty":1}`, `{"id":"…","action":"exit","symbol":"MNQ"}`,
+  `{"id":"…","action":"download_history","env":{…}}`, `{"id":"…","action":"download_daily"}`.
+- **See what happened** → read the files the bot pushes back (refresh after ~1–2 minutes):
+  `data/discipline/events.csv` (log), `trades.csv`, `signals.csv`, `snapshot.json` (positions, stops, setups), `live_check.json`,
+  `data/quant/` (ETF book). Results also go to the owner's Telegram ("Discipline Bot").
 
-## 3. Non-negotiable rules
-1. **Paper now, live when the owner says so.** The goal is to trade live once conditions are right. Going live is the owner's decision:
-   only switch (`ALLOW_LIVE = True`, Gateway on the live login, port 4001) when he explicitly tells you to in chat. Help him decide with
-   facts: suggested readiness checks are at least 30 closed paper trades per rule, results in line with expectations, no unexplained
-   errors in events.csv for 2 weeks, and a first live phase at 1 contract per lot with a smaller daily loss limit. He sets the terms.
-2. **No backtests.** The owner's standing order: try ideas directly on paper and judge them by the real trades. Experiment boldly on paper; that is what it is for.
-3. **No profit targets.** Winners run on trailing stops. Keep every trade's stop.
-4. Keep a daily loss limit on at all times (`DAILY_LOSS_LIMIT_USD`, now $1,000). The owner may raise or lower it; change it when he asks,
-   and suggest a lower figure for the first live weeks.
-5. Before every change: `git pull --rebase` (the bot commits constantly). After editing: `python -m py_compile discipline_bot/*.py`
-   must pass before you commit. Push directly to `discipline-bot`, or open a PR and tell the owner to merge it.
-6. Add a dated comment in `config.py` / code explaining every change and why.
-7. Telegram messages are for trades and real problems only; no chatter, no news feeds.
-8. When you report, give a clickable link to each file you changed and figures you can trace to the journal files. Do not invent numbers.
+## 3. Rules
+1. The paper account (DU…, Gateway port 4002) is where all trading happens today. Experiment freely there. **No backtests**: try ideas on paper.
+2. **Going live is the owner's decision.** Never set `ALLOW_LIVE = True` or move the bot to port 4001 unless he tells you so in chat.
+   When he does: start with 1 contract per lot and suggest a lower `DAILY_LOSS_LIMIT_USD` for the first weeks; he sets the final numbers.
+3. No profit targets (trailing stops only). A daily loss limit always stays on (`DAILY_LOSS_LIMIT_USD`, now $1,000; the owner may change it).
+4. Never put account numbers, balances or net liquidation in the repo (it may be public). Telegram only.
+5. Every change: a dated comment saying why. Every report: links to the changed files, numbers traceable to the journal files.
 
-## 4. Current setup (as of 27 Nov 2026)
-- **Futures book**, 15-min bars, Micro gold (MGC), Micro Nasdaq (MNQ), Micro Dow (MYM). Entry rules in `signals.py`, in this order:
-  squeeze breakout · 24-hour breakout (with a trend override for V-shaped recoveries, added 27 Nov) · reversal after a crash/spike (MNQ, MYM) ·
-  EMA 8/21 cross (MGC only). Scales in up to 4 lots, each with its own trailing stop (3.0/2.5/2.0/1.5 ATR). Flat before the weekend.
-- **Quant book #1**, `quant.py`: 14 ETFs, hold if 12-month return > 0, volatility-weighted, max 25% each, no leverage, $100,000 paper sleeve,
-  rebalanced weekly during 10:00–12:30 New York.
+## 4. Testing the LIVE connection
+`discipline_bot/live_check.py` connects READ-ONLY to a live Gateway on port 4001, places no orders, and reports to Telegram:
+account, net liquidation, available funds, whether MNQ/MGC/MYM contracts and prices are visible, open positions.
+It needs the **owner** to do this once on the PC (only he can log in; tell him exactly this):
+1. Open a second **IB Gateway**, choose **IB API** and **Live Trading**, log in with his live username/password and 2FA.
+2. In that Gateway: Configure → Settings → API → Settings: set **Socket port 4001**, tick "Allow connections from localhost only", and leave
+   "Read-Only API" ticked for the test. Keep the paper Gateway (port 4002) running as it is.
+3. Do not log in to the live account on the phone/TWS at the same time (one live session at a time; it would kick the Gateway).
+Then you queue `{"id":"live-check-<date>","action":"live_check"}`, wait 2 minutes, read `data/discipline/live_check.json`
+(`ok: true` = connected and futures visible) and tell him the result. If `ok` is false, read `error` and tell him the one step to fix.
 
-## 5. Your task list (in order)
-1. **Familiarise and report.** Read the files above and `data/discipline/trades.csv` + `events.csv`. Send the owner a short summary:
-   trades and P&L by rule and by market, open positions, any errors in events.csv.
-2. **Slippage tracking.** For every fill, log the price the signal assumed vs the actual fill, per market, so real trading costs are visible.
-3. **Tick and depth recording.** Have the bot record live tick-by-tick trades (and Depth of Market if the account's data allows) for MGC, MNQ, MYM, MES
-   to local files on the PC (not pushed to git: too large), so order-flow ideas can be tried later.
-4. **Futures trend book (CTA style)** as a separate paper book: many futures markets, daily bars, 12-month trend, volatility-targeted sizing.
-   Build it like `quant.py`, run it live on paper, report weekly.
-5. **Monthly journal.** At each month end, append a dated entry to `JOURNAL.md`: results per book, what changed, lessons.
+## 5. Current setup (27 Nov 2026)
+- Futures book on paper: MGC, MNQ, MYM, 15-min bars; rules in `signals.py` (squeeze breakout, 24h breakout with V-recovery override,
+  reversal for MNQ/MYM, EMA 8/21 for MGC); scales in up to 4 lots with per-lot trailing stops; flat before weekends.
+- Quant book #1 (`quant.py`): 14 ETFs, 12-month trend, volatility-weighted, $100,000 paper sleeve, weekly rebalance.
 
-## 6. How to work with the owner
-- He is busy and reads on his phone: short, plain answers, the result first, then the link.
-- He wants action, not explanations of why something cannot be done. If something truly needs him (e.g. a login on the PC), say exactly what to tap.
+## 6. Task list
+1. Run the live check (§4) once the owner has logged in the live Gateway, and report.
+2. Weekly: summarise trades and P&L by rule and market from `trades.csv`; flag errors in `events.csv`.
+3. Add slippage tracking (signal price vs fill) per trade.
+4. Record live tick data for MGC/MNQ/MYM/MES to local files on the PC (not to git).
+5. Build a futures trend book (daily, many markets) on paper.
+6. Month end: append results and lessons to `JOURNAL.md`.
+
+## 7. Talking to the owner
+Short, plain, result first, then the link. If something needs him, give the exact taps. Don't ask him to do what you can do in the repo.
