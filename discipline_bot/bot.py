@@ -120,6 +120,8 @@ def setup_telegram_buttons(state):
             {"command": "close1_mnq", "description": "Close ONE Nasdaq lot (newest), keep the rest"},
             {"command": "close1_mgc", "description": "Close ONE gold lot (newest), keep the rest"},
             {"command": "close1_mym", "description": "Close ONE Dow lot (newest), keep the rest"},
+            {"command": "mode_paper", "description": "Switch bot to PAPER trading"},
+            {"command": "mode_live", "description": "Switch bot to LIVE trading"},
             {"command": "pause", "description": "Pause new entries (stops stay on)"},
             {"command": "resume", "description": "Resume new entries"}]}, timeout=15)
         # 'Menu' button on the LEFT of the message box (no buttons taking up screen space)
@@ -1022,6 +1024,13 @@ def handle_confirm(ib, state, cq, cfg):
         send_telegram("👍 Cancelled. Nothing was closed.")
         return
     log_event("manual_confirmed", ",".join(pc["syms"]), pc["action"])
+    if pc["action"] == "mode":
+        port = int(pc["syms"][0])
+        C.MODE_FILE.write_text(json.dumps({"port": port, "prev": C.IB_PORT, "just_switched": True}))
+        log_event("mode_switch", "", f"{mode_name(C.IB_PORT)} -> {mode_name(port)}")
+        send_telegram(f"🔁 Switching to {mode_name(port)}. Back in about 15 seconds.")
+        state["restart_now"] = True
+        return
     if pc["action"] == "close1":
         for sy in pc["syms"]:
             close_one_lot(ib, state, sy)
@@ -1075,6 +1084,17 @@ def telegram_commands(ib, state):
         log_event("telegram_cmd", "", raw[:40])
         # manual override: "close MNQ" / "close all" / "pause" / "resume"
         syms = [w.upper() for w in words if w.upper() in C.INSTRUMENTS]
+        if any(w in ("mode_paper", "mode_live") for w in words) or (("paper" in words or "live" in words) and ("mode" in words or "switch" in words)):
+            port = 4002 if ("mode_paper" in words or "paper" in words) else 4001
+            held = [sy for sy in C.INSTRUMENTS if lots_of(state, sy)]
+            if port == C.IB_PORT:
+                send_telegram(f"Already on {mode_name(port)}.")
+            elif held:
+                send_telegram(f"⛔ You hold {', '.join(held)} on {mode_name(C.IB_PORT)}. Close it first "
+                              f"(/close_{held[0].lower()}), then switch. Otherwise nobody manages that position.")
+            else:
+                ask_confirm(state, "mode", [str(port)], f"Switch the bot to {mode_name(port)} trading?")
+            continue
         if ("close1" in words or ("close" in words and ("one" in words or "1" in words))) and syms:
             ask_confirm(state, "close1", syms, f"Close ONE lot (the newest) of {', '.join(syms)} at market?")
             continue
@@ -1191,10 +1211,34 @@ def on_error(reqId, code, msg, contract):
                           "is blocking the bot's prices. Signals cannot fire until you log out there.")
 
 
+class ModeSwitch(Exception):
+    pass
+
+
+def mode_name(port):
+    return "LIVE" if int(port) == 4001 else "PAPER"
+
+
+def read_mode():
+    try:
+        return json.loads(C.MODE_FILE.read_text())
+    except Exception:
+        return {}
+
+
 def connect():
     ib = IB()
     ib.errorEvent += on_error
-    ib.connect(C.IB_HOST, C.IB_PORT, clientId=C.CLIENT_ID)
+    try:
+        ib.connect(C.IB_HOST, C.IB_PORT, clientId=C.CLIENT_ID)
+    except Exception:
+        m = read_mode()
+        if m.get("just_switched"):              # switched from Telegram but that Gateway is not running: go back
+            C.MODE_FILE.write_text(json.dumps({"port": m["prev"]}))
+            send_telegram(f"⚠️ Could not reach the {mode_name(C.IB_PORT)} Gateway on the Lenovo (port {C.IB_PORT}). "
+                          f"Log it in there and try again. Staying on {mode_name(m['prev'])}.")
+            raise ModeSwitch()
+        raise
     accts = ib.managedAccounts()
     if not C.ALLOW_LIVE and not all(a.startswith("DU") for a in accts):
         ib.disconnect()
@@ -1211,8 +1255,16 @@ def run():
     while True:
         try:
             if ib is None or not ib.isConnected():
-                ib = connect()
+                try:
+                    ib = connect()
+                except ModeSwitch:
+                    return                              # run_bot.bat restarts on the previous mode
                 log_event("connected", "", ",".join(ib.managedAccounts()))
+                m = read_mode()
+                if m.pop("just_switched", None):
+                    C.MODE_FILE.write_text(json.dumps(m))
+                    send_telegram(("🔴 Now trading LIVE money." if C.IB_PORT == 4001 else "📝 Now on PAPER trading.")
+                                  + " Send /status to check.")
                 setup_telegram_buttons(state)
                 if not state.get("charts_ready"):
                     try:
@@ -1288,6 +1340,11 @@ def run():
                     telegram_commands(ib, state)
                 except Exception as e:
                     log_event("telegram_error", "", repr(e)[:200])
+                if state.pop("restart_now", None):
+                    save_state(state)
+                    git_push_journal()
+                    ib.disconnect()
+                    return                              # run_bot.bat restarts on the new mode
                 try:
                     protect(ib, state)
                 except Exception as e:

@@ -13,7 +13,14 @@ Exit rule (Rule D, backtested 24 Nov 2026 on IBKR bars; 1-hour chosen after comp
 
 # ── CONNECTION ────────────────────────────────────────────────────────────────
 IB_HOST = "127.0.0.1"   # Gateway runs on the same Lenovo; never expose its port to the internet
-IB_PORT = 4001          # IB Gateway PAPER port (live Gateway is 4001). Check in Gateway: Configure > Settings > API
+# Port: 4001 = LIVE Gateway, 4002 = PAPER Gateway. Switched from Telegram (/mode_paper, /mode_live), which writes
+# .mode.json next to the repo (not in git). Without that file the bot runs LIVE.
+import json as _json, pathlib as _pl
+MODE_FILE = _pl.Path(__file__).resolve().parent.parent / ".mode.json"
+try:
+    IB_PORT = int(_json.loads(MODE_FILE.read_text())["port"])
+except Exception:
+    IB_PORT = 4001
 CLIENT_ID = 21          # any number not used by another program connected to the same Gateway
 
 # Safety switch. While False the bot refuses to run unless the account id starts with "DU" (IBKR paper).

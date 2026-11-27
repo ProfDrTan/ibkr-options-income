@@ -219,3 +219,5 @@ __marimo__/
 
 # discipline_bot local log
 data/discipline/bot.log
+
+.mode.json
