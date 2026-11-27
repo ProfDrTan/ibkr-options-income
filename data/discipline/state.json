@@ -10,12 +10,7 @@
     "download-mes-1m",
     "download-mbt-1m"
   ],
-  "stops": {
-    "MNQ": {
-      "orderId": 932,
-      "trail": 155.25
-    }
-  },
+  "stops": {},
   "signal_checked": "202611270100",
   "signal_bar": {
     "MNQ": "2026-11-27 00:15:00+00:00",
@@ -26,9 +21,7 @@
     "ZN": "2026-11-25 03:15:00+00:00",
     "MBT": "2026-11-25 03:15:00+00:00"
   },
-  "missing_since": {
-    "afedac80": "2026-11-27T01:11:35+00:00"
-  },
+  "missing_since": {},
   "tg_offset": 667423704,
   "calendar_fetched": "2026-11-27T00:20:58+00:00",
   "calendar": [
@@ -55,35 +48,17 @@
     "MNQ": "08:31 close 26248.8 \u00b7 24h range 25719\u201326435.8 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
     "MYM": "08:31 close 50496 \u00b7 24h range 50058\u201350577 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
   },
-  "lots": {
-    "MNQ": [
-      {
-        "trade_id": "afedac80",
-        "symbol": "MNQ",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-26T14:30:31+00:00",
-        "entry_price": 26257.25,
-        "atr": 51.7321,
-        "initial_stop": 26337.0,
-        "trail_dist": 155.25,
-        "risk_usd": 155.2,
-        "note": "auto reversal 2026-11-26 14:15:00+00:00",
-        "stop_id": 932
-      }
-    ]
-  },
+  "lots": {},
   "used_fills": [
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0c3023.01.01",
-    "0000e1a7.6b0ba72e.01.01",
     "0000e1a7.6b0ba707.01.01",
+    "0000e1a7.6b0ba72e.01.01",
     "0000e1a7.6b0c204e.01.01",
     "0000e1a7.6b0c250c.01.01",
     "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0c31e6.01.01",
+    "0000e1a7.6b0c32e3.01.01",
     "0000e1a7.6b0bc11d.01.01",
     "0000e1a7.6b0c1ad9.01.01"
   ],
