@@ -13,35 +13,12 @@
     "live-check-codex-20261127084039"
   ],
   "stops": {
-    "MNQ": {
-      "orderId": 245,
-      "trail": 80.0
-    },
     "MYM": {
       "orderId": 255,
       "trail": 252.0
     }
   },
   "lots": {
-    "MNQ": [
-      {
-        "trade_id": "8fcea250",
-        "symbol": "MNQ",
-        "side": "SELL",
-        "qty": 1,
-        "source": "bot",
-        "lot": 1,
-        "entry_time": "2026-11-27T15:00:27+00:00",
-        "entry_price": 26228.25,
-        "atr": 79.9643,
-        "initial_stop": 26354.5,
-        "trail_dist": 80.0,
-        "risk_usd": 239.89,
-        "note": "auto squeeze 2026-11-27 14:45:00+00:00",
-        "stop_id": 245,
-        "peak_gain": 10.25
-      }
-    ],
     "MYM": [
       {
         "trade_id": "f12c4767",
@@ -80,21 +57,20 @@
     }
   ],
   "calendar_warned": [],
-  "missing_since": {
-    "8fcea250": "2026-11-27T15:12:36+00:00"
-  },
+  "missing_since": {},
   "used_fills": [
     "0000dbc9.6b08ba15.01.01",
-    "0000dbc9.6b08ba2a.01.01",
-    "000100b6.6b08d5fd.01.01",
     "0001012a.6b0c1282.01.01",
+    "000100b6.6b08d5fd.01.01",
     "0001012a.6b0c0fa4.01.01",
+    "0000dbc9.6b08ba99.01.01",
+    "0001012a.6b0c935c.01.01",
     "0000dbc9.6b08ba38.01.01",
     "0000dbc9.6b08ba32.01.01",
-    "0000dbc9.6b08ba99.01.01",
+    "0000dbc9.6b08ba2a.01.01",
     "000100b6.6b08d8da.01.01"
   ],
-  "tg_offset": 667423738,
+  "tg_offset": 667423739,
   "signal_checked": "202611271500",
   "signal_bar": {
     "MGC": "2026-11-27 14:45:00+00:00",

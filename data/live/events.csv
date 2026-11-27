@@ -157,3 +157,5 @@ time_utc,type,symbol,detail
 2026-11-27T15:09:02+00:00,shock,MNQ,124.5 against in 5 min (> 1.5 ATR); tightened ['L1 80']
 2026-11-27T15:11:50+00:00,telegram_cmd,,/status
 2026-11-27T15:12:22+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
+2026-11-27T15:12:40+00:00,telegram_cmd,,/status
+2026-11-27T15:13:44+00:00,exit,MNQ,lot 1 trailing_stop @ 26353.5 | P&L $-250 | -1.044R | 0.2h
