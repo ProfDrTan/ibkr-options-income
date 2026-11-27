@@ -100,6 +100,9 @@ Entry rules, in priority order (pure Python in `signals.py`):
 - **Live-money filters (owner approved 27 Nov 22:02)**: the 24h-breakout V-recovery override runs on PAPER only
   (`DAYBREAK_OVERRIDE`); a lot is added only when the previous lot is ≥ 1 ATR in profit (`ADD_ONLY_WHEN_PREV_LOT_UP_ATR`);
   holiday block (`us_holiday_or_half_day`) exists but is OFF (`HOLIDAY_NO_ENTRIES=False`, owner 22:44: it blocked 2 signals). Open positions keep being managed.
+- **No-chase (owner said "live", 27 Nov 23:16)**: a signal more than 3 ATR past the 21-bar EMA is not taken (Telegram ⏸️); the bot
+  waits for the first 1-ATR bounce against the move and enters when a 15-min bar closes back beyond the previous bar. Dropped after
+  16 bars or if price crosses the EMA. (`NO_CHASE_ATR`, `CHASE_BOUNCE_ATR`, `state["chase_wait"]`.)
 - Weekend flatten Fri 20:30 UTC. **Hard daily loss limit $1,000** realised per SGT day, always on (owner sets the amount).
   Other guardrails OFF (`GUARDRAILS_ON=False`, VIX guard 999), owner's call.
 - Research-only markets (entries False): M2K, MCL, ZN, MBT, MES.
@@ -136,6 +139,9 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 23:20 SGT · Claude** — No-chase rule on LIVE (§5), owner's explicit "live" at 23:16. Trigger: the 23:00 MNQ short (26,228,
+  −$250) and MYM short (50,493) were taken after ~500/~440-point falls. Open MYM short untouched. Next idea (not built): act intrabar
+  instead of on 15-min closes, only after no-chase proves itself.
 - **2026-11-27 22:52 SGT · Claude** — §0 rule: state the current-session effect of any entry-blocking change before going live.
 - **2026-11-27 22:48 SGT · Claude** — Holiday block turned OFF at the owner's request: at 22:30 it blocked an MNQ squeeze short and an
   MYM reversal short. Override-on-paper-only and the add-lot rule stay.

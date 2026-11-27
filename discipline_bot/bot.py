@@ -940,7 +940,6 @@ def check_one_signal(ib, state, seen, sym, spec):
     atr0 = sum(trs0[-C.ATR_PERIOD:]) / C.ATR_PERIOD
     ema21 = _ema(Cl, 21)[-1]
     waits = state.setdefault("chase_wait", {})
-    bounce_entry = False
     if sign and C.NO_CHASE_ATR and sign * (bar.close - ema21) > C.NO_CHASE_ATR * atr0:
         stretch = sign * (bar.close - ema21) / atr0
         if waits.get(sym, {}).get("side") != ("BUY" if sign > 0 else "SELL"):
@@ -958,7 +957,8 @@ def check_one_signal(ib, state, seen, sym, spec):
             waits.pop(sym, None)
             log_event("no_chase_expired", sym, f"{w8['rule']} {w8['side']}: no clean bounce entry; dropped")
         else:
-            ext_i = min(range(len(seg)), key=lambda i: s8 * (seg[i].low if s8 > 0 else -seg[i].high)) if False else                 (max(range(len(seg)), key=lambda i: seg[i].high) if s8 > 0 else min(range(len(seg)), key=lambda i: seg[i].low))
+            ext_i = (max(range(len(seg)), key=lambda i: seg[i].high) if s8 > 0       # furthest point of the move
+                     else min(range(len(seg)), key=lambda i: seg[i].low))
             ext = seg[ext_i].high if s8 > 0 else seg[ext_i].low
             after = seg[ext_i + 1:]
             counter = (ext - min(b.low for b in after)) if (after and s8 > 0) else ((max(b.high for b in after) - ext) if after else 0)
@@ -968,7 +968,6 @@ def check_one_signal(ib, state, seen, sym, spec):
                 sign, rule = s8, w8["rule"]
                 reason = f"{w8['rule']} {'long' if s8 > 0 else 'short'} after a {counter:g}-point bounce (no-chase entry)"
                 waits.pop(sym, None)
-                bounce_entry = True
     if not sign:
         if reason.startswith("warming"):
             log_event("signal_info", sym, reason)
