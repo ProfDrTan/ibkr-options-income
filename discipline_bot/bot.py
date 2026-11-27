@@ -550,6 +550,70 @@ def guardian(ib, state):
         send_telegram(f"🛡️ {sym} position had no stop — attached {stop}, trailing {trail}.")
 
 
+TICKS, PRICES = {}, {}
+
+
+def tighten_all(ib, state, sym, k):
+    """Tighten every lot's trailing stop in sym to k x ATR (never loosens)."""
+    lots = lots_of(state, sym)
+    if not lots:
+        return []
+    spec = C.INSTRUMENTS[sym]
+    done = []
+    orders = {t.order.orderId: t for t in ib.reqAllOpenOrders()}
+    for lot in lots:
+        t = orders.get(lot.get("stop_id"))
+        new = round_tick(k * float(lot["atr"]), spec["tick"])
+        if t and t.order.orderType == "TRAIL" and (t.order.auxPrice or 0) > new:
+            t.order.auxPrice = new
+            ib.placeOrder(t.contract, t.order)
+            lot["trail_dist"] = new
+            done.append(f"L{lot.get('lot', 1)} {new:g}")
+    if done and sym in state.get("stops", {}):
+        state["stops"][sym]["trail"] = min(state["stops"][sym].get("trail") or 1e9, *[float(l["trail_dist"]) for l in lots])
+    return done
+
+
+def protect(ib, state):
+    """Every 5 s: (1) shock exit: price moves > SHOCK_ATR x ATR against an open position within 5 minutes ->
+    tighten all its stops to 1 ATR; (2) 15 min before a high-impact US release -> tighten to PRE_RELEASE_ATR."""
+    for sym, lots in list(state.get("lots", {}).items()):
+        if not lots:
+            continue
+        if sym not in TICKS:
+            TICKS[sym] = ib.reqMktData(front_contract(ib, sym), "", False, False)
+        tk = TICKS[sym]
+        px = tk.last if tk.last == tk.last and tk.last else tk.marketPrice()
+        if not px or px != px:
+            continue
+        hist = PRICES.setdefault(sym, [])
+        hist.append((now(), px))
+        PRICES[sym] = hist = [(t, p) for t, p in hist if (now() - t).total_seconds() <= 300]
+        atr = float(lots[0]["atr"])
+        adverse = (max(p for _, p in hist) - px) if lots[0]["side"] == "BUY" else (px - min(p for _, p in hist))
+        last = state.setdefault("shock_at", {}).get(sym)
+        if adverse > C.SHOCK_ATR * atr and (not last or (now() - dt.datetime.fromisoformat(last)).total_seconds() > 3600):
+            state["shock_at"][sym] = now().isoformat(timespec="seconds")
+            done = tighten_all(ib, state, sym, 1.0)
+            log_event("shock", sym, f"{adverse:g} against in 5 min (> {C.SHOCK_ATR} ATR); tightened {done}")
+            send_telegram(f"⚡ {sym} moved {adverse:g} points against you in 5 minutes. Stops tightened to 1 ATR: "
+                          f"{', '.join(done) or 'already tight'}.")
+    for ev in CALENDAR:
+        mins = (dt.datetime.fromisoformat(ev["time_utc"]) - now()).total_seconds() / 60
+        key = ev["time_utc"] + ev["name"]
+        if 0 < mins <= 15 and key not in state.setdefault("pre_tightened", []):
+            state["pre_tightened"].append(key)
+            msgs = []
+            for sym, lots in state.get("lots", {}).items():
+                if lots:
+                    done = tighten_all(ib, state, sym, C.PRE_RELEASE_ATR)
+                    if done:
+                        msgs.append(f"{sym}: {', '.join(done)}")
+            if msgs:
+                log_event("pre_release_tighten", "", f"{ev['name']}: {msgs}")
+                send_telegram(f"📅 {ev['name']} in {mins:.0f} min: stops tightened to {C.PRE_RELEASE_ATR} ATR. " + "; ".join(msgs))
+
+
 def close_one_lot(ib, state, sym):
     """Scale out: close only the NEWEST lot (cancel its own stop, 1 contract at market). The other lots keep running."""
     lots = lots_of(state, sym)
@@ -932,6 +996,42 @@ def summary_text(ib, state=None):
 
 
 
+def ask_confirm(state, action, syms, question):
+    """Send Yes/No buttons; nothing happens until Yes is tapped (expires after 2 minutes)."""
+    import requests
+    cfg = json.loads(TG_FILE.read_text())
+    key = uuid.uuid4().hex[:8]
+    state["pending_confirm"] = {"key": key, "action": action, "syms": syms, "time": now().isoformat(timespec="seconds")}
+    requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/sendMessage", timeout=15, json={
+        "chat_id": cfg["chat_id"], "text": colorize("❓ " + question),
+        "reply_markup": {"inline_keyboard": [[{"text": "✅ Yes, do it", "callback_data": f"yes:{key}"},
+                                              {"text": "❌ No", "callback_data": f"no:{key}"}]]}})
+
+
+def handle_confirm(ib, state, cq, cfg):
+    import requests
+    requests.post(f"https://api.telegram.org/bot{cfg['bot_token']}/answerCallbackQuery",
+                  json={"callback_query_id": cq["id"]}, timeout=15)
+    ans, _, key = (cq.get("data") or "").partition(":")
+    pc = state.get("pending_confirm") or {}
+    if pc.get("key") != key or (now() - dt.datetime.fromisoformat(pc["time"])).total_seconds() > 120:
+        send_telegram("⌛ That request expired. Send it again if you still want it.")
+        return
+    state.pop("pending_confirm", None)
+    if ans != "yes":
+        send_telegram("👍 Cancelled. Nothing was closed.")
+        return
+    log_event("manual_confirmed", ",".join(pc["syms"]), pc["action"])
+    if pc["action"] == "close1":
+        for sy in pc["syms"]:
+            close_one_lot(ib, state, sy)
+    else:
+        for sy in pc["syms"]:
+            flatten(ib, state, sy, "manual_close_telegram")
+        state["paused"] = True
+        send_telegram(f"✋ Closing {', '.join(pc['syms']) or 'nothing'} at market. New entries are PAUSED until you send: resume")
+
+
 def telegram_commands(ib, state):
     """Answer /status (or 'status') typed in the Discipline Bot chat, so positions can be checked from the
     phone without logging in to IBKR (which would knock IB Gateway off the paper login)."""
@@ -950,6 +1050,11 @@ def telegram_commands(ib, state):
         return
     for u in r.get("result", []):
         state["tg_offset"] = u["update_id"] + 1
+        cq = u.get("callback_query")
+        if cq:
+            if str(cq.get("message", {}).get("chat", {}).get("id")) == str(cfg["chat_id"]):
+                handle_confirm(ib, state, cq, cfg)
+            continue
         msg = u.get("message") or {}
         if str(msg.get("chat", {}).get("id")) != str(cfg["chat_id"]):
             log_event("telegram_cmd", "", f"ignored message from chat {msg.get('chat', {}).get('id')}")
@@ -971,16 +1076,11 @@ def telegram_commands(ib, state):
         # manual override: "close MNQ" / "close all" / "pause" / "resume"
         syms = [w.upper() for w in words if w.upper() in C.INSTRUMENTS]
         if ("close1" in words or ("close" in words and ("one" in words or "1" in words))) and syms:
-            for sy in syms:
-                close_one_lot(ib, state, sy)
+            ask_confirm(state, "close1", syms, f"Close ONE lot (the newest) of {', '.join(syms)} at market?")
             continue
         if any(w in ("close", "exit", "flat", "flatten", "sell", "cover") for w in words) and (syms or "all" in words):
             targets = syms or [p.contract.symbol for p in ib.positions() if p.position and p.contract.symbol in C.INSTRUMENTS]
-            for sy in targets:
-                flatten(ib, state, sy, "manual_close_telegram")
-            state["paused"] = True
-            send_telegram(f"✋ Closing {', '.join(targets) or 'nothing (no open positions)'} at market. "
-                          "New entries are PAUSED until you send: resume")
+            ask_confirm(state, "close", targets, f"Close ALL lots of {', '.join(targets) or 'nothing'} at market and pause new entries?")
             continue
         if "pause" in words or "stop" in words:
             state["paused"] = True
@@ -1188,6 +1288,10 @@ def run():
                     telegram_commands(ib, state)
                 except Exception as e:
                     log_event("telegram_error", "", repr(e)[:200])
+                try:
+                    protect(ib, state)
+                except Exception as e:
+                    log_event("protect_error", "", repr(e)[:200])
                 ib.sleep(5)
             else:
                 time.sleep(5)

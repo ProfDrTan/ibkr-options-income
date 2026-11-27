@@ -114,3 +114,7 @@ LOT_TRAILS_ATR = (3.0, 2.5, 2.0, 1.5)
 
 # 26 Nov 2026: EMA 8/21 cross entry (signals.ema_cross_signal) only where it improved both test years.
 EMA_CROSS_MARKETS = {"MGC"}
+
+# 27 Nov 2026 protections (owner approved): shock exit and pre-release tightening, checked every 5 seconds.
+SHOCK_ATR = 1.5          # price moves this many 15-min ATRs against an open position within 5 minutes -> stops to 1 ATR
+PRE_RELEASE_ATR = 1.5    # 15 minutes before a high-impact US release, trailing stops tighten to this (never loosen)
