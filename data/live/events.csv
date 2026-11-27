@@ -137,3 +137,4 @@ time_utc,type,symbol,detail
 2026-11-27T14:04:34+00:00,start,,port 4001 | code da8d56c | auto entries ON
 2026-11-27T14:04:34+00:00,connected,,U1…387
 2026-11-27T14:04:37+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T14:08:25+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
