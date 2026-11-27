@@ -13,11 +13,11 @@ Exit rule (Rule D, backtested 24 Nov 2026 on IBKR bars; 1-hour chosen after comp
 
 # ── CONNECTION ────────────────────────────────────────────────────────────────
 IB_HOST = "127.0.0.1"   # Gateway runs on the same Lenovo; never expose its port to the internet
-IB_PORT = 4002          # IB Gateway PAPER port (live Gateway is 4001). Check in Gateway: Configure > Settings > API
+IB_PORT = 4001          # IB Gateway PAPER port (live Gateway is 4001). Check in Gateway: Configure > Settings > API
 CLIENT_ID = 21          # any number not used by another program connected to the same Gateway
 
 # Safety switch. While False the bot refuses to run unless the account id starts with "DU" (IBKR paper).
-ALLOW_LIVE = False
+ALLOW_LIVE = True   # 27 Nov 2026: owner switched the futures bot to LIVE (port 4001)
 
 # ── INSTRUMENTS ───────────────────────────────────────────────────────────────
 # roll_days: skip any contract that expires within this many days (use the next one instead)
