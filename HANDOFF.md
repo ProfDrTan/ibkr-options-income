@@ -25,6 +25,11 @@ Owner: Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). Repo `ProfDrTan/i
    and send the owner the link; he merges it with one tap. Code reaching the LIVE bot always passes through him or a direct push.** Retry the pull/push if it races with the bot (the bot commits its journal every minute).
 8. Confirm the bot restarted on your code: a `start` line with your commit hash in `data/live/events.csv` within ~2 minutes.
 
+**Before any change that can block or change entries on LIVE**
+- Tell the owner in plain words what it will do in the CURRENT session (e.g. "this blocks all new trades for the rest of today")
+  before pushing it. New entry filters go on PAPER first unless the owner says otherwise. (Added 27 Nov after the holiday block
+  stopped 2 live signals without the owner realising it would.)
+
 **Never**
 - Never stop `run_bot.bat` or ask the owner to. You (ChatGPT/Codex/Claude) run in the cloud, NOT on the owner's PC. Checking ports,
   processes or Gateway from your sandbox tells you nothing. You control the PC only through the repo (§2).
@@ -131,6 +136,7 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 22:52 SGT · Claude** — §0 rule: state the current-session effect of any entry-blocking change before going live.
 - **2026-11-27 22:48 SGT · Claude** — Holiday block turned OFF at the owner's request: at 22:30 it blocked an MNQ squeeze short and an
   MYM reversal short. Override-on-paper-only and the add-lot rule stay.
 - **2026-11-27 22:10 SGT · Claude** — Owner approved the 3 filters (§5): override paper-only, add a lot only when the previous one is
