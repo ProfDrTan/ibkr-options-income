@@ -1086,7 +1086,10 @@ def telegram_commands(ib, state):
         syms = [w.upper() for w in words if w.upper() in C.INSTRUMENTS]
         if any(w in ("mode_paper", "mode_live") for w in words) or (("paper" in words or "live" in words) and ("mode" in words or "switch" in words)):
             port = 4002 if ("mode_paper" in words or "paper" in words) else 4001
-            held = [sy for sy in C.INSTRUMENTS if lots_of(state, sy)]
+            held = [p.contract.symbol for p in ib.positions() if p.position and p.contract.symbol in C.INSTRUMENTS]
+            stale = [sy for sy in C.INSTRUMENTS if lots_of(state, sy) and sy not in held]
+            if stale:                               # IBKR says flat but the journal hasn't booked the exit yet
+                record_exits(ib, state, force=tuple(stale))
             if port == C.IB_PORT:
                 send_telegram(f"Already on {mode_name(port)}.")
             elif held:
