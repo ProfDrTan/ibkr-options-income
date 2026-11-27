@@ -58,3 +58,4 @@ time_utc,type,symbol,detail
 2026-11-27T07:49:40+00:00,start,,port 4001 | code c99e7dd | auto entries ON
 2026-11-27T07:49:40+00:00,connected,,U10500387
 2026-11-27T07:49:43+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T07:56:29+00:00,telegram_cmd,,/close1_mnq

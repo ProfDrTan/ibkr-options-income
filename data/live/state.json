@@ -59,7 +59,7 @@
   "used_fills": [
     "0001012a.6b0c0fa4.01.01"
   ],
-  "tg_offset": 667423719,
+  "tg_offset": 667423720,
   "signal_checked": "202611270703",
   "signal_bar": {
     "MGC": "2026-11-27 07:30:00+00:00",
@@ -72,5 +72,13 @@
     "MYM": "15:46 close 50719 \u00b7 24h range 50266\u201350779 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
-  "shock_at": {}
+  "shock_at": {},
+  "pending_confirm": {
+    "key": "5f3a1193",
+    "action": "close1",
+    "syms": [
+      "MNQ"
+    ],
+    "time": "2026-11-27T07:56:29+00:00"
+  }
 }
