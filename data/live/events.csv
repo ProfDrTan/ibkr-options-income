@@ -80,3 +80,4 @@ time_utc,type,symbol,detail
 2026-11-27T08:30:59+00:00,entry,MGC,lot 1 BUY 1 @ 3700.9 | stop 3684.8 | trail 33.4 | risk $167
 2026-11-27T08:34:04+00:00,telegram_cmd,,/status
 2026-11-27T08:41:15+00:00,live_check_started,,read-only live connection test
+2026-11-27T08:41:37+00:00,telegram_cmd,,/status
