@@ -81,3 +81,6 @@ time_utc,type,symbol,detail
 2026-11-27T08:34:04+00:00,telegram_cmd,,/status
 2026-11-27T08:41:15+00:00,live_check_started,,read-only live connection test
 2026-11-27T08:41:37+00:00,telegram_cmd,,/status
+2026-11-27T08:45:11+00:00,telegram_cmd,,/status
+2026-11-27T08:45:53+00:00,signal,MYM,"BUY MYMZ6 close 50833.0: 24h breakout above 50819.0 against the slow trend, but price is past both averages and the fast one has turned (override)"
+2026-11-27T08:45:56+00:00,entry,MYM,lot 1 BUY 1 @ 50831.0 | stop 50753.0 | trail 158.0 | risk $39
