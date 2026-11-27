@@ -114,3 +114,4 @@ time_utc,type,symbol,detail
 2026-11-27T11:45:09+00:00,telegram_error,,"getUpdates failed: ConnectionError(ProtocolError('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)))"
 2026-11-27T11:46:13+00:00,exit,MYM,lot 1 trailing_stop @ 50823.0 | P&L $-4 | -0.102R | 3.0h
 2026-11-27T11:46:14+00:00,exit,MYM,lot 2 trailing_stop @ 50839.0 | P&L $-33 | -0.794R | 2.8h
+2026-11-27T11:50:47+00:00,exit,MGC,lot 2 trailing_stop @ 3695.3 | P&L $-138 | -1.042R | 2.6h
