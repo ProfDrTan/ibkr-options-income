@@ -1005,6 +1005,11 @@ def read_queue():
 
 
 def process_commands(ib, state):
+    if not state.get("queue_baseline"):
+        # a fresh journal (e.g. switching to live) must NEVER replay old commands: mark everything already queued as done
+        state["processed_commands"] = list({*state.get("processed_commands", []), *[c.get("id") for c in read_queue()]})
+        state["queue_baseline"] = now().isoformat(timespec="seconds")
+        return
     for cmd in read_queue():
         cid = cmd.get("id")
         if not cid or cid in state["processed_commands"]:
