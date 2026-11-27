@@ -370,3 +370,6 @@ time_utc,type,symbol,detail
 2026-11-27T00:46:02+00:00,ibkr_error,MGC,162 (req 1035): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-27T00:46:03+00:00,ibkr_error,MNQ,162 (req 1037): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
 2026-11-27T00:46:03+00:00,ibkr_error,MYM,162 (req 1039): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T01:00:26+00:00,ibkr_error,MGC,162 (req 1041): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T01:00:27+00:00,ibkr_error,MNQ,162 (req 1043): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
+2026-11-27T01:00:27+00:00,ibkr_error,MYM,162 (req 1045): Historical Market Data Service error message:Trading TWS session is connected from a different IP address
