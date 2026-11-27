@@ -10,3 +10,5 @@ bar_time,symbol,contract,side,close,breakout_level,atr,stop,trail,risk_usd,guard
 2026-11-27 14:15:00+00:00,MYM,MYMZ6,SELL,50761.0,"reversal down: rose 12 ATR to 50980, now closed below 2-hour low",60.5714,50852.0,182.0,45,no new entries today: US half-day after Thanksgiving,
 2026-11-27 14:30:00+00:00,MNQ,MNQZ6,SELL,26347.5,"squeeze breakout below 40-bar low 26576.75, 1h trend down",76.5714,26462.25,229.75,230,no new entries today: US half-day after Thanksgiving,
 2026-11-27 14:30:00+00:00,MYM,MYMZ6,SELL,50605.0,"reversal down: rose 13 ATR to 50980, now closed below 2-hour low",74.6429,50717.0,224.0,56,no new entries today: US half-day after Thanksgiving,
+2026-11-27 14:45:00+00:00,MNQ,MNQZ6,SELL,26253.75,"squeeze breakout below 40-bar low 26261.75, 1h trend down",83.25,26378.5,249.75,250,pass,
+2026-11-27 14:45:00+00:00,MYM,MYMZ6,SELL,50426.0,"reversal down: rose 13 ATR to 50980, now closed below 2-hour low",85.4286,50554.0,256.0,64,pass,

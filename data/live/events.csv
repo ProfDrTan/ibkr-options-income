@@ -148,3 +148,7 @@ time_utc,type,symbol,detail
 2026-11-27T14:46:31+00:00,start,,port 4001 | code ecb924e | auto entries ON
 2026-11-27T14:46:31+00:00,connected,,U1…387
 2026-11-27T14:46:34+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T15:00:24+00:00,signal,MNQ,"SELL MNQZ6 close 26253.75: squeeze breakout below 40-bar low 26261.75, 1h trend down"
+2026-11-27T15:00:27+00:00,entry,MNQ,lot 1 SELL 1 @ 26228.25 | stop 26354.5 | trail 240.0 | risk $240
+2026-11-27T15:00:53+00:00,signal,MYM,"SELL MYMZ6 close 50426.0: reversal down: rose 13 ATR to 50980, now closed below 2-hour low"
+2026-11-27T15:00:56+00:00,entry,MYM,lot 1 SELL 1 @ 50493.0 | stop 50610.0 | trail 252.0 | risk $63
