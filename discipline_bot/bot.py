@@ -787,8 +787,8 @@ def write_snapshot(ib, state):
     snap = {"time_utc": now().isoformat(timespec="seconds"), "bar_size": C.BAR_SIZE,
             "auto_entries": C.AUTO_ENTRIES, "signal_status": state.get("signal_status", {}), "positions": []}
     for it in ib.portfolio():
-        if not it.position:
-            continue
+        if not it.position or it.contract.secType != "FUT" or it.contract.symbol not in C.INSTRUMENTS:
+            continue          # only the bot's futures; never the owner's stocks (the snapshot is pushed to GitHub)
         mult = C.INSTRUMENTS.get(it.contract.symbol, {"multiplier": 1})["multiplier"]
         t = protective_stop(ib, it.contract, trades)
         snap["positions"].append({
@@ -822,7 +822,7 @@ def _esc(x):
 def status_text(ib, state):
     write_snapshot(ib, state)
     snap = json.loads((JDIR / "snapshot.json").read_text())
-    out = [f"📊 <b>Status {now().astimezone(SGT):%a %d %b %H:%M} SGT</b> · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}", STRATEGY, ""]
+    out = [f"📊 <b>Status {now().astimezone(SGT):%a %d %b %H:%M} SGT</b> · <b>{'🔴 LIVE' if C.IB_PORT == 4001 else 'PAPER'}</b> · auto {'ON' if C.AUTO_ENTRIES else 'OFF'}", STRATEGY, ""]
     total = 0.0
     pos = sorted(snap["positions"], key=lambda p: list(COLOR).index(p["contract"][:3]) if p["contract"][:3] in COLOR else 9)
     out.append("<b>Open positions</b>")
@@ -857,7 +857,7 @@ def summary_text(ib, state=None):
     isnew = lambda r: any(k in (r.get("note") or "") for k in ("squeeze", "daybreak", "reversal", "emacross"))
     new = [r for r in rows if isnew(r) and num(r.get("pnl_usd")) is not None]
     old = [r for r in rows if not isnew(r) and num(r.get("pnl_usd")) is not None]
-    out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b>", STRATEGY, "",
+    out = [f"🏁 <b>Performance {now().astimezone(SGT):%a %d %b %H:%M} SGT</b> · <b>{'🔴 LIVE (since 27 Nov 14:33)' if C.IB_PORT == 4001 else 'PAPER'}</b>", STRATEGY, "",
            "<b>New rules</b> (squeeze 25 Nov 11:38, 24h breakout 26 Nov 00:26, reversal 26 Nov 08:40 SGT), <b>closed</b> trades:"]
     for sym in EXPECT_R:
         t = [r for r in new if r["symbol"] == sym]

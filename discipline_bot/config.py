@@ -82,7 +82,7 @@ AUTO_ENTRIES = True
 # ── LOOP, JOURNAL, ALERTS ─────────────────────────────────────────────────────
 LOOP_SECONDS = 60
 GIT_SYNC = True                   # pull commands/ and push the journal through git (repo must be cloned with push rights)
-JOURNAL_DIR = "data/discipline"
+JOURNAL_DIR = "data/live" if IB_PORT == 4001 else "data/discipline"   # 27 Nov 2026: live trades get their own clean journal
 COMMAND_FILE = "discipline_bot/commands/queue.json"
 BLACKOUT_FILE = "discipline_bot/blackout.json"
 ORDER_REF = "discipline_bot"      # tag on every order the bot places
