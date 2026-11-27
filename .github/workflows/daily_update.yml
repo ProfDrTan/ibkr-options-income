@@ -5,6 +5,9 @@ on:
     - cron: '0 1 * * *'  # 09:00 SGT (01:00 UTC) every day
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
@@ -26,34 +29,34 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 - <<'EOF'
-import json, datetime, os
+          import json, datetime, os
 
-# Get current state
-with open('data/trade_state.json', 'r') as f:
-    state = json.load(f)
+          # Get current state
+          with open('data/trade_state.json', 'r') as f:
+              state = json.load(f)
 
-# Update last_updated timestamp
-state['last_updated'] = datetime.datetime.utcnow().isoformat()
+          # Update last_updated timestamp
+          state['last_updated'] = datetime.datetime.utcnow().isoformat()
 
-# Refresh current VIX reading only — does NOT touch recommendation.intel,
-# which is owned by orchestrator.py's real Monday run (individual_scores,
-# agent_summaries, composite, bias). This workflow used to overwrite that
-# with hardcoded placeholder scores (macro/technical/llm) every morning,
-# silently erasing the real AI Board data — fixed 12 Jul 2026.
-try:
-    import yfinance as yf
-    vix = yf.Ticker('^VIX').fast_info['lastPrice']
-    state['current_vix'] = round(vix, 2)
-except Exception as e:
-    print(f"VIX fetch failed (non-fatal): {e}")
+          # Refresh current VIX reading only — does NOT touch recommendation.intel,
+          # which is owned by orchestrator.py's real Monday run (individual_scores,
+          # agent_summaries, composite, bias). This workflow used to overwrite that
+          # with hardcoded placeholder scores (macro/technical/llm) every morning,
+          # silently erasing the real AI Board data — fixed 12 Jul 2026.
+          try:
+              import yfinance as yf
+              vix = yf.Ticker('^VIX').fast_info['lastPrice']
+              state['current_vix'] = round(vix, 2)
+          except Exception as e:
+              print(f"VIX fetch failed (non-fatal): {e}")
 
-# Save
-with open('data/trade_state.json', 'w') as f:
-    json.dump(state, f, indent=2)
+          # Save
+          with open('data/trade_state.json', 'w') as f:
+              json.dump(state, f, indent=2)
 
-print(f"Dashboard timestamp/VIX refreshed: {datetime.datetime.utcnow().isoformat()}")
-print(f"VIX: {state.get('current_vix', 'unavailable')}")
-EOF
+          print(f"Dashboard timestamp/VIX refreshed: {datetime.datetime.utcnow().isoformat()}")
+          print(f"VIX: {state.get('current_vix', 'unavailable')}")
+          EOF
 
       - name: Commit updated state
         run: |
