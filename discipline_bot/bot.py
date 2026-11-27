@@ -445,7 +445,7 @@ def check_entry(ib, state, sym, qty, atr, add=False, price=None):
     pnl = todays_realised_pnl(ib)    # hard daily loss limit: always on (Prof, 27 Nov 2026)
     if pnl <= -C.DAILY_LOSS_LIMIT_USD:
         return f"daily loss limit hit (${pnl:,.0f} today, limit ${C.DAILY_LOSS_LIMIT_USD:,})"
-    hol = us_holiday_or_half_day(now())   # 27 Nov 2026 owner approved: no new entries on thin US holiday sessions
+    hol = C.HOLIDAY_NO_ENTRIES and us_holiday_or_half_day(now())   # 27 Nov 2026 owner approved: no new entries on thin US holiday sessions
     if hol:
         return f"no new entries today: US {hol}"
     if add and C.ADD_ONLY_WHEN_PREV_LOT_UP_ATR:   # 27 Nov 2026 owner approved: don't stack lots near the top

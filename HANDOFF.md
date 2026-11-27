@@ -94,7 +94,7 @@ Entry rules, in priority order (pure Python in `signals.py`):
   (`lock_profits`, `LOCK_*` in config). Telegram 🔒 alert on the first lock. The guardian's "widened stop" check applies to TRAILs only.
 - **Live-money filters (owner approved 27 Nov 22:02)**: the 24h-breakout V-recovery override runs on PAPER only
   (`DAYBREAK_OVERRIDE`); a lot is added only when the previous lot is ≥ 1 ATR in profit (`ADD_ONLY_WHEN_PREV_LOT_UP_ATR`);
-  no new entries on NYSE holidays and early-close days, New York date (`us_holiday_or_half_day`). Open positions keep being managed.
+  holiday block (`us_holiday_or_half_day`) exists but is OFF (`HOLIDAY_NO_ENTRIES=False`, owner 22:44: it blocked 2 signals). Open positions keep being managed.
 - Weekend flatten Fri 20:30 UTC. **Hard daily loss limit $1,000** realised per SGT day, always on (owner sets the amount).
   Other guardrails OFF (`GUARDRAILS_ON=False`, VIX guard 999), owner's call.
 - Research-only markets (entries False): M2K, MCL, ZN, MBT, MES.
@@ -131,6 +131,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 22:48 SGT · Claude** — Holiday block turned OFF at the owner's request: at 22:30 it blocked an MNQ squeeze short and an
+  MYM reversal short. Override-on-paper-only and the add-lot rule stay.
 - **2026-11-27 22:10 SGT · Claude** — Owner approved the 3 filters (§5): override paper-only, add a lot only when the previous one is
   1 ATR up (stricter than "the first lot", so lots don't stack near the top), no entries on US holidays/half-days.
 - **2026-11-27 22:05 SGT · Claude** — Profit lock (§5). Context: after the MNQ shorts, all 7 automatic trades lost (−$444, trades.csv);
