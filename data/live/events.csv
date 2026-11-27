@@ -66,3 +66,7 @@ time_utc,type,symbol,detail
 2026-11-27T07:57:17+00:00,telegram_cmd,,/mode_paper
 2026-11-27T07:58:20+00:00,telegram_cmd,,/summary
 2026-11-27T07:58:52+00:00,restart,,code updated bed6345 -> 098f092; restarting
+2026-11-27T07:59:00+00:00,start,,port 4001 | code 7ae7bb9 | auto entries ON
+2026-11-27T07:59:01+00:00,connected,,U10500387
+2026-11-27T07:59:03+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T07:59:06+00:00,exit,MNQ,lot 1 other @ 26697.5 | P&L $285 | 1.887R | 1.4h
