@@ -39,22 +39,22 @@
     "0000dbc9.6b08ba2a.01.01",
     "0001012a.6b0c1282.01.01",
     "0000dbc9.6b08ba32.01.01",
-    "000100b6.6b08d5fd.01.01",
     "0000dbc9.6b08ba38.01.01",
     "0000dbc9.6b08ba99.01.01",
-    "000100b6.6b08d8da.01.01"
+    "000100b6.6b08d8da.01.01",
+    "000100b6.6b08d5fd.01.01"
   ],
   "tg_offset": 667423734,
-  "signal_checked": "202611271301",
+  "signal_checked": "202611271302",
   "signal_bar": {
-    "MGC": "2026-11-27 13:00:00+00:00",
-    "MNQ": "2026-11-27 13:00:00+00:00",
-    "MYM": "2026-11-27 13:00:00+00:00"
+    "MGC": "2026-11-27 13:15:00+00:00",
+    "MNQ": "2026-11-27 13:15:00+00:00",
+    "MYM": "2026-11-27 13:15:00+00:00"
   },
   "signal_status": {
-    "MGC": "21:15 close 3685 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "21:15 close 26728 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
-    "MYM": "21:15 close 50931 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MGC": "21:30 close 3675.2 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; 8/21 cross against trend",
+    "MNQ": "21:30 close 26689.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
+    "MYM": "21:30 close 50914 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {}
