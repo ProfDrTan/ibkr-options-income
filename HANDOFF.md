@@ -21,7 +21,8 @@ Owner: Professor Dr. Tan Teik Kheong (Singapore, SGT = UTC+8). Repo `ProfDrTan/i
 5. In the **same commit**: update the sections of this file that changed (§3–§6), and add a §9 entry at the top, and update §8 (Open tasks):
    date/time SGT, which assistant, what changed and why, what is left open. Never delete or rewrite another assistant's entries.
 6. A decision the owner makes in chat goes in §7 (Owner decisions) word for word as far as possible, with the date.
-7. Commit, `git pull --rebase`, push. Retry the pull/push if it races with the bot (the bot commits its journal every minute).
+7. Commit, `git pull --rebase`, push. **If direct push is refused (403, e.g. ChatGPT's connector), open a PR into `discipline-bot`
+   and send the owner the link; he merges it with one tap. Code reaching the LIVE bot always passes through him or a direct push.** Retry the pull/push if it races with the bot (the bot commits its journal every minute).
 8. Confirm the bot restarted on your code: a `start` line with your commit hash in `data/live/events.csv` within ~2 minutes.
 
 **Never**
@@ -119,6 +120,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 4. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-27 16:15 SGT · Claude** — ChatGPT read the handoff correctly but its GitHub write was refused (403). AGENTS.md rules 5–6:
+  on 403 open a PR and send the owner the link; don't re-run checks the journal already answers.
 - **2026-11-27 16:05 SGT · Claude** — Made this file the single source of truth (merged CHATGPT_START.md into it); added `AGENTS.md`
   and `CLAUDE.md` pointers (Codex and Claude read those automatically) and the `handoff_check` workflow. Masked the account number in
   the `connected` log line. Open: §8.
