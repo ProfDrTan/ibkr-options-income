@@ -34,8 +34,8 @@ Other guardrails are OFF (owner's call, paper). Journal: `data/discipline/` (eve
 US session 10:00–12:30 New York. Journal: `data/quant/`.
 
 ## Research (research/*.py) and data (data/history/)
-2 yrs of 15-min futures, 1 yr of 1-min MGC/MNQ/MYM/MES, 20 yrs daily ETFs + VIX. Every rule change must pass: positive in both halves,
-the big-move test (`research/bigmoves.py`, 15 largest days per market), and a replay of a recent real night. Costs: 1 tick each way + $0.50.
+2 yrs of 15-min futures, 1 yr of 1-min MGC/MNQ/MYM/MES, 20 yrs daily ETFs + VIX. OWNER'S RULE (27 Nov 2026): no more backtests for the paper
+bots; they cost tokens. New ideas go straight onto the paper account and are judged on real trades (it is paper money).
 Rejected so far: VIX direction filter, 1–5 min gauge confirmation, 15-min confirmation filters, opening-range breakout, VWAP fade,
 failed-breakout fades, gold value-area fades, plain EMA crossovers.
 
