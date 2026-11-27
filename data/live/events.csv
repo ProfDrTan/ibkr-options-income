@@ -46,3 +46,10 @@ time_utc,type,symbol,detail
 2026-11-27T07:39:01+00:00,start,,port 4001 | code 9cfc821 | auto entries ON
 2026-11-27T07:39:01+00:00,connected,,U10500387
 2026-11-27T07:39:04+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T07:39:21+00:00,telegram_cmd,,/close1_mnq
+2026-11-27T07:40:13+00:00,manual_confirmed,MNQ,close1
+2026-11-27T07:40:13+00:00,ibkr_error,,"10148 (req 12): OrderId 12 that needs to be cancelled cannot be cancelled, state: PendingCancel."
+2026-11-27T07:40:13+00:00,ibkr_error,,"10148 (req 12): OrderId 12 that needs to be cancelled cannot be cancelled, state: PendingCancel."
+2026-11-27T07:40:13+00:00,ibkr_error,,202 (req 12): Order Canceled - reason:
+2026-11-27T07:40:14+00:00,scale_out,MNQ,closing lot 2 at market (manual)
+2026-11-27T07:40:15+00:00,ibkr_error,,10349 (req 18): Order TIF was set to DAY based on order preset.
