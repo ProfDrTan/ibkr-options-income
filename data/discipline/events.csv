@@ -395,3 +395,4 @@ time_utc,type,symbol,detail
 2026-11-27T06:13:38+00:00,start,,port 4002 | code ff50bb7 | auto entries ON
 2026-11-27T06:13:39+00:00,connected,,DUQ138203
 2026-11-27T06:13:41+00:00,calendar,,2 high-impact USD events this week
+2026-11-27T06:19:58+00:00,live_check_started,,read-only live connection test
