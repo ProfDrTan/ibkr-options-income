@@ -20,11 +20,11 @@
       "trail": 16.6
     }
   },
-  "signal_checked": "202611270000",
+  "signal_checked": "202611270001",
   "signal_bar": {
-    "MNQ": "2026-11-26 23:45:00+00:00",
-    "MGC": "2026-11-26 23:45:00+00:00",
-    "MYM": "2026-11-26 23:45:00+00:00",
+    "MNQ": "2026-11-27 00:00:00+00:00",
+    "MGC": "2026-11-27 00:00:00+00:00",
+    "MYM": "2026-11-27 00:00:00+00:00",
     "M2K": "2026-11-25 03:15:00+00:00",
     "MCL": "2026-11-25 03:15:00+00:00",
     "ZN": "2026-11-25 03:15:00+00:00",
@@ -53,9 +53,9 @@
   ],
   "last_error_alert": "2026-11-25T22:15:23+00:00",
   "signal_status": {
-    "MGC": "08:00 close 3594.4 \u00b7 24h range 3562.8\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
-    "MNQ": "08:00 close 26248.5 \u00b7 24h range 25656.8\u201326435.8 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
-    "MYM": "08:00 close 50531 \u00b7 24h range 49973\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
+    "MGC": "08:15 close 3593.6 \u00b7 24h range 3562.8\u20133634.6 \u00b7 squeeze, no breakout; no 24h breakout; no 8/21 cross",
+    "MNQ": "08:15 close 26259.8 \u00b7 24h range 25664.8\u201326435.8 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
+    "MYM": "08:15 close 50518 \u00b7 24h range 50012\u201350559 \u00b7 squeeze, no breakout; no 24h breakout; no reversal"
   },
   "lots": {
     "MNQ": [
@@ -113,13 +113,13 @@
   },
   "used_fills": [
     "0000e1a7.6b0c1ad9.01.01",
+    "0000e1a7.6b0ba707.01.01",
     "0000e1a7.6b0b9935.01.01",
     "0000e1a7.6b0ba563.01.01",
     "0000e1a7.6b0bc11d.01.01",
     "0000e1a7.6b0c204e.01.01",
-    "0000e1a7.6b0c250c.01.01",
     "0000e1a7.6b0ba72e.01.01",
-    "0000e1a7.6b0ba707.01.01"
+    "0000e1a7.6b0c250c.01.01"
   ],
   "charts_ready": true,
   "keyboard_v1": true,
