@@ -24,7 +24,7 @@
     "MBT": "2026-11-25 03:15:00+00:00"
   },
   "missing_since": {},
-  "tg_offset": 667423742,
+  "tg_offset": 667423744,
   "calendar_fetched": "2026-11-27T15:25:35+00:00",
   "calendar": [
     {
@@ -50,7 +50,16 @@
     "MNQ": "23:30 close 26409.5 \u00b7 24h range 26130.5\u201326869.2 \u00b7 squeeze, no breakout; no 24h breakout; no reversal",
     "MYM": "23:30 close 50607 \u00b7 24h range 50266\u201350980 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
-  "lots": {},
+  "lots": {
+    "MGC": [],
+    "MNQ": [],
+    "MYM": [],
+    "MES": [],
+    "M2K": [],
+    "MCL": [],
+    "ZN": [],
+    "MBT": []
+  },
   "used_fills": [
     "0000e1a7.6b0c250c.01.01",
     "0000e1a7.6b0c32e3.01.01",
