@@ -1,5 +1,5 @@
 {
-  "time_utc": "2026-11-27T15:06:34+00:00",
+  "time_utc": "2026-11-27T15:11:50+00:00",
   "bar_size": "15 mins",
   "auto_entries": true,
   "signal_status": {
@@ -9,24 +9,11 @@
   },
   "positions": [
     {
-      "contract": "MNQZ6",
-      "qty": -1.0,
-      "avg_price": 26227.92,
-      "last": 26267.25,
-      "unrealized_usd": -78.66,
-      "stop": {
-        "type": "TRAIL",
-        "trail": 240.0,
-        "stop_price": 26354.5,
-        "status": "PreSubmitted"
-      }
-    },
-    {
       "contract": "MYMZ6",
       "qty": -1.0,
       "avg_price": 50491.67,
-      "last": 50503.0,
-      "unrealized_usd": -5.66,
+      "last": 50542.3984375,
+      "unrealized_usd": -25.36,
       "stop": {
         "type": "TRAIL",
         "trail": 252.0,
