@@ -677,6 +677,8 @@ def prior_vix(ib):
 def check_signals(ib, state):
     """Squeeze-breakout-with-trend on the last COMPLETED bar (see signals.py), for markets with entries on."""
     seen = state.setdefault("signal_bar", {})
+    if state.get("paused"):
+        return
     for sym, spec in C.INSTRUMENTS.items():
         if not spec.get("entries", True):
             continue
@@ -937,6 +939,24 @@ def telegram_commands(ib, state):
                                       ("help", ("help", "start", "menu")))
                     if any(w in keys for w in words)), "")
         log_event("telegram_cmd", "", raw[:40])
+        # manual override: "close MNQ" / "close all" / "pause" / "resume"
+        syms = [w.upper() for w in words if w.upper() in C.INSTRUMENTS]
+        if any(w in ("close", "exit", "flat", "flatten", "sell", "cover") for w in words) and (syms or "all" in words):
+            targets = syms or [p.contract.symbol for p in ib.positions() if p.position and p.contract.symbol in C.INSTRUMENTS]
+            for sy in targets:
+                flatten(ib, state, sy, "manual_close_telegram")
+            state["paused"] = True
+            send_telegram(f"✋ Closing {', '.join(targets) or 'nothing (no open positions)'} at market. "
+                          "New entries are PAUSED until you send: resume")
+            continue
+        if "pause" in words or "stop" in words:
+            state["paused"] = True
+            send_telegram("⏸ New entries PAUSED. Open positions keep their stops. Send: resume to restart.")
+            continue
+        if "resume" in words or "unpause" in words:
+            state["paused"] = False
+            send_telegram("▶️ New entries RESUMED.")
+            continue
         text = "/" + cmd if cmd else raw
         if text in ("/status", "status", "/positions", "positions"):
             send_telegram(status_text(ib, state), html=True)
