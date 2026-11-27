@@ -116,16 +116,16 @@
     "0001012a.6b0c0fa4.01.01"
   ],
   "tg_offset": 667423730,
-  "signal_checked": "202611270902",
+  "signal_checked": "202611270903",
   "signal_bar": {
-    "MGC": "2026-11-27 09:15:00+00:00",
-    "MNQ": "2026-11-27 09:15:00+00:00",
-    "MYM": "2026-11-27 09:15:00+00:00"
+    "MGC": "2026-11-27 09:30:00+00:00",
+    "MNQ": "2026-11-27 09:30:00+00:00",
+    "MYM": "2026-11-27 09:30:00+00:00"
   },
   "signal_status": {
-    "MGC": "17:30 close 3705.9 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
-    "MNQ": "17:30 close 26834.2 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
-    "MYM": "17:30 close 50884 \u00b7 24h range 50266\u201350915 \u00b7 no squeeze; no 24h breakout; no reversal"
+    "MGC": "17:45 close 3706.7 \u00b7 24h range 3579\u20133712.6 \u00b7 no squeeze; no 24h breakout; no 8/21 cross",
+    "MNQ": "17:45 close 26787.8 \u00b7 24h range 26130.5\u201326869.2 \u00b7 no squeeze; no 24h breakout; no reversal",
+    "MYM": "17:45 close 50859 \u00b7 24h range 50266\u201350915 \u00b7 no squeeze; no 24h breakout; no reversal"
   },
   "queue_baseline": "2026-11-27T07:25:21+00:00",
   "shock_at": {}
