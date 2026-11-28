@@ -69,6 +69,12 @@ changing this file.
 - **Known risk, error 162**: if the owner logs in to the live account on the phone/TWS/web, IBKR kicks the bot's price feed; the bot
   sends "🚫 Bot is BLIND". Fix in progress: the owner is creating a second IBKR username for the same account (Client Portal →
   Settings → User & Access Rights → Add User); approval can take ~2 business days. Then the bot's Gateway logs in with the new user.
+  **28 Nov:** the second username exists and IBKR switched on email 2FA for it (email 07:04 SGT). Not yet used by Gateway.
+  Before switching, it needs its own CME real-time market data (subscriptions are per user) and futures trading permission.
+- **Gateway down since 27 Nov 23:45 SGT** (ConnectionRefused on 4001 every minute in `data/live/events.csv`). Market closed for the
+  weekend; Gateway must be logged in before CME reopens Mon ~07:00 SGT.
+- **IBKR "US Futures Login Task" (email 27 Nov 23:01 SGT):** exchanges require the person/ATS behind each order to be identified;
+  IBKR says it must be done in Client Portal to keep trading US futures. Owner to complete it (declare the automated system).
 - Paper Gateway (4002) must be logged in on the Lenovo for the PAPER switch to work.
 
 ## 4. Telegram (owner's control panel; ☰ Menu items and plain words both work; polled every 5 s)
@@ -139,6 +145,8 @@ gold value-area fades, plain EMA crossovers. Public journey doc ("The Quant Jour
 5. Slippage tracking (signal price vs fill) per trade. Weekly summary by rule and market from `trades.csv`.
 
 ## 9. Change log (newest first; every assistant adds an entry with every change)
+- **2026-11-28 12:15 SGT · Claude** — Docs only (§3): second username active with email 2FA; Gateway down since Fri 23:45;
+  IBKR US Futures Login Task outstanding. No code change.
 - **2026-11-27 23:35 SGT · Claude** — Fix: after a /mode switch, the other mode's journal re-read the owner's Yes tap from Telegram and
   answered "That request expired". The bot now acknowledges the tap to Telegram before restarting.
 - **2026-11-27 23:20 SGT · Claude** — No-chase rule on LIVE (§5), owner's explicit "live" at 23:16. Trigger: the 23:00 MNQ short (26,228,
