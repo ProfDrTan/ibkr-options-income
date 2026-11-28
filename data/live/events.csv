@@ -1178,3 +1178,4 @@ time_utc,type,symbol,detail
 2026-11-28T09:45:45+00:00,signal,MGC,"BUY MGCG7 close 3670.8: EMA 8 crossed above EMA 21, trend up"
 2026-11-28T09:45:48+00:00,ibkr_error,,399 (req 266): Order Message: BUY 1 MGC FEB'27 (MGCG7)  Warning: Your order will not be placed at the exchange until 2026-11-29 18:00:00 US/Eastern.
 2026-11-28T09:46:07+00:00,entry_failed,MGC,"BUY 1 limit 3682.1: status PendingCancel; urs' is ignored based on the order type and destination. PlaceOrder is now being processed.; Warning 399, reqId 266: Order Message: BUY 1 MGC FEB'27 (MGCG7)  Warning: Your order will not be placed at the exchange until 2026-11-29 18:00:00 US/Eastern."
+2026-11-28T09:48:13+00:00,telegram_error,,"getUpdates failed: ReadTimeout(ReadTimeoutError(""HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=15)""))"
