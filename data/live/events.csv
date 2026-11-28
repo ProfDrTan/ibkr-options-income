@@ -739,3 +739,4 @@ time_utc,type,symbol,detail
 2026-11-28T01:46:43+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
 2026-11-28T01:47:47+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
 2026-11-28T01:48:52+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
+2026-11-28T01:49:57+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
