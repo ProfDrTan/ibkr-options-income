@@ -890,3 +890,4 @@ time_utc,type,symbol,detail
 2026-11-28T04:29:39+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
 2026-11-28T04:35:45+00:00,start,,port 4001 | code c33202b | auto entries ON
 2026-11-28T04:35:47+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
+2026-11-28T04:36:53+00:00,error,,"ConnectionRefusedError(22, 'The remote computer refused the network connection', None, 1225, None)"
